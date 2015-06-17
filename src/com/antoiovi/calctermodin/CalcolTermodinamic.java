@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import java.awt.GridLayout;
@@ -24,6 +25,7 @@ import java.awt.Insets;
 import javax.swing.JSeparator;
 import javax.swing.SpringLayout;
 
+import com.antoiovi.caminob.PanelCaminoTipoB;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -111,8 +113,9 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 		ATabPaneScambiatore panel_4 = new ATabPaneScambiatore();
 		tabbedPane.addTab("Scambiatore", null, panel_4, null);
 
-		JPanel panel_5 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_5, null);
+		PanelCaminoTipoB panelCaminoTipoB = new PanelCaminoTipoB();
+		JScrollPane scrollpane1=new JScrollPane(panelCaminoTipoB);
+		tabbedPane.addTab("Camino caldia tipo B < 35 kW", null, scrollpane1, null);
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {

@@ -14,19 +14,19 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 
 public class APanelScambiatore extends JPanel {
-	ImageScambiatore images;
+	ImageScambiatore imagescabiatore;
 	/**
 	 * Create the panel.
 	 */
 	public APanelScambiatore() {
-		images=new ImageScambiatore();
+		imagescabiatore=new ImageScambiatore();
 	}	
 		@Override
 		protected void paintComponent(Graphics g) {
 			// TODO Auto-generated method stub
 			Graphics2D g2d=(Graphics2D)g;
 			g2d.setBackground(Color.white);
-			g2d.drawImage(images.recreateImage(),0,0, null);
+			g2d.drawImage(imagescabiatore.recreateImage(),0,0, null);
 		}
 		
 	}
