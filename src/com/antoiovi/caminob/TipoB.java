@@ -1421,7 +1421,7 @@ void validazione(){
 	canale.setHaltezza(facanale.altezza/100);
 	canale.getCsi().clear();
 	canale.addCsi(facanale.perd);
-	canale.setCoefLimE(8.0);
+	canale.setCoeffLimEst(8.0);
 	//canale.setData(ambiente.Patm, caldaiach4.getPortatfumiPmax(), ambiente.Tmin, caldaiach4.getTempFumiPmax(), caldaiach4.getFumoPmax());
  
 	
@@ -1450,7 +1450,7 @@ void validazione(){
 	//out_panel.print("perimetro "+tubo.Per_int()+"  Area= "+tubo.Area_int());
 	condotto.getCsi().clear();
 	condotto.addCsi(facondotto.perd);
-	condotto.setCoefLimE(8.0);
+	condotto.setCoeffLimEst(8.0);
 	condotto.setHaltezza(tubo.Lung());
 	/**
 	 * imposto dati presa aria e interruttore di tiraggio
