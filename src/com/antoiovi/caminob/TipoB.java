@@ -333,7 +333,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_lungh.getModel().getValue();
 				facondotto.lunghezza=d;
-				validazione();
+				  validazione();
 			}
 		});
 		sp_lungh.setModel(new SpinnerNumberModel(5.0, 1.0, 12.0, 1.0));
@@ -367,7 +367,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_spess.getModel().getValue();
 				facondotto.spessore=d;
-				validazione();
+				  validazione();
 			}
 		});
 		sp_spess.setModel(new SpinnerNumberModel(5.0, 2.0, 10.0, 1.0));
@@ -397,7 +397,7 @@ Ambiente ambiente=new Ambiente();
 				t_rug.setText(s_r);
 			
 				facondotto.rugosita=d_r;
-				validazione();
+		 	validazione();
 			}
 		});
 		sp_rug.setModel(new SpinnerNumberModel(10, 5, 10000, 5));
@@ -436,7 +436,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_resterm.getModel().getValue();
 				facondotto.resterm=d;
-				validazione();
+			 validazione();
 			}
 		});
 		sp_resterm.setModel(new SpinnerNumberModel(0, 0, 1.0, 0.01));
@@ -461,7 +461,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_perc_cond_est.getModel().getValue();
 				facondotto.perccontest=d;
-				validazione();
+	 validazione();
 			}
 		});
 		sp_perc_cond_est.setModel(new SpinnerNumberModel(0.0, 0.0, 100.0, 10.0));
@@ -483,7 +483,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_perd.getModel().getValue();
 				facondotto.perd=d;
-				validazione();
+			   validazione();
 			}
 		});
 		sp_perd.setModel(new SpinnerNumberModel(0.3, 0.3, 3.0, 0.1));
@@ -521,7 +521,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_diam_ca.getModel().getValue();
 				facanale.diametro=d;
-				validazione();
+				  validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_diam_ca = new GridBagConstraints();
@@ -554,7 +554,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_lung_ca.getModel().getValue();
 				facanale.lunghezza=d;
-				validazione();
+				  validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_lung_ca = new GridBagConstraints();
@@ -587,7 +587,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_alt_ca.getModel().getValue();
 				facanale.altezza=d;
-				validazione();
+			  validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_alt_ca = new GridBagConstraints();
@@ -618,7 +618,7 @@ Ambiente ambiente=new Ambiente();
 		sp_spes_ca.setModel(new SpinnerNumberModel(0.0, 0.0, 10.0, 1.0));
 		sp_spes_ca.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				validazione();
+				  validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_spes_ca = new GridBagConstraints();
@@ -651,7 +651,7 @@ Ambiente ambiente=new Ambiente();
 				double d=(Double)sp_rug_ca_1.getModel().getValue();
 				textRug_ca.setText(String.format("%1.5f [mm]", d/10000));
 				facanale.rugosita=d/10000;
-				validazione();
+			 validazione();
 			}
 		});
 		sp_rug_ca_1.setModel(new SpinnerNumberModel(10.0, 5.0, 10000.0, 5.0));
@@ -688,7 +688,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_rter_ca.getModel().getValue();
 				facanale.resterm=d;
-				validazione();
+				 validazione();
 			}
 		});
 		sp_rter_ca.setModel(new SpinnerNumberModel(0.0, 0.0, 10.0, 1.0));
@@ -712,7 +712,7 @@ Ambiente ambiente=new Ambiente();
 		sp_contest_ca.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				facanale.perccontest=(Double)sp_contest_ca.getModel().getValue();
-				validazione();
+		 validazione();
 			}
 		});
 		sp_contest_ca.setModel(new SpinnerNumberModel(0.0, 0.0, 100.0, 10.0));
@@ -739,7 +739,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_perdloc_ca.getModel().getValue();
 				facanale.perd=d;
-				validazione();
+		 validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_perdloc_ca = new GridBagConstraints();
@@ -836,7 +836,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=	(Double)sp_pmax.getModel().getValue();
 				generatore.P_max=d;
-				validazione();
+				  validazione();
 			}
 		});
 		sp_pmax.setModel(new SpinnerNumberModel(35.0, 10.0, 35.0, 1.0));
@@ -855,7 +855,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=	(Double)sp_pmin.getModel().getValue();
 				 generatore.P_min=d;
-					validazione();
+			validazione();
 			}
 		});
 		sp_pmin.setModel(new SpinnerNumberModel(35.0, 10.0, 35.0, 1.0));
@@ -880,7 +880,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_rend_pmax.getModel().getValue();
 				generatore.Rend_Pmax=d;
-				validazione();
+			 validazione();
 			}
 		});
 		sp_rend_pmax.setModel(new SpinnerNumberModel(90.0, 75.0, 100.0, 1.0));
@@ -900,7 +900,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_rend_pmin.getModel().getValue();
 				generatore.Rend_Pmin=d;
-				validazione();
+			 validazione();
 			}
 		});
 		GridBagConstraints gbc_sp_rend_pmin = new GridBagConstraints();
@@ -956,7 +956,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_co2min.getModel().getValue();
 				generatore.co2_min=d;
-				validazione();
+			validazione();
 			}
 		});
 		sp_co2min.setModel(new SpinnerNumberModel(5.0, 4.0, 11.73, 0.01));
@@ -982,7 +982,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_eccaria.getModel().getValue();
 				generatore.eccaria_max=d;
-				validazione();
+					validazione();
 			}
 		});
 		sp_eccaria.setModel(new SpinnerNumberModel(0.0, 0.0, 200.0, 5.0));
@@ -1003,7 +1003,7 @@ Ambiente ambiente=new Ambiente();
 					sp_co2.setEnabled(false);
 					sp_eccaria.setEnabled(true);
 				}
-				validazione();
+					validazione();
 
 			}
 		});
@@ -1021,7 +1021,7 @@ Ambiente ambiente=new Ambiente();
 					sp_eccaria.setEnabled(false);
 					sp_eccar_min.setEnabled(false);
 				}
-				validazione();
+						validazione();
 			}
 		});
 		/**
@@ -1034,7 +1034,7 @@ Ambiente ambiente=new Ambiente();
 			public void stateChanged(ChangeEvent arg0) {
 				double d=(Double)sp_eccar_min.getModel().getValue();
 				generatore.eccaria_min=d;
-				validazione();
+		 validazione();
 			}
 		});
 		sp_eccar_min.setModel(new SpinnerNumberModel(0.0, 0.0, 200.0, 5.0));
@@ -1101,7 +1101,7 @@ Ambiente ambiente=new Ambiente();
 		sp_superf.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				ambiente.area_presa=doublefromspinner(sp_superf);
-				validazione();
+		 	validazione();
 			}
 		});
 		sp_superf.setModel(new SpinnerNumberModel(0.03, 0.001, 0.3, 0.001));
@@ -1126,7 +1126,7 @@ Ambiente ambiente=new Ambiente();
 		sp_perd_ap.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				ambiente.csi_presa_ar=doublefromspinner(sp_perd_ap);
-				validazione();
+			 validazione();
 			}
 		});
 		sp_perd_ap.setModel(new SpinnerNumberModel(0.0, 0.0, 10.0, 0.25));
@@ -1159,7 +1159,7 @@ Ambiente ambiente=new Ambiente();
 		sp_ar_rt.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				ambiente.area_int_tir=doublefromspinner(sp_ar_rt);
-				validazione();
+			 validazione();
 			}
 		});
 		sp_ar_rt.setModel(new SpinnerNumberModel(0.01, 0.01, 0.1, 0.01));
@@ -1184,7 +1184,7 @@ Ambiente ambiente=new Ambiente();
 		sp_perd_loc_rt.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				ambiente.csi_int_tir=doublefromspinner(sp_perd_loc_rt);
-				validazione();
+			validazione();
 						
 			}
 		});
@@ -1332,15 +1332,15 @@ validazione();
 	   */
 	//private JComboBox comboBox;
 	//String sezione;
-	  sp_lungh.getModel().setValue((Double)facondotto.lunghezza);
-	  sp_latoB.getModel().setValue((Double)facondotto.lato_b);
-	  sp_latoA.getModel().setValue((Double)facondotto.lato_a);
-	  sp_diam.getModel().setValue((Double)facondotto.diametro);
+ 	  sp_lungh.getModel().setValue(Double.valueOf( facondotto.lunghezza));
+	  sp_latoB.getModel().setValue(Double.valueOf(facondotto.lato_b));
+	  sp_latoA.getModel().setValue(Double.valueOf(facondotto.lato_a));
+	  sp_diam.getModel().setValue(Double.valueOf(facondotto.diametro));
 	  t_rug.setText(String.valueOf(facondotto.rugosita));
 	 
 	  double dr=facondotto.rugosita;
 	  int ir=(int)dr;
-	  sp_rug.getModel().setValue((Integer)ir);
+	  sp_rug.getModel().setValue(Integer.valueOf(ir));
 	  sp_resterm.getModel().setValue((Double)facondotto.resterm);
 	  doubletospinner(sp_spess,0);
 	 
@@ -1358,7 +1358,7 @@ validazione();
 
 	    dr=facanale.rugosita;
 	    ir=(int)dr;
-	  doubletospinner(sp_rug_ca_1,(Integer)ir);
+	  doubletospinner(sp_rug_ca_1,Integer.valueOf(ir));
 	  textRug_ca.setText(String.valueOf(facanale.rugosita));
 	  doubletospinner(sp_rter_ca,facanale.resterm);
 	  doubletospinner(sp_contest_ca,facanale.perccontest);
@@ -1468,7 +1468,7 @@ void validazione(){
 	camino.condotto=condotto;
 	 camino.canale=canale;
 	 camino.caldaia=caldaiach4;
-	 camino.calcola();
+	// camino.calcola();
 
 	//condotto.setData(ambiente.Patm,  canale.M1(), ambiente.Tmin, canale.Tu(), canale.fl_int());
  	 
