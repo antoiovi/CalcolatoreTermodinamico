@@ -17,6 +17,9 @@ public class ImgCondotti extends JPanel{
 private Font font;
 private Font rotatedFont;
 private FontMetrics fontmetrics;
+int startX=50;
+int startY=50;
+
 
 private ArrayList<Elem> conds;
 	public ImgCondotti(){
@@ -41,8 +44,8 @@ private ArrayList<Elem> conds;
 				fontmetrics=g2d.getFontMetrics( rotatedFont);
 				g2d.setFont(rotatedFont);
 				Iterator<Elem> i=conds.iterator();
-				int x_base=50;
-				int y_base=50;
+				int x_base=startX;
+				int y_base=startY;
 		while(   i.hasNext())
 			{
 			Elem e=i.next();
@@ -53,10 +56,21 @@ private ArrayList<Elem> conds;
 		}
 		
 	}
+	public void resetSatrt_X_Y(int x,int y){
+		startX=x;
+		startY=y;
+		repaint();
+		
+	}
 	
 	public void addElem(){
 		Elem e=new Cond();
 		conds.add(e);
+		 repaint();
+	}
+	public void addElem(Elem e){
+		conds.add(e);
+		 repaint();
 	}
 	 
 	private interface Elem{
@@ -65,13 +79,21 @@ private ArrayList<Elem> conds;
 		
 		}
 	
+	public void addCond(int Lungh){
+		Cond c=new Cond();
+		c.lungh=Lungh;
+		addElem(c);
+	}
+	
 	public  class Cond implements Elem{
-		int lungh=10;
+		int lungh=50;
 		Point startPoint;
+		public Cond(){
+			
+		}
 		@Override
 		public void paint(Graphics2D g2d, int x_base, int y_base) {
 		 startPoint=new Point(x_base,y_base);
-			
 			g2d.drawLine(x_base, y_base, endPoint().x,endPoint().y);
 			
 		}

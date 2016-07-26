@@ -49,11 +49,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JMenuBar;
+import com.antoiovi.calctermodin.panels.ImgCondotti;
+import javax.swing.JButton;
 
 public class CalcolTermodinamic extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JMenuItem mntmInfo;
+	private ImgCondotti imgCondotti;
 
 	/**
 	 * Launch the application.
@@ -116,6 +119,31 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 		PanelCaminoTipoB panelCaminoTipoB = new PanelCaminoTipoB();
 		JScrollPane scrollpane1=new JScrollPane(panelCaminoTipoB);
 		tabbedPane.addTab("Camino caldia tipo B < 35 kW", null, scrollpane1, null);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_1, null);
+		panel_1.setLayout(new BorderLayout(0, 0));
+		
+		imgCondotti = new ImgCondotti();
+		panel_1.add(imgCondotti, BorderLayout.CENTER);
+		
+		JPanel panel_5 = new JPanel();
+		panel_1.add(panel_5, BorderLayout.NORTH);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				imgCondotti.addElem();
+			}
+		});
+		panel_5.add(btnNewButton);
+		
+		JPanel panel_2 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_2, null);
+		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		PCondotto panel_6 = new PCondotto();
+		panel_2.add(panel_6);
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
