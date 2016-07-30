@@ -133,7 +133,7 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				imgCondotti.addElem();
+				 
 			}
 		});
 		panel_5.add(btnNewButton);

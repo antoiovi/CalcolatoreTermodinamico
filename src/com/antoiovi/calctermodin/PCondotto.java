@@ -11,18 +11,25 @@ import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import com.antoiovi.calctermodin.panels.IPaintCond;
 import com.antoiovi.calctermodin.panels.ImgCondotti;
 import com.antoiovi.calctermodin.panels.ImgCondotti.Cond;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SpinnerNumberModel;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.ImageIcon;
 
 public class PCondotto extends JPanel {
 	private ImgCondotti imgCond;
+	private IPaintCond paintCond;
 	private JSpinner spinner_Start_Y;
 	private JSpinner spinner_Start_X;
 	private JSpinner spinner_Lungh;
+	private JSpinner spinnerAngoloGomito;
 
 	/**
 	 * Create the panel.
@@ -38,24 +45,6 @@ public class PCondotto extends JPanel {
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
-		
-		JLabel lblNewLabel = new JLabel("Lunghezza");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel.add(lblNewLabel, gbc_lblNewLabel);
-		
-		spinner_Lungh = new JSpinner();
-		spinner_Lungh.setModel(new SpinnerNumberModel(new Integer(10), new Integer(10), null, new Integer(5)));
-		GridBagConstraints gbc_spinner_Lungh = new GridBagConstraints();
-		gbc_spinner_Lungh.fill = GridBagConstraints.HORIZONTAL;
-		gbc_spinner_Lungh.insets = new Insets(0, 0, 0, 5);
-		gbc_spinner_Lungh.anchor = GridBagConstraints.NORTH;
-		gbc_spinner_Lungh.gridx = 1;
-		gbc_spinner_Lungh.gridy = 0;
-		panel.add(spinner_Lungh, gbc_spinner_Lungh);
 		
 		JLabel lblNewLabel_1 = new JLabel("Start X");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -93,7 +82,7 @@ public class PCondotto extends JPanel {
 				try{
 				Integer x=(Integer)spinner_Start_X.getModel().getValue();
 				Integer y=(Integer)spinner_Start_Y.getModel().getValue();
-				imgCond.resetSatrt_X_Y(x.intValue(), y.intValue());
+				paintCond.resetStart_X_Y(x.intValue(), y.intValue());
 				}catch(Exception e){
 					
 				}
@@ -109,25 +98,106 @@ public class PCondotto extends JPanel {
 		add(panel_1, BorderLayout.WEST);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 		
-		JButton btnNewButton_1 = new JButton("Nuovo Elem()");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JPanel panel_2 = new JPanel();
+		panel_1.add(panel_2);
+		GridBagLayout gbl_panel_2 = new GridBagLayout();
+		gbl_panel_2.columnWidths = new int[]{81, 49, 24, 68, 0};
+		gbl_panel_2.rowHeights = new int[]{23, 0, 0, 0};
+		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel_2.setLayout(gbl_panel_2);
+		
+		JButton btnNewGomito = new JButton("Add gomito ");
+		btnNewGomito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 imgCond.addElem();
+				Double ang=(Double)spinnerAngoloGomito.getModel().getValue();
+				
+				paintCond.addGomito(ang.doubleValue());
+			}
+		});
+		GridBagConstraints gbc_btnNewGomito = new GridBagConstraints();
+		gbc_btnNewGomito.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewGomito.anchor = GridBagConstraints.NORTH;
+		gbc_btnNewGomito.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewGomito.gridx = 0;
+		gbc_btnNewGomito.gridy = 0;
+		panel_2.add(btnNewGomito, gbc_btnNewGomito);
+		
+		JLabel lblNewLabel_3 = new JLabel(" ");
+		lblNewLabel_3.setIcon(new ImageIcon(PCondotto.class.getResource("/com/antoiovi/calctermodin/icon/FreccieRotaz_01.gif")));
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.fill = GridBagConstraints.VERTICAL;
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_3.gridx = 1;
+		gbc_lblNewLabel_3.gridy = 0;
+		panel_2.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		
+		JLabel label = new JLabel("");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.anchor = GridBagConstraints.WEST;
+		gbc_label.insets = new Insets(0, 0, 5, 5);
+		gbc_label.gridx = 2;
+		gbc_label.gridy = 0;
+		panel_2.add(label, gbc_label);
+		
+		spinnerAngoloGomito = new JSpinner();
+		spinnerAngoloGomito.setModel(new SpinnerNumberModel(0.0, -90.0, 90.0, 0.0));
+		GridBagConstraints gbc_spinnerAngoloGomito = new GridBagConstraints();
+		gbc_spinnerAngoloGomito.insets = new Insets(0, 0, 5, 0);
+		gbc_spinnerAngoloGomito.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerAngoloGomito.gridx = 3;
+		gbc_spinnerAngoloGomito.gridy = 0;
+		panel_2.add(spinnerAngoloGomito, gbc_spinnerAngoloGomito);
+		
+		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				paintCond.clearCond();
 			}
 		});
 		
-		panel_1.add(btnNewButton_1);
-		
-		JButton btnNewButton = new JButton("Nuovo Elem( Elem e)");
+		JButton btnNewButton = new JButton("Add condotto");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 0;
+		gbc_btnNewButton.gridy = 1;
+		panel_2.add(btnNewButton, gbc_btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			 int Lungh=(Integer)spinner_Lungh.getModel().getValue();
-				imgCond.addCond(Lungh); 
+				paintCond.addCond(Lungh); 
 			}
 		});
-		panel_1.add(btnNewButton);
+		
+		JLabel lblNewLabel = new JLabel("Lunghezza");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.gridwidth = 2;
+		gbc_lblNewLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 1;
+		gbc_lblNewLabel.gridy = 1;
+		panel_2.add(lblNewLabel, gbc_lblNewLabel);
+		
+		spinner_Lungh = new JSpinner();
+		GridBagConstraints gbc_spinner_Lungh = new GridBagConstraints();
+		gbc_spinner_Lungh.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_Lungh.insets = new Insets(0, 0, 5, 0);
+		gbc_spinner_Lungh.gridx = 3;
+		gbc_spinner_Lungh.gridy = 1;
+		panel_2.add(spinner_Lungh, gbc_spinner_Lungh);
+		spinner_Lungh.setModel(new SpinnerNumberModel(new Integer(10), new Integer(10), null, new Integer(5)));
+		GridBagConstraints gbc_btnClear = new GridBagConstraints();
+		gbc_btnClear.anchor = GridBagConstraints.NORTHWEST;
+		gbc_btnClear.insets = new Insets(0, 0, 0, 5);
+		gbc_btnClear.gridx = 0;
+		gbc_btnClear.gridy = 2;
+		panel_2.add(btnClear, gbc_btnClear);
+		
+		JPanel panel_3 = new JPanel();
+		panel_1.add(panel_3);
 		
 		imgCond = new ImgCondotti();
+		paintCond=imgCond;
 		add(imgCond, BorderLayout.CENTER);
 		imgCond.setLayout(new BorderLayout(0, 0));
 
