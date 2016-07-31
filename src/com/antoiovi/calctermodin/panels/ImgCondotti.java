@@ -1,6 +1,7 @@
 package com.antoiovi.calctermodin.panels;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -68,6 +69,19 @@ private ArrayList<Elem> conds;
 	
 	}
 	
+	// END PAINT COMPONENT******************************************
+	static final int defaultWidth=600;
+	static final int deafultHeight=300;
+	static final int margin=50;
+	int maxWidth=600;
+	int maxHeight=300;
+	int bottom=400;
+	
+	@Override
+	public Dimension getPreferredSize() {
+	    return new Dimension(maxWidth, bottom);
+	}
+	
 	public void resetSatrt_X_Y(int x,int y){
 		startX=x;
 		startY=y;
@@ -122,13 +136,21 @@ private ArrayList<Elem> conds;
 		double angolo=0.0;
 		Point2D startPoint=point;
 		Iterator i=e.iterator();
+		double limitX=0;
+		double limitY=0;
 		while(i.hasNext()){
 			Elem el=(Elem) i.next();
 			el.paint2D(g2d, startPoint, angolo);
 			startPoint=el.endPoint();
 			angolo+=el.getAngle();
-			
+			limitX=startPoint.getX();
+			limitY=startPoint.getY();
 		}
+		if(limitX>maxWidth){
+			maxWidth=(int)limitX+margin;
+			repaint();
+		}
+		output.logDebug(String.format("limitY = %f",limitY));
 		
 	}
 	
@@ -148,49 +170,69 @@ private ArrayList<Elem> conds;
 	
 	
 	public  class Cond implements Elem{
-		double lungh=50;
-		double angle;
 		static final double angolo=0.0; //zero perchè è un elemento che non ruota;
-		 
+		double lungh=50;
+		Point2D endPoint;
 		Point2D startPoint;
+		
 		public Cond(){
-			angle=0.0;
+			 
 		}
 		
 		double relativeAngle=0;
 		@Override
 		public Point2D endPoint(  ) {
 			
+			return endPoint;
+		}
+		
+		private void calculateEndPoint(){
 			double angleRad = relativeAngle * Math.PI / 180;//Converti in radianti
 			output.logTrace(String.format("Cond relativeangle Radianti = %f ", angleRad));
 			double	endX   = startPoint.getX()+ lungh* Math.cos(angleRad);
 			double	endY   = startPoint.getY() + lungh * Math.sin(angleRad);
-			Point2D p=new Point2D.Double(endX,endY);
-			return p;
+			endPoint=new Point2D.Double(endX,endY);
+		 
 		}
+		
 
 		@Override
 		public void paint2D(Graphics2D g2d, double x_base, double y_base,double angle) {
 			relativeAngle=angolo+angle;
 		 	startPoint=new Point2D.Double(x_base,y_base);
-		 	Point2D endP=endPoint();
-			g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endP.getX(),endP.getY()));
+		 	calculateEndPoint();
+			g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endPoint.getX(),endPoint.getY()));
 			
 		}
 
 		@Override
 		public void paint2D(Graphics2D g2d, Point2D punto, double angle) {
-		
 			relativeAngle=angolo+angle;
 			output.logTrace(String.format("Paint Cond relativeangle  = %f ", relativeAngle));
 		 	startPoint=punto;
-		 	Point2D endP=endPoint();
-		 	g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endP.getX(),endP.getY()));
+		 	calculateEndPoint();
+		 	g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endPoint.getX(),endPoint.getY()));
 		}
 
 		@Override
 		public double getAngle() {
 			return angolo;
+		}
+
+		public double getLungh() {
+			return lungh;
+		}
+
+		public void setLungh(double lungh) {
+			this.lungh = lungh;
+		}
+
+		public Point2D getStartPoint() {
+			return startPoint;
+		}
+
+		public void setStartPoint(Point2D startPoint) {
+			this.startPoint = startPoint;
 		}
 		
 		 
@@ -200,6 +242,9 @@ private ArrayList<Elem> conds;
 		Color color;
 	// Agolo in gradi
 		double angolo;
+		Point2D endPoint;
+		Point2D startPoint;
+		 
 		 
 		double lungh=10;
 		 
@@ -211,8 +256,7 @@ private ArrayList<Elem> conds;
 			color=Color.red;
 		}
 		
-		Point2D startPoint;
-		 
+	
 		
 		double relativeAngle=0;
 		@Override
@@ -227,13 +271,7 @@ private ArrayList<Elem> conds;
 
 		@Override
 		public void paint2D(Graphics2D g2d, double x_base, double y_base,double angle) {
-		String msg=	String.format("Paint gomito; angolo = %f", angolo);
-		output.logTrace(msg);
-			relativeAngle=angolo+angle;
-		 	startPoint=new Point2D.Double(x_base,y_base);
-		 	Point2D endP=endPoint();
-			g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endP.getX(),endP.getY()));
-			
+			paint2D( g2d, new Point2D.Double(x_base,y_base),   angle);
 		}
 
 		@Override
@@ -244,8 +282,8 @@ private ArrayList<Elem> conds;
 			g2d.setColor(color);
 			relativeAngle=angolo+angle;
 		 	startPoint=punto;
-		 	Point2D endP=endPoint();
-		 	g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endP.getX(),endP.getY()));
+		 	calculateEndPoint();
+		 	g2d.draw(new Line2D.Double(startPoint.getX(),startPoint.getY(), endPoint.getX(),endPoint.getY()));
 		 	g2d.setColor(oldcolor);
 		}
 
@@ -253,7 +291,15 @@ private ArrayList<Elem> conds;
 		public double getAngle() {
 			return angolo;
 		}
+		
+		private void calculateEndPoint(){
+			double angleRad = relativeAngle * Math.PI / 180;//Converti in radianti
+			double	endX   = startPoint.getX()+ lungh* Math.cos(angleRad);
+			double	endY   = startPoint.getY() + lungh * Math.sin(angleRad);
+			endPoint=new Point2D.Double(endX,endY);
+			 
 		 
+		}
 		
 		}
 	

@@ -22,6 +22,8 @@ import javax.swing.SpinnerNumberModel;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 public class PCondotto extends JPanel {
 	private ImgCondotti imgCond;
@@ -101,9 +103,9 @@ public class PCondotto extends JPanel {
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{81, 49, 24, 68, 0};
+		gbl_panel_2.columnWidths = new int[]{81, 49, 24, 0, 68, 0};
 		gbl_panel_2.rowHeights = new int[]{23, 0, 0, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
@@ -123,14 +125,24 @@ public class PCondotto extends JPanel {
 		gbc_btnNewGomito.gridy = 0;
 		panel_2.add(btnNewGomito, gbc_btnNewGomito);
 		
-		JLabel lblNewLabel_3 = new JLabel(" ");
-		lblNewLabel_3.setIcon(new ImageIcon(PCondotto.class.getResource("/com/antoiovi/calctermodin/icon/FreccieRotaz_01.gif")));
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.fill = GridBagConstraints.VERTICAL;
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_3.gridx = 1;
-		gbc_lblNewLabel_3.gridy = 0;
-		panel_2.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		JButton btnGomitoPositiv = new JButton(" ");
+		btnGomitoPositiv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Double ang=(Double)spinnerAngoloGomito.getModel().getValue();
+				 
+				paintCond.addGomito(ang.doubleValue());
+			}
+		});
+		btnGomitoPositiv.setHorizontalAlignment(SwingConstants.LEADING);
+		btnGomitoPositiv.setVerticalAlignment(SwingConstants.BOTTOM);
+		btnGomitoPositiv.setIcon(new ImageIcon(PCondotto.class.getResource("/com/antoiovi/calctermodin/icon/FrecciaSx_01.gif")));
+		GridBagConstraints gbc_btnGomitoPositiv = new GridBagConstraints();
+		gbc_btnGomitoPositiv.anchor = GridBagConstraints.SOUTH;
+		gbc_btnGomitoPositiv.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnGomitoPositiv.insets = new Insets(0, 0, 5, 5);
+		gbc_btnGomitoPositiv.gridx = 1;
+		gbc_btnGomitoPositiv.gridy = 0;
+		panel_2.add(btnGomitoPositiv, gbc_btnGomitoPositiv);
 		
 		JLabel label = new JLabel("");
 		GridBagConstraints gbc_label = new GridBagConstraints();
@@ -140,12 +152,27 @@ public class PCondotto extends JPanel {
 		gbc_label.gridy = 0;
 		panel_2.add(label, gbc_label);
 		
+		JButton btnGomitoNegativo = new JButton(" ");
+		btnGomitoNegativo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Double ang=(Double)spinnerAngoloGomito.getModel().getValue();
+				ang*=-1;
+				paintCond.addGomito(ang.doubleValue());
+			}
+		});
+		btnGomitoNegativo.setIcon(new ImageIcon(PCondotto.class.getResource("/com/antoiovi/calctermodin/icon/FrecciaDx_01.gif")));
+		GridBagConstraints gbc_btnGomitoNegativo = new GridBagConstraints();
+		gbc_btnGomitoNegativo.insets = new Insets(0, 0, 5, 5);
+		gbc_btnGomitoNegativo.gridx = 3;
+		gbc_btnGomitoNegativo.gridy = 0;
+		panel_2.add(btnGomitoNegativo, gbc_btnGomitoNegativo);
+		
 		spinnerAngoloGomito = new JSpinner();
 		spinnerAngoloGomito.setModel(new SpinnerNumberModel(0.0, -90.0, 90.0, 0.0));
 		GridBagConstraints gbc_spinnerAngoloGomito = new GridBagConstraints();
 		gbc_spinnerAngoloGomito.insets = new Insets(0, 0, 5, 0);
 		gbc_spinnerAngoloGomito.fill = GridBagConstraints.HORIZONTAL;
-		gbc_spinnerAngoloGomito.gridx = 3;
+		gbc_spinnerAngoloGomito.gridx = 4;
 		gbc_spinnerAngoloGomito.gridy = 0;
 		panel_2.add(spinnerAngoloGomito, gbc_spinnerAngoloGomito);
 		
@@ -182,7 +209,7 @@ public class PCondotto extends JPanel {
 		GridBagConstraints gbc_spinner_Lungh = new GridBagConstraints();
 		gbc_spinner_Lungh.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spinner_Lungh.insets = new Insets(0, 0, 5, 0);
-		gbc_spinner_Lungh.gridx = 3;
+		gbc_spinner_Lungh.gridx = 4;
 		gbc_spinner_Lungh.gridy = 1;
 		panel_2.add(spinner_Lungh, gbc_spinner_Lungh);
 		spinner_Lungh.setModel(new SpinnerNumberModel(new Integer(10), new Integer(10), null, new Integer(5)));
@@ -200,6 +227,9 @@ public class PCondotto extends JPanel {
 		paintCond=imgCond;
 		add(imgCond, BorderLayout.CENTER);
 		imgCond.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane(imgCond);
+		add(scrollPane, BorderLayout.CENTER);
 
 	}
 
