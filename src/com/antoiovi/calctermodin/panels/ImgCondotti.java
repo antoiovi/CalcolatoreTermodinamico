@@ -48,7 +48,7 @@ private ArrayList<Elem> conds;
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		//Sposta l'origine in basso e rende positivo lasse y i su
-			g2d.translate(0, getHeight());
+			g2d.translate(0, getHeight()+bottom);
 				g2d.scale(1.0, -1.0);
 				/*font = new Font(null, Font.PLAIN, 10);
 				AffineTransform affineTransform = new AffineTransform();
@@ -72,14 +72,55 @@ private ArrayList<Elem> conds;
 	// END PAINT COMPONENT******************************************
 	static final int defaultWidth=600;
 	static final int deafultHeight=300;
+	static final int deafultBottom=0;
 	static final int margin=50;
 	int maxWidth=600;
 	int maxHeight=300;
-	int bottom=400;
+	int bottom=0;
+	
+	private void paintElementi(Graphics2D g2d,List<Elem> e,Point2D point){
+		double angolo=0.0;
+		Point2D startPoint=point;
+		Iterator i=e.iterator();
+		double limitX=0;
+		double limitY=0;
+		while(i.hasNext()){
+			Elem el=(Elem) i.next();
+			el.paint2D(g2d, startPoint, angolo);
+			startPoint=el.endPoint();
+			angolo+=el.getAngle();
+			limitX=startPoint.getX();
+			limitY=startPoint.getY();
+		}
+		//output.logDebug(String.format ("limitYgetWidth() %d",getWidth()));
+		
+		
+		if(limitX>maxWidth){
+		 	maxWidth=(int)limitX+margin;
+			//repaint();
+		}
+		output.logDebug(String.format("limitY = %f,  maxHeight= %d, bottom= %d",limitY,maxHeight,bottom));
+		if(limitY>maxHeight){
+			limitY=limitY<0?limitY*-1:limitY;
+			maxHeight=(int)limitY+2*margin+bottom;
+		// repaint();
+		}
+		if(limitY<bottom){
+			limitY=limitY<0?limitY*-1:limitY;
+			bottom-=limitY;
+			maxHeight+=limitY+margin;
+			 
+		// repaint();
+		}
+		output.logDebug(String.format("limitY = %f",limitY));
+		
+	}
+	
+	
 	
 	@Override
 	public Dimension getPreferredSize() {
-	    return new Dimension(maxWidth, bottom);
+	    return new Dimension(maxWidth, maxHeight);
 	}
 	
 	public void resetSatrt_X_Y(int x,int y){
@@ -132,27 +173,6 @@ private ArrayList<Elem> conds;
   
 	
 	
-	private void paintElementi(Graphics2D g2d,List<Elem> e,Point2D point){
-		double angolo=0.0;
-		Point2D startPoint=point;
-		Iterator i=e.iterator();
-		double limitX=0;
-		double limitY=0;
-		while(i.hasNext()){
-			Elem el=(Elem) i.next();
-			el.paint2D(g2d, startPoint, angolo);
-			startPoint=el.endPoint();
-			angolo+=el.getAngle();
-			limitX=startPoint.getX();
-			limitY=startPoint.getY();
-		}
-		if(limitX>maxWidth){
-			maxWidth=(int)limitX+margin;
-			repaint();
-		}
-		output.logDebug(String.format("limitY = %f",limitY));
-		
-	}
 	
 
 	

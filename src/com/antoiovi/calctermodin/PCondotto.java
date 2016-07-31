@@ -48,6 +48,18 @@ public class PCondotto extends JPanel {
 		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
+		JButton btnReaint = new JButton("Reaint");
+		btnReaint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				imgCond.repaint();
+			}
+		});
+		GridBagConstraints gbc_btnReaint = new GridBagConstraints();
+		gbc_btnReaint.insets = new Insets(0, 0, 0, 5);
+		gbc_btnReaint.gridx = 0;
+		gbc_btnReaint.gridy = 0;
+		panel.add(btnReaint, gbc_btnReaint);
+		
 		JLabel lblNewLabel_1 = new JLabel("Start X");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
@@ -168,7 +180,7 @@ public class PCondotto extends JPanel {
 		panel_2.add(btnGomitoNegativo, gbc_btnGomitoNegativo);
 		
 		spinnerAngoloGomito = new JSpinner();
-		spinnerAngoloGomito.setModel(new SpinnerNumberModel(0.0, -90.0, 90.0, 0.0));
+		spinnerAngoloGomito.setModel(new SpinnerNumberModel(45.0, -90.0, 90.0, 0.0));
 		GridBagConstraints gbc_spinnerAngoloGomito = new GridBagConstraints();
 		gbc_spinnerAngoloGomito.insets = new Insets(0, 0, 5, 0);
 		gbc_spinnerAngoloGomito.fill = GridBagConstraints.HORIZONTAL;
@@ -212,7 +224,7 @@ public class PCondotto extends JPanel {
 		gbc_spinner_Lungh.gridx = 4;
 		gbc_spinner_Lungh.gridy = 1;
 		panel_2.add(spinner_Lungh, gbc_spinner_Lungh);
-		spinner_Lungh.setModel(new SpinnerNumberModel(new Integer(10), new Integer(10), null, new Integer(5)));
+		spinner_Lungh.setModel(new SpinnerNumberModel(new Integer(100), new Integer(10), null, new Integer(5)));
 		GridBagConstraints gbc_btnClear = new GridBagConstraints();
 		gbc_btnClear.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnClear.insets = new Insets(0, 0, 0, 5);
