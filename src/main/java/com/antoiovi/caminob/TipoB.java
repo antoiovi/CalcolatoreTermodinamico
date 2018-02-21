@@ -296,7 +296,7 @@ Ambiente ambiente=new Ambiente();
 		sp_latoB = new JSpinner();
 		sp_latoB.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				double d=(double)sp_latoB.getModel().getValue();
+				double d=(Double)sp_latoB.getModel().getValue();
 				facondotto.lato_b=d;
 				validazione();
 			}
@@ -1463,7 +1463,7 @@ void validazione(){
 	camino.setCsi_comign(ambiente.csi_comign);
 	
 	camino.Patm=ambiente.Patm;
-	camino.Tamb= ambiente.Tmin;
+	camino.temper_est= ambiente.Tmin;
 	
 	camino.condotto=condotto;
 	 camino.canale=canale;
