@@ -19,6 +19,18 @@ public class PanelCaminoTipoB extends JPanel {
 
 	private TipoB panelTipob;
 
+	/* ******
+	Mylogger
+		int OFF=0;
+		int SUPERFINE=1;
+		int FINEST=3;
+		int FINE=4;
+		int INFO=5;
+		int MESSAGE=6;
+		int WARNING=7;
+		int GRAVE=8;
+	********/
+	static final int LOG_LEVEL=Mylogger.INFO;
 	/**
 	 * Create the panel.
 	 */
@@ -37,8 +49,13 @@ public class PanelCaminoTipoB extends JPanel {
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
 		add(panelTipob, gbc_panel);
+		/***
+		**   LOGGER PANEL
+		***/
 		Myloggerpanel textArea = new Myloggerpanel();
 		textArea.setLineWrap(true);
+		textArea.setLevel(LOG_LEVEL);
+		
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridheight = 3;
