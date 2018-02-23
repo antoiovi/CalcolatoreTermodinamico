@@ -60,6 +60,7 @@ hs_err_pid*
 
 ### Maven ###
 target/
+target/*
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -70,7 +71,17 @@ buildNumber.properties
 .mvn/timing.properties
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
-!/.mvn/wrapper/maven-wrapper.jar
+#!/.mvn/wrapper/maven-wrapper.jar
 
 
 # End of https://www.gitignore.io/api/git,java,maven
+
+
+# Created by https://www.gitignore.io/api/libreoffice
+
+### LibreOffice ###
+# LibreOffice locks
+.~lock.*#
+
+
+# End of https://www.gitignore.io/api/libreoffice
