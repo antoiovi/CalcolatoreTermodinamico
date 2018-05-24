@@ -136,7 +136,7 @@ Ambiente ambiente=new Ambiente();
 	 */
 	public TipoB() {
 		 
-	presaaria=new PresaariaB( ambiente.csi_int_tir, ambiente.csi_presa_ar , ambiente.area_int_tir, ambiente.area_presa );
+	
 		setMinimumSize(new Dimension(1200, 10));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{466, 337, 0, 0};
@@ -1308,7 +1308,7 @@ validazione();
 	 * INIZZIALIZZAZIONE OMPONENTI
 	 */
 	void init(){
-
+	presaaria=new PresaariaB( ambiente.csi_int_tir, ambiente.csi_presa_ar , ambiente.area_int_tir, ambiente.area_presa );
 		/**
 		 * Generatore
 		 */
@@ -1393,7 +1393,15 @@ validazione();
 	/**
 	 * VALIDAZIONE
 	 */
-void validazione(){
+	 void validazione(){
+	
+	panel_camino.validate();
+	panel_camino.repaint();
+	return;
+	 
+	 }
+void validazione2(){
+	 
 	/**
 	 * caldaia e fumo
 	 */
@@ -1468,7 +1476,7 @@ void validazione(){
 	camino.condotto=condotto;
 	 camino.canale=canale;
 	 camino.caldaia=caldaiach4;
-	// camino.calcola();
+	 camino.calcola();
 
 	//condotto.setData(ambiente.Patm,  canale.M1(), ambiente.Tmin, canale.Tu(), canale.fl_int());
  	 

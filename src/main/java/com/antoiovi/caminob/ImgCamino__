@@ -1,25 +1,4 @@
-package com.antoiovi.caminob;
-
-import it.iovino.fluidi.Fluido;
-
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
-import com.antoiovi.caldaie.Caldaia;
-import com.antoiovi.unicig.camini.CaminoB_1;
-import com.antoiovi.unicig.condotti.Condotto;
-import com.antoiovi.unicig.condotti.VelocitaFluido;
-
-import java.awt.Color;
-
+ 
 
 
 
@@ -55,23 +34,7 @@ public Condotto getCondotto() {
 public void setCondotto(Condotto condotto) {
 	this.condotto = condotto;
 }
-Color alarmcolor=Color.black;
-static int countanimation=0;
-/**
- * 
- * |		|	|
- * |		|	|______________
- * |		|________________  |
- * |		    |          |  |
- * |            |________  |  |   
- * |            |   c   g| |  | 
- * |        |   |
- * |        |   |f
- * |    |   |   |
- * x        x1  x2         x3 x4
- * @return
- */
-
+ 
 public int getPiano() {
 return piano;
 }
@@ -100,146 +63,13 @@ private Color alarmcolor_speed_cond=Color.black;
 private Font font;
 private Font rotatedFont;
 private FontMetrics fontmetrics;
-	/**
-	 *  
-	 * CAMINO SEMLICE
-	 */
-	public ImgCamino() {
-		setBackground(Color.WHITE);
-		String.valueOf(piano);
-		String.valueOf(piano-1);
-		generatore=new Generatore();
-		timer = new Timer(speed, this);
-		int pause=100;
-		timer.setInitialDelay(pause);
-		timer.start(); 
+	 
+	 
+	  
+			 String STR_COM=String.format("Perdi comignolo %1.3f pa", camino.dp_com);
+		 
 		
-	}
-	/**
-	 * 		paintComponent
-	 */
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
-		//Sposta l'origine in basso e rende positivo lasse y i su
-			g2d.translate(0, getHeight());
-				g2d.scale(1.0, -1.0);
-				font = new Font(null, Font.PLAIN, 10);
-				AffineTransform affineTransform = new AffineTransform();
-				// Rendo il testo asse x orientato correttmente creando una
-				// trasformazione che annulla la rototraslazione del piano
-				affineTransform.scale(1, -1);
-				rotatedFont = font.deriveFont(affineTransform);
-				fontmetrics=g2d.getFontMetrics( rotatedFont);
-				g2d.setFont(rotatedFont);
-				int h=h_0;// altezza condotto
-				int x_base=20;
-				int y_base=30;
-			 // Condotto 0
-				paintCond0(g2d,x_base,y_base,h);
-				
-				y_base+=h;
-				h=h_1;
-				for(int x=0;x<npiani;x++){
-					paintCond(g2d,x_base,y_base,h,x+1);
-					y_base+=h;
-				}
-				
-			   	h=h_u;
-				paintCondU(g2d,x_base,y_base,h);
-				paintTabelPressioni(g2d,x_base+L1+L2+50,y_base+120);
-				paintPresaaria(g2d, 10, 10,0);
-			//	paintTabelPressioni(g2d,x_base,y_base+h_u);
-	}
-	/**
-	 * CONDOTTO ZERO
-	 * @param g2d
-	 * @param x_base
-	 * @param y_base
-	 * @param h
-	 */
-	void paintCond0(Graphics2D g2d,int x_base,int y_base,int h){
-		int x=x_base;
-		int x1=x_base+L1+L2;
-		 
-		int y=y_base+f;
-		 
-		int y4=y+h;
-		 
-	//	g2d.drawLine(x, y, x,y4);
-		 
-	//	g2d.drawLine(x1,y, x1,y4);
-		g2d.drawLine(x,y, x1,y);
-			
-	}
-	/**
-	 * CONDOTTO ULTIMO
-	 * @param g2d
-	 * @param x_base
-	 * @param y_base
-	 * @param h
-	 */
-	void paintCondU(Graphics2D g2d,int x_base,int y_base,int h){
-		int x=x_base;
-		int x1=x_base+L1+L2;
-		 
-		int y=y_base;
-		 
-		int y4=y+h;
-		 
-		g2d.drawLine(x, y, x,y4);
-		 
-		g2d.drawLine(x1,y, x1,y4);
-		/**
-		 * comignolo
-		 */
-		int f=3;
-		 for(int k=0;k<4;k++){
-			 g2d.drawLine(x ,y4+f, x1,y4+f);
-			 f+=3;
-		 }
-		 // Stringa comigolo		 
-		// g2d.drawString(STR_COM, x1, y4+f+2);
-		 
-	}
-	/**
-	 * CONDOTTO
-	 * @param g2d
-	 * @param x_base
-	 * @param y_base
-	 * @param h
-	 * @param piano
-	 */
-	void paintCond(Graphics2D g2d,int x_base,int y_base,int h,int piano){
-		//int d=(int)(d2-d1)/2;
-		 
-		int x=x_base;
-		int x1=x_base+L1;
-		int x2=x1+L2;
-		int x3=x2+c;
-		int x4=x3+d1;
-		//int x5=x4+d;
-		 
-		int y=y_base;
-		int x_right=x2;
-		int y1=y+f-d1-d1;
-		int y2=y+f;
-		int y3=y2+d1;
-		int y4=y+h;
-		int y_top=y4;
-		int y0=y2-g;
-		g2d.drawLine(x, y+f-h_0, x,y4);
-		//g2d.drawLine(x1,y+f, x1,y1);
-		//g2d.drawLine(x1,y1, x1,y4);
 		
-		g2d.drawLine(x2,y+f-h_0, x2,y2);
- 	g2d.drawLine(x2,y3, x2,y4);
-		//g2d.drawString("Condotti primario e secondario "+piano, x2, y3+10);
-		
-		//canale da fumo
-		g2d.drawLine(x2, y2, x3,y2);//orizzontale
-		g2d.drawLine(x2, y3, x4,y3);
 		/***
 		 * DATI CANALE
 			Canale da fumo
@@ -251,77 +81,59 @@ private FontMetrics fontmetrics;
 			double Cf_peff;
 			double Cf_Wm;
 		 */
-		 
-		 
-		 
+			
+			String STR_CAN_T=String.format("Tu= %1.1f  Tm= %1.1f  Ti= %1.1f", outdata.Cf_Tu,outdata.Cf_Tm,outdata.Cf_Ti);
+			String STR_CAN_DP= String.format("d_P() %1.2f Ps()= %1.3f ",outdata.Cf_dp,outdata.Cf_ps);
+			String STR_CAN_W= String.format("Velocita= %1.3f",outdata.Cf_Wm);
+			String STR_CAN_PEFF= String.format("Peff base= %1.3f",outdata.Cf_peff);
 			
 			
- 
-		 
-		 
-		if(canale!=null){
-			int yt=y3;
-			g2d.drawString(STR_CAN_T, x2+5, yt-10);
-			int y_y=y0;
-			g2d.drawString( STR_CAN_DP, x2, y_y);
-			y_y-=15;
-			g2d.setColor(alarmcolor_speed_can);
-			g2d.drawString( STR_CAN_W, x2, y_y);
-			
-			g2d.setColor(alarmcolor_pca);
-			y_y-=15;
-			g2d.drawString( String.format("Peff base= %1.3f",camino.peff_ca_base), x2, y_y);
-			
-			
-			g2d.setColor(Color.black);
 		}
 		
-		g2d.drawLine(x3,y2, x3,y0);//verticale
-		g2d.drawLine(x4,y3, x4,y0);
-		
-		
-		//g2d.drawLine(x1,y1, x2,y1-d1);//diagonale
-		int yt=y_top;
-		/***
-		 * DATI CONDOTTO
-		 */
-		if(condotto!=null && camino!=null){
-			
-			
+		 / Condotto 
+double Co_M;
+double Co_Tu;
+double Co_Tm;
+double Co_Ti;
+double Co_dp;
+double Co_ps;
+double Co_peff;
+double Co_Wm;
+double Co_Nr;
+double Co_Mv;
+double Co_Ar;
+double Co_Dh;
 			 
-			 
+			String STR_CON_TU=String.format("Tu %1.1f K",outdata.Co_Tu);
+			String STR_CON_TM=String.format("Tm %1.1f K",outdata.Co_Tm);
 			
-			String STR_CON_DP= String.format("d_P() %1.2f Ps()= %1.3f ",outdata.Co_dp,outdata.Co_ps);
-			String STR_CON_PSTA= String.format("Ps(1)= %1.3f",outdata.Co_ps);
-			String STR_CON_PEFF= String.format("Peff base= %1.3f",outdata.Co_peff);
-
-
-
-			String STR_CAN_PEFF= String.format("Peff base= %1.3f",outdata.Cf_peff);
-		
-			g2d.drawString(STR_CON_TU, x+5, yt);
-			yt-=20;
-			g2d.drawString(STR_CON_TM, x+5, yt);
-			yt-=20;
-			g2d.drawString(STR_CON_MASS, x+5, yt);
-			yt-=15;
-			g2d.setColor(alarmcolor_speed_cond);
-			g2d.drawString(STR_CON_W, x+5, yt);
-			g2d.setColor(Color.black);
-			yt-=15;
-			g2d.drawString(STR_CON_Nre, x+5, yt);
-			yt-=15;
-			g2d.drawString(STR_CON_Mv, x+5, yt);
-			yt-=20;
-			g2d.drawString(STR_CON_TI, x+5, yt);
+			String STR_CON_TM=String.format("Tm %1.1f K",outdata.Co_Tm);
 			
-			yt=y_top-40;
-			int xx=x_right;
 			
-			g2d.drawString(STR_CON_DIM, xx+5, yt);
-			yt-=20;
-			g2d.setColor(alarmcolor);
-			//g2d.drawString("Peff(0) "+String.format("%1.3f",camino.peff_cond), xx+5, yt);
+			String STR_CON_MASS=String.format("Portata %1.4f k/s",outdata.Co_M);
+						
+			
+			String STR_CON_W=String.format("Velocita %1.2f m/s",outdata.Co_Wm);
+			
+			
+			
+			String STR_CON_Nre=String.format("N Reynold %1.3f K",outdata.Co_Nr);
+			
+			
+			
+			String STR_CON_Mv=String.format("Densita %1.3f kg/m3",outdata.Co_Mv);
+			
+			
+			String STR_CON_TM=String.format("Ti %1.1f K",outdata.Co_Ti);
+			
+			
+			
+			String STR_COND_DIM=String.format("Area %1.3f [m2] Diam idraulico %1.2f [m]",outdata.Co_Ar,Co_Dh);
+			
+			
+			
+			
+			
 			g2d.drawString("Peff(0) "+String.format("%1.3f",camino.peff_cond), xx+5, yt);
 			g2d.setColor(Color.black);
 			yt-=20;
@@ -468,7 +280,7 @@ private FontMetrics fontmetrics;
 		g2d.drawString(String.format("Perdite comignolo               %f [pa] ", camino.dp_com), x_base, yt);
 		yt-=ls;
 		height+=ls;
-		/**è
+		/**Ã¨
 		 * Condotto
 		 */
 		g2d.drawString(String.format("d_P() perdite carico condotto    %1.3f",camino.dp_con), x_base, yt);
@@ -531,45 +343,15 @@ private FontMetrics fontmetrics;
 	 repaint();
 	}
 	
-			String STR_COM;
-			String STR_CAN_T;
-			String STR_CAN_DP;
-			String STR_CAN_W;
-			String STR_CAN_PEFF;
-			
-			String STR_CON_TU;
-			String STR_CON_TM;
-			String STR_CON_TI;
-			String STR_CON_MASS;
-			String STR_CON_W;
-			String STR_CON_Nre;
-			String STR_CON_Mv;
-			
-			String STR_CON_DIM;
-			String STR_CON_DP;
-			String STR_CON_PSTA;
-			String STR_CON_PEFF;
- 
+	String 
 	
 	public void setOutputData(OutputData outputdat){
 		this.outdata=outputdat;
-			String STR_COM=String.format("Perdi comignolo %1.3f pa", camino.dp_com);
-			String STR_CAN_T=String.format("Tu= %1.1f  Tm= %1.1f  Ti= %1.1f", outdata.Cf_Tu,outdata.Cf_Tm,outdata.Cf_Ti);
-			String STR_CAN_DP= String.format("d_P() %1.2f Ps()= %1.3f ",outdata.Cf_dp,outdata.Cf_ps);
-			String STR_CAN_W= String.format("Velocita= %1.3f",outdata.Cf_Wm);
-			String STR_CAN_PEFF= String.format("Peff base= %1.3f",outdata.Cf_peff);
-			String STR_CON_TU=String.format("Tu %1.1f K",outdata.Co_Tu);
-			String STR_CON_TM=String.format("Tm %1.1f K",outdata.Co_Tm);
-			String STR_CON_TI=String.format("Tm %1.1f K",outdata.Co_Ti);
-			String STR_CON_MASS=String.format("Portata %1.4f k/s",outdata.Co_M);
-			String STR_CON_W=String.format("Velocita %1.2f m/s",outdata.Co_Wm);
-			String STR_CON_Nre=String.format("N Reynold %1.3f K",outdata.Co_Nr);
-			String STR_CON_Mv=String.format("Densita %1.3f kg/m3",outdata.Co_Mv);
-			//String STR_CON_TM=String.format("Ti %1.1f K",outdata.Co_Ti);
-			String STR_CON_DIM=String.format("Area %1.3f [m2] Diam idraulico %1.2f [m]",outdata.Co_Ar,outdata.Co_Dh);
-			String STR_CON_DP= String.format("d_P() %1.2f Ps()= %1.3f ",outdata.Co_dp,outdata.Co_ps);
-			String STR_CON_PSTA= String.format("Ps(1)= %1.3f",outdata.Co_ps);
-			String STR_CON_PEFF= String.format("Peff base= %1.3f",outdata.Co_peff);
+			String s=String.format("Tu= %1.1f  Tm= %1.1f  Ti= %1.1f", outdata.Cf_Tu,outdata.Cf_Tm,outdata.Cf_Ti);
+			g2d.drawString( String.format("d_P() %1.2f Ps()= %1.3f ",camino.dp_can, camino.ps_ca), x2, y_y);
+			g2d.drawString( String.format("Velocita= %1.3f",canale.Wm()), x2, y_y);
+			g2d.drawString( String.format("Peff base= %1.3f",camino.peff_ca_base), x2, y_y)		
+			
 			
 			
 			

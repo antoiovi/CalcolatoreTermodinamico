@@ -17,8 +17,9 @@ public class Myloggerpanel extends JTextArea implements Mylogger{
 
 	int level;
 	@Override
-	public void appendMessage(int level, String message) {
-		if(level>=this.level){
+	public void appendMessage(int _level, String message) {
+		
+		if(_level >= this.level){
 			this.append(message);
 		}
 	}

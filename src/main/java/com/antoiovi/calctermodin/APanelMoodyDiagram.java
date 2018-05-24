@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+import javax.swing.SwingConstants;
 
 import java.awt.GridLayout;
 
@@ -27,6 +28,9 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -52,7 +56,7 @@ import java.awt.Dimension;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 
-public class APanelMoodyDiagram extends JPanel implements ActionListener{
+public class APanelMoodyDiagram extends JPanel implements ActionListener,ItemListener{
 	private JTextField textFieldNrey;
 	private JTextField textFieldRug;
 	private JTextField textFieldFattAtt;
@@ -110,7 +114,7 @@ private JTextArea textArea;
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JLabel lblNewLabel = new JLabel("Numero di Reynolds");
+		JLabel lblNewLabel = new JLabel("Numero di Reynolds [adimensionale]");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
@@ -128,7 +132,7 @@ private JTextArea textArea;
 		panel.add(textFieldNrey, gbc_textFieldNrey);
 		textFieldNrey.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Rugosit\u00E0");
+		JLabel lblNewLabel_1 = new 	JLabel("<html>Rugosit\u00E0<br/>( metri o millimetri) <br/>(click mouse destro per help) </html>", SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
@@ -137,7 +141,6 @@ private JTextArea textArea;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
 		textFieldRug = new JTextField();
-		
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(textFieldRug, popupMenu);
 		
@@ -153,7 +156,8 @@ private JTextArea textArea;
 		panel.add(textFieldRug, gbc_textFieldRug);
 		textFieldRug.setColumns(10);
 		
-		JLabel lblNewLabel_2 = new JLabel("Diametro");
+		JLabel lblNewLabel_2 = new JLabel("<html>Diametro<br/>( metri se rugosita in metri <br/> mm se rugosita in mm)</html>", SwingConstants.CENTER);
+		//"Diametro( in metri se");
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
 		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 0);
@@ -190,6 +194,7 @@ private JTextArea textArea;
 		
 		ckboxScabrAMano = new JCheckBox(" Inserisci valore a mano");
 		ckboxScabrAMano.setSelected(true);
+		ckboxScabrAMano.addItemListener(this);
 		panel_2.add(ckboxScabrAMano);
 		
 		textFieldScabr = new JTextField();
@@ -202,15 +207,9 @@ private JTextArea textArea;
 		panel.add(textFieldScabr, gbc_textFieldScabr);
 		textFieldScabr.setColumns(10);
 		
-		JLabel lblNewLabel_3 = new JLabel("Fattore d'attrito");
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.fill = GridBagConstraints.BOTH;
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_3.gridx = 0;
-		gbc_lblNewLabel_3.gridy = 9;
-		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
-		JButton btnCalcola = new JButton("Calcola");
+		
+		JButton btnCalcola = new JButton("Calcola fattore attrito");
 		btnCalcola.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
@@ -228,8 +227,17 @@ private JTextArea textArea;
 		GridBagConstraints gbc_btnCalcola = new GridBagConstraints();
 		gbc_btnCalcola.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCalcola.gridx = 0;
-		gbc_btnCalcola.gridy = 10;
+		gbc_btnCalcola.gridy = 9;
 		panel.add(btnCalcola, gbc_btnCalcola);
+		
+		
+		JLabel lblNewLabel_3 = new JLabel("Fattore d'attrito");
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.fill = GridBagConstraints.BOTH;
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_3.gridx = 0;
+		gbc_lblNewLabel_3.gridy = 10;
+		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		textFieldFattAtt = new JTextField();
 		textFieldFattAtt.setBorder(null);
@@ -315,6 +323,10 @@ private JTextArea textArea;
 			textArea.setRows(4);
 		
 	}
+	
+	private void init(){
+		ckboxScabrAMano.setSelected(false);
+	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
@@ -347,6 +359,31 @@ private JTextArea textArea;
 		}
 		
 	}
+	
+	@Override
+		public void itemStateChanged(ItemEvent itemEvent) {
+		 if(itemEvent.getSource().equals(ckboxScabrAMano)){
+				int state = itemEvent.getStateChange();
+				if (state == ItemEvent.SELECTED){
+					textFieldDiam.setEnabled(false);
+					textFieldRug.setEnabled(false);
+					textFieldScabr.setEnabled(true);
+				}else{
+					textFieldDiam.setEnabled(true);
+					textFieldRug.setEnabled(true);
+					textFieldScabr.setEnabled(false);
+				}
+				
+			}
+              
+		};
+	
+	
+	
+	
+	
+	
+	
 	
 	class AVerifier extends InputVerifier{
 		 public boolean shouldYieldFocus(JComponent input) {
@@ -477,7 +514,9 @@ private JTextArea textArea;
 		textFieldFattAtt.setText("#ERRORE");
 		textArea.setText("#ERRORE#");
 		return false;
-	}}		
+	}}	
+
+	
 	public void CreateDiagram()  {
 double Nrey;
  double f[]=new double[assexs.length];
