@@ -321,7 +321,7 @@ private JTextArea textArea;
 			textArea.setEditable(false);
 			textArea.setColumns(20);
 			textArea.setRows(4);
-		
+		init();
 	}
 	
 	private void init(){
