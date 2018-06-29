@@ -48,7 +48,7 @@ import com.antoiovi.swing.APDiagram;
 import com.antoiovi.swing.APanelDiagram;
 import com.antoiovi.util.math.Geometry;
 
-import it.iovino.impter.MoodyDiagram;
+import com.antoiovi.unicig.condotti.MoodyDiagram;
 
 import javax.swing.JScrollPane;
 
@@ -473,7 +473,7 @@ private JTextArea textArea;
 			 * Zona di tranzizione
 			 */
 			double f1=64/nrey;
-		    it.iovino.impter.MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
+		    MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
             double f2=moodydiagr.zbrent();
             double Xa=2300;
             double Xb=3400;
@@ -492,7 +492,7 @@ private JTextArea textArea;
         	/**
         	 * Moto Turbolento
         	 */
-                it.iovino.impter.MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
+                MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
                 fattattr=moodydiagr.zbrent();
                resultString=String.format("Moto turbolento. \nNumero di Reynolds = %1.1f \n"
    					+ " scabrezza relativa = %f \n Fattore di attrito\n(tramite formula di Colebrook)= %f", nrey,scabr,fattattr);
@@ -527,7 +527,7 @@ double Nrey;
 			f[x]=64/Nrey;
 			f[x]=Math.log10(f[x])-asseys[0];
               }
-		else{        it.iovino.impter.MoodyDiagram moodydiagr=new MoodyDiagram(Nrey,scabr);
+		else{        MoodyDiagram moodydiagr=new MoodyDiagram(Nrey,scabr);
                 f[x]=moodydiagr.zbrent();
                 f[x]=Math.log10(f[x])-asseys[0];
             }
