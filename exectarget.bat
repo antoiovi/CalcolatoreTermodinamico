@@ -1,1 +1,1 @@
-java -cp  .\target\classes\lib\uniciglib-1.jar;.\target\classes\lib\utilities-1.jar;.\target\classes\lib\calctermodin-1.0.jar;.\target\classes\lib\hamcrest-core-1.3.jar;.\target\classes\ com.antoiovi.calctermodin.CalcolTermodinamic
+java -cp  .\target\classes\lib\uniciglib-2.jar;.\target\classes\lib\utilities-1.jar;.\target\classes\lib\calctermodin-1.0.jar;.\target\classes\lib\hamcrest-core-1.3.jar;.\target\classes\ com.antoiovi.calctermodin.CalcolTermodinamic
