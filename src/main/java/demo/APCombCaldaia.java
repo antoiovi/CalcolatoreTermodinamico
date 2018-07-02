@@ -1,5 +1,5 @@
 package demo; 
-import com.antoiovi.unicig.fluidi.comb.Combustibile;
+ import com.antoiovi.unicig.fluidi.comb.Combustibile;
 
 import java.awt.Container;
 import java.awt.event.ActionListener;
@@ -77,6 +77,7 @@ public class APCombCaldaia extends JPanel
 	JTextField[] txtInput;
 	
 	// Panel input 2
+	JPanel panelInput1;
 	JPanel panelInput2;
 	static final int REND_MAN=0;
 	static final int CO2_MAN=1;
@@ -163,28 +164,17 @@ public class APCombCaldaia extends JPanel
 	Y+=2;
 	
 	X=0;
+	
+	/**
+	* INPUT PANEL 1
+	**/
+	this.initPanelInput1();
 	// Input
 	c.gridx = X;
 	c.gridy = Y;
-	c.gridwidth = 1;
-	lblInput[0]=new JLabel(sinput[0]);
-	panel.add(lblInput[0], c);
-	Y++;
-	c.gridy = Y;
-	c.gridwidth = 2;
-	panel.add(jinput[0],c);
-	c.gridwidth = 1;
-	X=2;
-	for(int x=1;x<sinput.length;x++){
-		c.gridx = X;
-		lblInput[x]=new JLabel(sinput[x]);
-		panel.add(lblInput[x], c);
-		X++;
-		c.gridx = X;
-		panel.add(jinput[x],c);
-		X++;
-	}
-	
+	c.gridwidth = 5;
+	c.fill = GridBagConstraints.HORIZONTAL;
+	panel.add(panelInput1,c);
 	/**
 	* INPUT PANEL 2
 	**/
@@ -256,13 +246,33 @@ Y++;
 	c.gridx = 0;
 	c.gridy = Y;
 	c.gridwidth = 6;
+	c.weightx=1.0;
 	c.weighty=1.0;
 	c. gridheight=2;
 	c.anchor=GridBagConstraints.LAST_LINE_START;
 	panel.add(descr,c);
     }
 	
+	/*********************
+	* panel input 1
+	*********************/
+	void initPanelInput1(){
+		panelInput1=new JPanel(new FlowLayout());
+		// Input
+		lblInput[0]=new JLabel(sinput[0]);
+		panelInput1.add(lblInput[0]);
+		panelInput1.add(jinput[0]);
+		for(int x=1;x<sinput.length;x++){
+			lblInput[x]=new JLabel(sinput[x]);
+			panelInput1.add(lblInput[x]);
+			panelInput1.add(jinput[x]);
+			}
+	}
 	
+	
+	/*********************
+	* panel input 2
+	*********************/
 	void initPanelInput2(){
 	int chb=2;
 	int rb1=2;
