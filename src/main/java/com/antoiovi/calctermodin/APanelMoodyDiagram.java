@@ -134,7 +134,7 @@ private JTextArea textArea;
 		panel.add(textFieldNrey, gbc_panel);
 		Y++;
 
-		JLabel lblRug =new JLabel("sdsdp");
+		JLabel lblRug =new JLabel("Rugosita'(click mouse dx per help)");
 		gbc_panel.gridy = Y;
 		panel.add(lblRug, gbc_panel);
 		Y++;
