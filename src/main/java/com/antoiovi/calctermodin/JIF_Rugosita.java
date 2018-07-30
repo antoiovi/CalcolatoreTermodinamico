@@ -69,7 +69,7 @@ public class JIF_Rugosita extends JDialog implements ActionListener {
 	    super(parent,  true);
 	    setTitle("Rugosit\u00E0 media perete interna");
 	    setResizable(false);
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 600, 500);
 		init();
 		
 	}
@@ -78,7 +78,7 @@ public class JIF_Rugosita extends JDialog implements ActionListener {
 	    this.setModal(true);
 	    setTitle("Rugosit\u00E0 media perete interna");
 	    setResizable(false);
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 600, 500);
 	init();
 		
 	}
@@ -87,7 +87,7 @@ public class JIF_Rugosita extends JDialog implements ActionListener {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		
 		gridBagLayout.columnWidths = new int[] { 273, 52, 53, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -153,30 +153,29 @@ public class JIF_Rugosita extends JDialog implements ActionListener {
 			getContentPane().add(jbuttonsMax[x],gbl);
 		}
 		gridY++;
-			JLabel lblNewLabel_7 = new JLabel("<html>Valori forniti dalla norma UNI 9615.<br>Questi valori possono diventare pi\u00F9 grandi nel caso di esecuzione non corretta del canale da fumo e del camino.</html>");
-				gbl.fill = GridBagConstraints.HORIZONTAL;
-				gbl.gridwidth = 3;
-				gbl.gridx = 0;
-				gbl.gridy = gridY;
-				getContentPane().add(lblNewLabel_7, gbl);
-				gridY++;		
-				JPanel panel = new JPanel();
-				gbl.fill = GridBagConstraints.BOTH;
-				gbl.gridy = gridY;
-				getContentPane().add(panel, gbl);
-				panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-				
-						JLabel lblInserireValore = new JLabel("Inserire valore");
-						panel.add(lblInserireValore);
-						
-								textFieldValue = new JTextField();
-								panel.add(textFieldValue);
-								textFieldValue.setColumns(10);
-
+			JLabel lblNewLabel_7 = new JLabel("<html>Valori forniti dalla norma UNI 9615.<br>Questi valori possono diventare pi\u00F9 grandi nel caso di esecuzione non corretta <br/>del canale da fumo e del camino.</html>");
+			
+			
+		gbl.fill = GridBagConstraints.HORIZONTAL;
+		gbl.gridwidth = 3;
+		gbl.gridx = 0;
+		gbl.gridy = gridY;
+		getContentPane().add(lblNewLabel_7, gbl);
+		gridY++;		
+		JPanel panel = new JPanel();
+		gbl.fill = GridBagConstraints.BOTH;
+		gbl.gridy = gridY;
+		getContentPane().add(panel, gbl);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JLabel lblInserireValore = new JLabel("Inserire valore");
+		panel.add(lblInserireValore);
+		textFieldValue = new JTextField();
+		panel.add(textFieldValue);
+		textFieldValue.setColumns(10);
+		gridY++;
 		JPanel panel_1 = new JPanel();
 		gbl.gridy = gridY;
 		getContentPane().add(panel_1, gbl);
-
 		JButton okButton = new JButton("Ok");
 		okButton.setActionCommand("ok");
 		okButton.addActionListener(this);

@@ -72,7 +72,7 @@ double nrey;
  */
 double diam;
 /**
- * Rugosità
+ * Rugositia'
  */
 double rug;
 /**
@@ -90,6 +90,8 @@ private JTextArea textArea;
 	 * Create the panel.
 	 */
 	public APanelMoodyDiagram() {
+
+		
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{181, 0, 0};
@@ -103,43 +105,40 @@ private JTextArea textArea;
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.anchor = GridBagConstraints.NORTH;
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+	//	gbc_panel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
+		gbc_panel.weightx=0.2;
 		add(panel, gbc_panel);
+//		gbc_panel.weightx=0.0;
+		int Y=0;
+
 		GridBagLayout gbl_panel = new GridBagLayout();
+
 		gbl_panel.columnWidths = new int[]{174, 0};
-		gbl_panel.rowHeights = new int[]{19, 19, 19, 19, 0, 0, 0, 19, 0, 19, 0, 19, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{19, 19, 19, 19, 19, 0, 0, 19, 0, 19, 0, 19, 0, 0, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.3,0.7};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblNewLabel = new JLabel("Numero di Reynolds [adimensionale]");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel.add(lblNewLabel, gbc_lblNewLabel);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_panel.gridy = Y;
+		panel.add(lblNewLabel, gbc_panel);
+		Y++;
 		
 		textFieldNrey = new JTextField();
 		textFieldNrey.setText("100000");
-		GridBagConstraints gbc_textFieldNrey = new GridBagConstraints();
-		gbc_textFieldNrey.fill = GridBagConstraints.BOTH;
-		gbc_textFieldNrey.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldNrey.gridx = 0;
-		gbc_textFieldNrey.gridy = 1;
-		panel.add(textFieldNrey, gbc_textFieldNrey);
-		textFieldNrey.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new 	JLabel("<html>Rugosit\u00E0<br/>( metri o millimetri) <br/>(click mouse destro per help) </html>", SwingConstants.CENTER);
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.fill = GridBagConstraints.BOTH;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 2;
-		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		
+		gbc_panel.gridy = Y;
+		panel.add(textFieldNrey, gbc_panel);
+		Y++;
+
+		JLabel lblRug =new JLabel("sdsdp");
+		gbc_panel.gridy = Y;
+		panel.add(lblRug, gbc_panel);
+		Y++;
+
 		textFieldRug = new JTextField();
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(textFieldRug, popupMenu);
@@ -148,41 +147,32 @@ private JTextArea textArea;
 		mntmHelpRugosit.setActionCommand("HelpRugosita");
 		popupMenu.add(mntmHelpRugosit);
 		mntmHelpRugosit.addActionListener(this);
-		GridBagConstraints gbc_textFieldRug = new GridBagConstraints();
-		gbc_textFieldRug.fill = GridBagConstraints.BOTH;
-		gbc_textFieldRug.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldRug.gridx = 0;
-		gbc_textFieldRug.gridy = 3;
-		panel.add(textFieldRug, gbc_textFieldRug);
+
+		gbc_panel.gridy = Y;
+		panel.add(textFieldRug, gbc_panel);
 		textFieldRug.setColumns(10);
+		Y++;
 		
-		JLabel lblNewLabel_2 = new JLabel("<html>Diametro<br/>( metri se rugosita in metri <br/> mm se rugosita in mm)</html>", SwingConstants.CENTER);
+		JLabel lblNewLabel_2 = new JLabel("<html>Diametro<br/> ( metri se rugosita in metri <br/> mm se rugosita in mm)</html>", SwingConstants.CENTER);
 		//"Diametro( in metri se");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_2.gridx = 0;
-		gbc_lblNewLabel_2.gridy = 4;
-		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
-		
+		//gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
+		gbc_panel.gridy = Y;
+		panel.add(lblNewLabel_2, gbc_panel);
+		Y++;
+
 		textFieldDiam = new JTextField();
-		GridBagConstraints gbc_textFieldDiam = new GridBagConstraints();
-		gbc_textFieldDiam.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldDiam.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldDiam.gridx = 0;
-		gbc_textFieldDiam.gridy = 5;
-		panel.add(textFieldDiam, gbc_textFieldDiam);
+		gbc_panel.gridy= Y;
+		panel.add(textFieldDiam, gbc_panel);
 		textFieldDiam.setColumns(10);
-		
+		Y++;
+
 		JLabel lblscabrezzaRelativarugositdiamtero = new JLabel("<html>Scabrezza relativa<br>(Rugosit\u00E0/Diamtero)</html>");
 		lblscabrezzaRelativarugositdiamtero.setHorizontalAlignment(SwingConstants.TRAILING);
-		GridBagConstraints gbc_lblscabrezzaRelativarugositdiamtero = new GridBagConstraints();
-		gbc_lblscabrezzaRelativarugositdiamtero.anchor = GridBagConstraints.WEST;
-		gbc_lblscabrezzaRelativarugositdiamtero.insets = new Insets(0, 0, 5, 0);
-		gbc_lblscabrezzaRelativarugositdiamtero.gridx = 0;
-		gbc_lblscabrezzaRelativarugositdiamtero.gridy = 6;
-		panel.add(lblscabrezzaRelativarugositdiamtero, gbc_lblscabrezzaRelativarugositdiamtero);
-		
+		gbc_panel.gridy = Y;
+		panel.add(lblscabrezzaRelativarugositdiamtero, gbc_panel);
+		Y++;
+
+/***
 		JPanel panel_2 = new JPanel();
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.anchor = GridBagConstraints.WEST;
@@ -196,17 +186,24 @@ private JTextArea textArea;
 		ckboxScabrAMano.setSelected(true);
 		ckboxScabrAMano.addItemListener(this);
 		panel_2.add(ckboxScabrAMano);
+**/
+
+
+		
+		ckboxScabrAMano = new JCheckBox(" Inserisci valore a mano");
+		ckboxScabrAMano.setSelected(true);
+		ckboxScabrAMano.addItemListener(this);
+		gbc_panel.gridy=Y;
+		panel.add(ckboxScabrAMano,gbc_panel);
+		Y++;
+
 		
 		textFieldScabr = new JTextField();
 		textFieldScabr.setText("0.005");
-		GridBagConstraints gbc_textFieldScabr = new GridBagConstraints();
-		gbc_textFieldScabr.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldScabr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldScabr.gridx = 0;
-		gbc_textFieldScabr.gridy = 8;
-		panel.add(textFieldScabr, gbc_textFieldScabr);
+		gbc_panel.gridy = Y;
+		panel.add(textFieldScabr, gbc_panel);
 		textFieldScabr.setColumns(10);
-		
+		Y++;
 		
 		
 		JButton btnCalcola = new JButton("Calcola fattore attrito");
@@ -224,33 +221,49 @@ private JTextArea textArea;
 				}
 			}
 		});
-		GridBagConstraints gbc_btnCalcola = new GridBagConstraints();
-		gbc_btnCalcola.insets = new Insets(0, 0, 5, 0);
-		gbc_btnCalcola.gridx = 0;
-		gbc_btnCalcola.gridy = 9;
-		panel.add(btnCalcola, gbc_btnCalcola);
-		
+		gbc_panel.gridy = Y;
+		panel.add(btnCalcola, gbc_panel);
+		Y++;
 		
 		JLabel lblNewLabel_3 = new JLabel("Fattore d'attrito");
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.fill = GridBagConstraints.BOTH;
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_3.gridx = 0;
-		gbc_lblNewLabel_3.gridy = 10;
-		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		gbc_panel.gridy = Y;
+		panel.add(lblNewLabel_3, gbc_panel);
+		Y++;
 		
 		textFieldFattAtt = new JTextField();
 		textFieldFattAtt.setBorder(null);
 		textFieldFattAtt.setBackground(Color.WHITE);
 		textFieldFattAtt.setEditable(false);
-		GridBagConstraints gbc_textFieldFattAtt = new GridBagConstraints();
-		gbc_textFieldFattAtt.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldFattAtt.fill = GridBagConstraints.BOTH;
-		gbc_textFieldFattAtt.gridx = 0;
-		gbc_textFieldFattAtt.gridy = 11;
-		panel.add(textFieldFattAtt, gbc_textFieldFattAtt);
+		gbc_panel.gridy = Y;
+		panel.add(textFieldFattAtt, gbc_panel);
 		textFieldFattAtt.setColumns(10);
-		
+		Y++;
+
+
+		// Aggiungo i verifier
+		AVerifier verifier=new AVerifier(); 	
+		textFieldNrey.setInputVerifier(verifier);
+		textFieldRug.setInputVerifier(verifier);
+		textFieldFattAtt.setInputVerifier(verifier);
+		textFieldDiam.setInputVerifier(verifier);
+		textFieldScabr.setInputVerifier(verifier);
+		ckboxScabrAMano.setInputVerifier(verifier);
+		// Aggiungo la text AREA di output	
+		JPanel panel_3 = new JPanel();
+		gbc_panel.gridy = Y;
+		panel.add(panel_3, gbc_panel);
+		panel_3.setLayout(new BorderLayout(0, 0));
+			
+		textArea = new JTextArea();
+		textArea.setLineWrap(true);
+		panel_3.add(textArea);
+		textArea.setEditable(false);
+		textArea.setColumns(20);
+		textArea.setRows(4);
+		/**
+		* Panel1 : dove viene inserito il panel diagram
+		*/
+
 		JPanel panel_1 = new JPanel();
 		//double assey[]=Geometry.ScaleLog10(0.008,0.1, 0.001);
 		/**
@@ -264,23 +277,25 @@ private JTextArea textArea;
 		 *  riduco asse y da 0.008 a 0.1
 		 */
 		System.arraycopy(assey_1, init, asseys, 0,lung);
-
 		double assex_1[]=Geometry.ScaleLog10(100, 100000000);
-		 init=7;
-		 lung=assex_1.length-init;
+		init=7;
+		lung=assex_1.length-init;
 		assexs = new double[lung];
 		System.arraycopy(assex_1, init, assexs, 0,lung);
-		
 		panel_1.setLayout(new BorderLayout(0, 0));
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 0;
-		add(panel_1, gbc_panel_1);
+		// Inserisco il panel nel panel principale
+		gbc_panel.gridx = 1;
+		gbc_panel.gridy = 0;
+		gbc_panel.weightx=0.8;
+		gbc_panel.fill=GridBagConstraints.BOTH;
+		add(panel_1, gbc_panel);
+
+		// Creo il panel diagram
 		diagram = new APanelDiagram (); 
 		apdiagram=diagram;
+		// Inserisco il diagram nel panel
 		panel_1.add(diagram, BorderLayout.CENTER);
+		// inizzializoz il diagram 
 		diagram.setBackground(Color.WHITE);
 		apdiagram.setX_axis(assexs);
 		apdiagram.setY_axis(asseys);
@@ -297,35 +312,25 @@ private JTextArea textArea;
 		apdiagram.disabilitaMenu();
 		//diagram.setAdapt_scale(1);
 		diagram.setLayout(null);
-		AVerifier verifier=new AVerifier(); 	
-		textFieldNrey.setInputVerifier(verifier);
-			textFieldRug.setInputVerifier(verifier);
-			textFieldFattAtt.setInputVerifier(verifier);
-			textFieldDiam.setInputVerifier(verifier);
-			textFieldScabr.setInputVerifier(verifier);
-			ckboxScabrAMano.setInputVerifier(verifier);
-			
-			JPanel panel_3 = new JPanel();
-			GridBagConstraints gbc_panel_3 = new GridBagConstraints();
-			gbc_panel_3.gridheight = 4;
-			gbc_panel_3.insets = new Insets(0, 0, 5, 0);
-			gbc_panel_3.fill = GridBagConstraints.BOTH;
-			gbc_panel_3.gridx = 0;
-			gbc_panel_3.gridy = 12;
-			panel.add(panel_3, gbc_panel_3);
-			panel_3.setLayout(new BorderLayout(0, 0));
-			
-			textArea = new JTextArea();
-			textArea.setLineWrap(true);
-			panel_3.add(textArea);
-			textArea.setEditable(false);
-			textArea.setColumns(20);
-			textArea.setRows(4);
+		
+
+	
 		init();
 	}
 	
 	private void init(){
 		ckboxScabrAMano.setSelected(false);
+		textFieldRug.setText(String.valueOf(0.001));
+		rug=0.001;
+		diam=0.75;
+		textFieldDiam.setText(String.valueOf(0.5));
+		this.Calcfattaattr();
+		this.CreateDiagram();
+
+
+
+
+
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -449,12 +454,14 @@ private JTextArea textArea;
 
 	private boolean Calcfattaattr() {
 	try {
+
 		nrey=Double.parseDouble(textFieldNrey.getText());
 		scabr=Double.parseDouble(textFieldScabr.getText());
 		if (ckboxScabrAMano.isSelected()) {
 			scabr=Double.parseDouble(textFieldScabr.getText());
 			
 		} else {
+		//	rug=Double.parseDouble(textFieldRug.getText());
 			scabr=rug/diam;
 			textFieldScabr.setText(Double.toString(scabr));
 		}
