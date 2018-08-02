@@ -3,7 +3,7 @@ package demo;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
- 
+import  javax.swing.JScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -66,7 +66,10 @@ private JPanel contentPane;
 		tabbedPane.addTab("Diagramma di Moody", null, panel_moody, null);
 		**/
 		APCombCaldaia apcomb=new APCombCaldaia();
-		tabbedPane.addTab("AP comb caldaia", null, apcomb, null);
+		JPanel panel_1=new JPanel(new BorderLayout());
+		JScrollPane spane=new JScrollPane(apcomb);
+		panel_1.add(spane,BorderLayout.CENTER);
+		tabbedPane.addTab("AP comb caldaia", null, panel_1 , null);
 		
 		 
 		

@@ -1,27 +1,17 @@
 package demo; 
  import com.antoiovi.unicig.fluidi.comb.Combustibile;
 
-import java.awt.Container;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.util.Calendar;
-import java.util.Date;
 
 import java.awt.Color;
  import java.awt.Font;
 
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Toolkit;
 
-import javax.swing.InputVerifier;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -29,34 +19,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SpinnerListModel;
 
-import java.awt.Rectangle;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.CardLayout;
-import javax.swing.BoxLayout;
-import javax.swing.SwingConstants;
 
-import javax.swing.SwingUtilities;
 
 
 public class APCombCaldaia extends JPanel 
 {
-    JSpinner s;
-    SpinnerNumberModel model ;
-    JSpinner.NumberEditor editor;
     String[] sinput={"Combustibile","Potenza","Temperatura fumi [°C]"};
 	
 	String[] schek={"Input rendiemento a mano","Input CO2% a mano","Bruciatore aria soffiata","Bruciatore aria naturale"};
@@ -67,7 +40,6 @@ public class APCombCaldaia extends JPanel
 					"Aumento del punto di rugiada in Kelvin"  ,"coefficiente di conducibilità termica in W/(m x K)",
 					"viscosità dinamica dei prodotti [N s/m2]"," R in J/(kgxK)",
 					"Tenore vapore H2O  in %"				  ,"pressione parziale del vapore acqueo in Pa"};
-	//"<html><b><u>T</u>wo</b><br>lines</html>";
 	String sDescrizione= "<html><b>Calcolo parametri combustione</b><br>"+
 					"<p>Il programma calcola i parametri dei prodotti "+
 				"della combustione dati i dati del generatore utilizando il metodo della norma UNI EN 13384-1</p><br>"+
@@ -111,15 +83,21 @@ public class APCombCaldaia extends JPanel
 	JPanel panel;	
     public APCombCaldaia()
     {
-    panel=this;
-	
-	
-		super.setLayout(new GridBagLayout());
+	//	super.setLayout(new BorderLayout());
+	       panel=this;//new JPanel();
+		panel.setLayout(new GridBagLayout());
+
+
+
+
+
 		combustibili=Combustibile.combustibile;
 		combList= new JComboBox(combustibili);
 		combList.setSelectedIndex(4);
 		jinput=new JComponent[sinput.length];
-		
+
+		JLabel   ciao=new JLabel("CIAO"); 
+		//add(ciao,BorderLayout.NORTH);
 	
 		
 	    lblInput=new JLabel[sinput.length];
@@ -154,6 +132,7 @@ public class APCombCaldaia extends JPanel
 	//c.weighty = 1.0;   //request any extra vertical space
 	c.ipady = 40;      //make this component tall
 	c.gridwidth = 2;
+
 	JLabel titlinput=new JLabel("Dati caldaia :")	;
 	titlinput.setFont(new Font("Courier New", Font.BOLD, 24));
     titlinput.setForeground(Color.GRAY);
@@ -172,7 +151,9 @@ public class APCombCaldaia extends JPanel
 	// Input
 	c.gridx = X;
 	c.gridy = Y;
+
 	c.gridwidth = 5;
+
 	c.fill = GridBagConstraints.HORIZONTAL;
 	panel.add(panelInput1,c);
 	/**
@@ -183,7 +164,9 @@ public class APCombCaldaia extends JPanel
 	Y+=2;
 	c.gridx = 0;
 	c.gridy = Y;
+
 	c.gridwidth = 5;
+
 	c.fill = GridBagConstraints.HORIZONTAL;
 	panel.add(panelInput2,c);
 	c.fill = GridBagConstraints.NONE;
@@ -216,6 +199,7 @@ public class APCombCaldaia extends JPanel
 	c.gridy = Y;
 	c.ipady = 0;       //reset to default
 	c.weighty =0;		//reset to default
+	c.gridwidth=1;
 	X=0;
 int col=0;
 int row=Y;
@@ -223,12 +207,15 @@ int row=Y;
 	for(int x=0;x<soutput.length;x++){
 		c.gridx = X;
 		c.gridy = Y;
-		
+		c.weightx=0.1;
+	
 		lblOutput[x]=new JLabel(soutput[x]);
 		panel.add(lblOutput[x], c);
 		X++;
 		c.gridx = X;
+		c.weightx=0.4;
 		txtOutput[x]=new JTextField();
+		c.fill = GridBagConstraints.HORIZONTAL;
 		txtOutput[x].setColumns(10);
 		panel.add(txtOutput[x],c);
 		X++;
@@ -249,8 +236,10 @@ Y++;
 	c.weightx=1.0;
 	c.weighty=1.0;
 	c. gridheight=2;
+	c.fill = GridBagConstraints.HORIZONTAL;
 	c.anchor=GridBagConstraints.LAST_LINE_START;
 	panel.add(descr,c);
+
     }
 	
 	/*********************
