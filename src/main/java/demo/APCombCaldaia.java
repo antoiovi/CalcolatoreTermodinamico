@@ -1,5 +1,6 @@
 package demo; 
  import com.antoiovi.unicig.fluidi.comb.Combustibile;
+import java.awt.Toolkit;
 
 
 import java.awt.Color;
@@ -16,12 +17,16 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
 
 import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -33,7 +38,26 @@ public class APCombCaldaia extends JPanel
     String[] sinput={"Combustibile","Potenza","Temperatura fumi [°C]"};
 	
 	String[] schek={"Input rendiemento a mano","Input CO2% a mano","Bruciatore aria soffiata","Bruciatore aria naturale"};
-	
+	//INDICI OUTPUT
+	final int IND_P_MASS=0;
+	final int IND_R=1;
+	final int IND_CAP_T=2;
+	final int IND_H2O_P=3;
+
+	final int IND_PRESS_PARZ_H2O=4;
+	final int IND_TEMP_RUG=5;
+	final int IND_COND_TERM=6;
+	final int IND_VISC_DIN=7;
+	final int IND_TEN_VAP_H2O=8;
+
+	// Indici InputTextField
+	final int INP_POT=0;
+	final int INP_TEMPFUM=1;
+	final int INP_REND=2;
+	final int INP_CO2=3;
+		
+
+				
 	String[] soutput={"Portata massica fumi [g/s]"     		  ,"CostElasticita",
 					"CapTermica"							  ,"TenoreH2O [%]"			  ,
 					"Pressione parziale del vapore acqueo[Pa]","temperatura punto di rugiada[°C]",
@@ -51,6 +75,7 @@ public class APCombCaldaia extends JPanel
 	// Panel input 2
 	JPanel panelInput1;
 	JPanel panelInput2;
+	JTextField textFieldInput[];
 	static final int REND_MAN=0;
 	static final int CO2_MAN=1;
 
@@ -62,7 +87,7 @@ public class APCombCaldaia extends JPanel
 	
 	JRadioButton[] rdb_ariabr;
 	//Group the radio buttons.
-    ButtonGroup group ;
+	 ButtonGroup group ;
     
 	
 	
@@ -81,50 +106,43 @@ public class APCombCaldaia extends JPanel
 	String[] combustibili;
 	JComboBox combList;
 	JPanel panel;	
+	JTextArea outArea;
+	
     public APCombCaldaia()
     {
-	//	super.setLayout(new BorderLayout());
-	       panel=this;//new JPanel();
-		panel.setLayout(new GridBagLayout());
+       panel=this;//new JPanel();
+	panel.setLayout(new GridBagLayout());
 
+	combustibili=Combustibile.combustibile;
+	combList= new JComboBox(combustibili);
+	combList.setSelectedIndex(4);
+	jinput=new JComponent[sinput.length];
 
-
-
-
-		combustibili=Combustibile.combustibile;
-		combList= new JComboBox(combustibili);
-		combList.setSelectedIndex(4);
-		jinput=new JComponent[sinput.length];
-
-		JLabel   ciao=new JLabel("CIAO"); 
-		//add(ciao,BorderLayout.NORTH);
+	lblInput=new JLabel[sinput.length];
+	txtInput=new JTextField[sinput.length-1];
 	
-		
-	    lblInput=new JLabel[sinput.length];
-		txtInput=new JTextField[sinput.length-1];
-		
-		lblOutput=new JLabel[soutput.length];
-		txtOutput=new JTextField[soutput.length];
-		
-		for(int x=0;x<sinput.length;x++){
+	lblOutput=new JLabel[soutput.length];
+	txtOutput=new JTextField[soutput.length];
+	
+	textFieldInput=new JTextField[4];
+	
+	for(int x=0;x<sinput.length;x++){
 		if(x==0){
 			jinput[x]=combList;
-			
+		
 		}else{
 			txtInput[x-1]=new JTextField();
 			txtInput[x-1].setColumns(10);
 			jinput[x]=txtInput[x-1];
 		}
-		
-		
-	
+		textFieldInput[INP_POT]=txtInput[0];
+		textFieldInput[INP_TEMPFUM]=txtInput[1];
 	}
 		
 	int X=0;
 	int Y=0;
 	GridBagConstraints c = new GridBagConstraints();
 	c.anchor=GridBagConstraints.EAST;
-	//c.fill = GridBagConstraints.HORIZONTAL;
 	c.insets = new Insets(0, 0, 5, 5);
 	//Titolo input
 	X=0;
@@ -135,7 +153,7 @@ public class APCombCaldaia extends JPanel
 
 	JLabel titlinput=new JLabel("Dati caldaia :")	;
 	titlinput.setFont(new Font("Courier New", Font.BOLD, 24));
-    titlinput.setForeground(Color.GRAY);
+	titlinput.setForeground(Color.GRAY);
 	panel.add(titlinput,c);
 	
 	c.weighty =0;   //reset
@@ -170,16 +188,23 @@ public class APCombCaldaia extends JPanel
 	c.fill = GridBagConstraints.HORIZONTAL;
 	panel.add(panelInput2,c);
 	c.fill = GridBagConstraints.NONE;
-	// Button OK
+
+	// -------- Button OK
 	Y+=2;
 	X=0;
 	bCalcola=new JButton("Calcola")	;
+	bCalcola.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+               		Calcola();
+			}
+		});	
+
 	//c.weighty = 1.0;   //request any extra vertical space
 	c.gridx = 0;
 	c.gridy = Y;
 	c.gridwidth = 2;
 	panel.add(bCalcola,c);
-	
+	// -------- RISULTATI DEL CALCOLO -------	
 	X=0;
 	Y+=2;
 	c.gridx = X;
@@ -190,19 +215,19 @@ public class APCombCaldaia extends JPanel
 
 	JLabel titleout=new JLabel("Risultati del calcolo :")	;
 	titleout.setFont(new Font("Courier New", Font.BOLD, 24));
-    titleout.setForeground(Color.GRAY);
+	titleout.setForeground(Color.GRAY);
 	panel.add(titleout,c);
 	c.gridwidth = 1;
 	
-	// Output
+	//------------- Output
 	Y+=2;
 	c.gridy = Y;
 	c.ipady = 0;       //reset to default
 	c.weighty =0;		//reset to default
 	c.gridwidth=1;
 	X=0;
-int col=0;
-int row=Y;
+	int col=0;
+	int row=Y;
 
 	for(int x=0;x<soutput.length;x++){
 		c.gridx = X;
@@ -217,6 +242,8 @@ int row=Y;
 		txtOutput[x]=new JTextField();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		txtOutput[x].setColumns(10);
+		txtOutput[x].setBackground(Color.BLUE);
+
 		panel.add(txtOutput[x],c);
 		X++;
 		col++;
@@ -227,9 +254,13 @@ int row=Y;
 		}
 		
 	}	
-Y++;
 	
+	//---------------------DESCIZIONE (Ultima Linea)-----
+	outArea=new JTextArea(10,10);
 	JLabel descr=new JLabel(sDescrizione);
+	
+
+	Y++;
 	c.gridx = 0;
 	c.gridy = Y;
 	c.gridwidth = 6;
@@ -238,10 +269,21 @@ Y++;
 	c. gridheight=2;
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.anchor=GridBagConstraints.LAST_LINE_START;
+
 	panel.add(descr,c);
 
+
+	Y++;
+	c.gridy=Y;
+	c.gridheight=3;
+	c.weighty=1.0;
+	panel.add(outArea,c);
+
+
+
+
     }
-	
+
 	/*********************
 	* panel input 1
 	*********************/
@@ -256,6 +298,7 @@ Y++;
 			panelInput1.add(lblInput[x]);
 			panelInput1.add(jinput[x]);
 			}
+		
 	}
 	
 	
@@ -286,6 +329,8 @@ Y++;
 			jinput2[W]=manual[x];
 			W++;
 		}
+	textFieldInput[INP_REND]=manual[0];
+	textFieldInput[INP_CO2]=manual[1];
 	for(int x=0;x<rb1;x++){
 			rdb_ariabr[x]=new JRadioButton(schek[x+chb]);
 			group.add(rdb_ariabr[x]);
@@ -299,5 +344,77 @@ Y++;
  	
 	}
 
-    
+	/*****************
+	*	CALCOLA
+	*****************/
+	private void Calcola(){
+		
+		validateInput();
+
+		
+		}
+		/****************
+		*	Validate Input
+		***************/
+	boolean validateInput(){
+		boolean test=true;
+		txtOutput[IND_P_MASS].setText("Portata massica");
+		txtOutput[IND_R].setText("Coefficiente elasticita");
+		
+		int selectdComb=combList.getSelectedIndex();
+		log("converto INP POTENZA");
+	
+		String strP     =  textFieldInput[INP_POT].getText();
+		String strTempF =  textFieldInput[INP_TEMPFUM].getText();
+		String strRend  =  textFieldInput[INP_REND].getText();
+		String strCO2   =  textFieldInput[INP_CO2].getText();
+		log("Potenza : "+strP);
+		log("Temperatura fumi :"+strTempF);
+		log("Rendimento :"+strRend);
+		log("Co2 percento :"+strCO2);
+		
+		Double P=convertField(textFieldInput[INP_POT]);
+		Double T=convertField(textFieldInput[INP_TEMPFUM]);
+		Double R=convertField(textFieldInput[INP_REND]);
+		Double C=convertField(textFieldInput[INP_CO2]);
+
+
+		return test;
+	}
+	/*************
+	*	CONVERT FIELD
+	**************/
+	private	Double convertField(JTextField field){
+		String strVal=field.getText();
+		Double val=convertToDouble(strVal);
+		if(val== null){
+			field.setBackground(Color.RED);
+			field.setForeground(Color.BLUE);
+			return null;
+		}else{
+			field.setBackground(Color.WHITE);
+			field.setForeground(Color.BLACK);
+			return val;
+
+		}
+	}	
+
+	/************************
+	*	ConvertToDouble
+	***************/
+	private Double convertToDouble(String string){
+			try{
+				Double val=Double.parseDouble(string);
+				log("val non nullo");
+				return val;
+			}catch(Exception e){
+				log("errore val=nullo...");
+				return null;
+			}
+	
+    		}
+
+	private void log(String s){
+		System.out.println(s);
+		}
 }
