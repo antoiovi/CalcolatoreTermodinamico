@@ -56,7 +56,8 @@ public class APCombCaldaia extends JPanel
 	final int INP_REND=2;
 	final int INP_CO2=3;
 		
-
+	final int CHB_REND=0;
+	final int CHB_CO=1;
 				
 	String[] soutput={"Portata massica fumi [g/s]"     		  ,"CostElasticita",
 					"CapTermica"							  ,"TenoreH2O [%]"			  ,
@@ -76,9 +77,7 @@ public class APCombCaldaia extends JPanel
 	JPanel panelInput1;
 	JPanel panelInput2;
 	JTextField textFieldInput[];
-	static final int REND_MAN=0;
-	static final int CO2_MAN=1;
-
+	
 	JTextField[] manual;
 	JCheckBox[] jcheck;
 	
@@ -89,8 +88,6 @@ public class APCombCaldaia extends JPanel
 	//Group the radio buttons.
 	 ButtonGroup group ;
     
-	
-	
 	JComponent[] jinput2;
 	
 	
@@ -348,9 +345,15 @@ public class APCombCaldaia extends JPanel
 	*	CALCOLA
 	*****************/
 	private void Calcola(){
-		
-		validateInput();
 
+		logArea("");
+		if(validateInput()){
+			logArea("INPUT OK");
+
+		}else{
+			logArea("ERRORE INPUT");
+		}
+		
 		
 		}
 		/****************
@@ -374,11 +377,19 @@ public class APCombCaldaia extends JPanel
 		log("Co2 percento :"+strCO2);
 		
 		Double P=convertField(textFieldInput[INP_POT]);
+			test=P==null?false:test;
 		Double T=convertField(textFieldInput[INP_TEMPFUM]);
+			test=T==null?false:test;
+		
 		Double R=convertField(textFieldInput[INP_REND]);
 		Double C=convertField(textFieldInput[INP_CO2]);
 
-
+		if(jcheck[CHB_REND].isSelected()){
+			test=R==null?false:test;	
+			}
+		if(jcheck[CHB_CO].isSelected()){
+			test=C==null?false:test;
+			}
 		return test;
 	}
 	/*************
@@ -388,8 +399,9 @@ public class APCombCaldaia extends JPanel
 		String strVal=field.getText();
 		Double val=convertToDouble(strVal);
 		if(val== null){
-			field.setBackground(Color.RED);
-			field.setForeground(Color.BLUE);
+			 field.setOpaque(true);
+			field.setBackground(Color.GREEN);
+			field.setForeground(Color.RED);
 			return null;
 		}else{
 			field.setBackground(Color.WHITE);
@@ -417,4 +429,9 @@ public class APCombCaldaia extends JPanel
 	private void log(String s){
 		System.out.println(s);
 		}
+
+	private void logArea(String s){
+		outArea.setText(s);		
+		}
+
 }
