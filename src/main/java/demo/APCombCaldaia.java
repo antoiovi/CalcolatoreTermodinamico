@@ -26,6 +26,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 
 import java.awt.BorderLayout;
@@ -33,7 +35,7 @@ import java.awt.FlowLayout;
 
 
 
-public class APCombCaldaia extends JPanel 
+public class APCombCaldaia extends JPanel  implements ItemListener 
 {
     String[] sinput={"Combustibile","Potenza","Temperatura fumi [°C]"};
 	
@@ -276,10 +278,30 @@ public class APCombCaldaia extends JPanel
 	c.weighty=1.0;
 	panel.add(outArea,c);
 
+			jcheck[0].setSelected(true);
+			jcheck[1].setSelected(true);
 
 
 
     }
+		/**
+		* Implementazione metodo di ItemListener
+		*  (intercettazione change checkbox
+		**/
+		@Override
+		public void itemStateChanged(ItemEvent itemEvent) {
+		 if(itemEvent.getSource().equals(jcheck[0])){
+				
+			textFieldInput[INP_REND].setEnabled(jcheck[0].isSelected());	
+			}
+
+                     else if(itemEvent.getSource().equals(jcheck[1])){  
+		        
+			textFieldInput[INP_CO2].setEnabled(jcheck[1].isSelected());	
+			}
+
+
+		};
 
 	/*********************
 	* panel input 1
@@ -312,6 +334,7 @@ public class APCombCaldaia extends JPanel
 	
 
 	jcheck=new JCheckBox[chb];
+
 	manual=new JTextField[chb];
 	rdb_ariabr=new JRadioButton[rb1];
 	
@@ -319,6 +342,8 @@ public class APCombCaldaia extends JPanel
 	int W=0;
 	for(int x=0;x<chb;x++){
 			jcheck[x]=new JCheckBox(schek[x]);
+			jcheck[x].addItemListener(this);
+
 			jinput2[W]=jcheck[x];
 			W++;
 			manual[x]=new JTextField();
@@ -345,9 +370,10 @@ public class APCombCaldaia extends JPanel
 	*	CALCOLA
 	*****************/
 	private void Calcola(){
+		Dati dati=new Dati();
 
 		logArea("");
-		if(validateInput()){
+		if(validateInput(dati)){
 			logArea("INPUT OK");
 
 		}else{
@@ -359,8 +385,9 @@ public class APCombCaldaia extends JPanel
 		/****************
 		*	Validate Input
 		***************/
-	boolean validateInput(){
+	boolean validateInput(Dati dati){
 		boolean test=true;
+	
 		txtOutput[IND_P_MASS].setText("Portata massica");
 		txtOutput[IND_R].setText("Coefficiente elasticita");
 		
@@ -433,5 +460,21 @@ public class APCombCaldaia extends JPanel
 	private void logArea(String s){
 		outArea.setText(s);		
 		}
+
+
+
+	private class Dati {
+			int COMBUSTIBILE;
+			double potenza;
+			double temp_fumi;
+			boolean inp_rend_mano;
+			double rend_a_mano;
+			boolean inp_co2_mano;
+			double co2_mano;
+			boolean bruc_aria_soff;
+			boolean bruc_aria_nat;
+			
+			
+			}
 
 }
