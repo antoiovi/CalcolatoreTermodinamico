@@ -39,27 +39,38 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 {
     String[] sinput={"Combustibile","Potenza","Temperatura fumi [°C]"};
 
-	String[] schek={"Input rendiemento a mano","Input CO2% a mano","Bruciatore aria soffiata","Bruciatore aria naturale"};
-	//INDICI OUTPUT
-	final int IND_P_MASS=0;
-	final int IND_R=1;
-	final int IND_CAP_T=2;
-	final int IND_H2O_P=3;
 
-	final int IND_PRESS_PARZ_H2O=4;
-	final int IND_TEMP_RUG=5;
-	final int IND_COND_TERM=6;
-	final int IND_VISC_DIN=7;
-	final int IND_TEN_VAP_H2O=8;
+
+	//INDICI OUTPUT
+	final int OUT_P_MASS=0;
+	final int OUT_R=1;
+	final int OUT_CAP_T=2;
+	final int OUT_H2O_P=3;
+
+	final int OUT_PRESS_PARZ_H2O=4;
+	final int OUT_TEMP_RUG=5;
+	final int OUT_COND_TERM=6;
+	final int OUT_VISC_DIN=7;
+	final int OUT_TEN_VAP_H2O=8;
 
 	// Indici InputTextField
 	final int INP_POT=0;
 	final int INP_TEMPFUM=1;
-	final int INP_REND=2;
-	final int INP_CO2=3;
+	final int INP_P_MASS=2;
+  final int INP_REND=3;
+	final int INP_CO2=4;
 
-	final int CHB_REND=0;
-	final int CHB_CO=1;
+
+	String[] strCheckBoxes={"Portata fumi nota [g/s]","Rendiemento noto","CO2% noto"};
+  final int CHB_P_MASS=0;
+  final int CHB_REND=1;
+	final int CHB_CO=2;
+
+String[] strRadioButtons={"Bruciatore aria soffiata","Bruciatore aria naturale"};
+final int RAD_BTN_AS=0;
+final int RAD_BTN_AN=1;
+
+
 
 	String[] soutput={"Portata massica fumi [g/s]"     		  ,"CostElasticita",
 					"CapTermica"							  ,"TenoreH2O [%]"			  ,
@@ -103,7 +114,7 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 	JButton bCalcola;
 
 	String[] combustibili;
-	JComboBox combList;
+	JComboBox jcombListCombust;
 	JPanel panel;
 	JTextArea outArea;
 
@@ -111,32 +122,37 @@ public class APCombCaldaia extends JPanel  implements ItemListener
     {
        panel=this;//new JPanel();
 	panel.setLayout(new GridBagLayout());
-
+  // JComboBox con lista combustibili
 	combustibili=Combustibile.combustibile;
-	combList= new JComboBox(combustibili);
-	combList.setSelectedIndex(4);
-	jinput=new JComponent[sinput.length];
-
+	jcombListCombust= new JComboBox(combustibili);
+	jcombListCombust.setSelectedIndex(4);
+// sinput stringhe input : combiustiblie, potenza; temperatura
+// jiunput : componenti che possono essere JTextField o JComboBox
+  jinput=new JComponent[sinput.length];
+// etichette inpute : come campi input
 	lblInput=new JLabel[sinput.length];
-	txtInput=new JTextField[sinput.length-1];
+  // textfield solo due (uno è jcombobox )
+	txtInput=new JTextField[sinput.length-1+strCheckBoxes.length];
 
 	lblOutput=new JLabel[soutput.length];
 	txtOutput=new JTextField[soutput.length];
 
-	textFieldInput=new JTextField[4];
+// Numero 5 textfield Input :  Potenza, Temperatura Pmassica Rendimento CO2
+	textFieldInput=new JTextField[5];
+  textFieldInput[INP_POT]=new JTextField(10);
+  textFieldInput[INP_TEMPFUM]=new JTextField(10);
+  textFieldInput[INP_P_MASS]=new JTextField(10);
+  textFieldInput[INP_REND]=new JTextField(10);
+  textFieldInput[INP_CO2]=new JTextField(10);
 
 	for(int x=0;x<sinput.length;x++){
 		if(x==0){
-			jinput[x]=combList;
-
+			jinput[x]=jcombListCombust;
 		}else{
-			txtInput[x-1]=new JTextField();
-			txtInput[x-1].setColumns(10);
-			jinput[x]=txtInput[x-1];
+			jinput[x]=textFieldInput[x-1];
 		}
-		textFieldInput[INP_POT]=txtInput[0];
-		textFieldInput[INP_TEMPFUM]=txtInput[1];
 	}
+
 
 	int X=0;
 	int Y=0;
@@ -278,8 +294,9 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 	c.weighty=1.0;
 	panel.add(outArea,c);
 
-			jcheck[0].setSelected(true);
-			jcheck[1].setSelected(true);
+			jcheck[CHB_CO].setSelected(true);
+			jcheck[CHB_REND].setSelected(true);
+      jcheck[CHB_P_MASS].setSelected(true);
 
 
 
@@ -290,16 +307,13 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 		**/
 		@Override
 		public void itemStateChanged(ItemEvent itemEvent) {
-		 if(itemEvent.getSource().equals(jcheck[0])){
-
-			textFieldInput[INP_REND].setEnabled(jcheck[0].isSelected());
+		 if(itemEvent.getSource().equals(jcheck[CHB_REND])){
+			    textFieldInput[INP_REND].setEnabled(jcheck[CHB_REND].isSelected());
+			}else if(itemEvent.getSource().equals(jcheck[CHB_CO])){
+			     textFieldInput[INP_CO2].setEnabled(jcheck[CHB_CO].isSelected());
+			}else if(itemEvent.getSource().equals(jcheck[CHB_P_MASS])){
+			     textFieldInput[INP_P_MASS].setEnabled(jcheck[CHB_P_MASS].isSelected());
 			}
-
-                     else if(itemEvent.getSource().equals(jcheck[1])){
-
-			textFieldInput[INP_CO2].setEnabled(jcheck[1].isSelected());
-			}
-
 
 		};
 
@@ -325,43 +339,34 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 	* panel input 2
 	*********************/
 	void initPanelInput2(){
-	int chb=2;
+	int chb=3; // Check Box : portatamassica,Rendimento, CO2
 	int rb1=2;
 
-	String[] schek={"Input rendiemento a mano","Input CO2% a mano","Bruciatore aria soffiata","Bruciatore aria naturale"};
 	panelInput2=new JPanel(new FlowLayout());
 	group= new ButtonGroup();
-
-
 	jcheck=new JCheckBox[chb];
+  jcheck[CHB_P_MASS]=new JCheckBox(strCheckBoxes[CHB_P_MASS]);
+  jcheck[CHB_P_MASS].addItemListener(this);
+  panelInput2.add(jcheck[CHB_P_MASS]);
+  panelInput2.add(textFieldInput[INP_P_MASS]);
 
-	manual=new JTextField[chb];
+  jcheck[CHB_REND]=new JCheckBox(strCheckBoxes[CHB_REND]);
+  jcheck[CHB_REND].addItemListener(this);
+  panelInput2.add(jcheck[CHB_REND]);
+  panelInput2.add(textFieldInput[INP_REND]);
+
+  jcheck[CHB_CO]=new JCheckBox(strCheckBoxes[CHB_CO]);
+  jcheck[CHB_CO].addItemListener(this);
+  panelInput2.add(jcheck[CHB_CO]);
+  panelInput2.add(textFieldInput[INP_CO2]);
+
 	rdb_ariabr=new JRadioButton[rb1];
-
-	jinput2=new JComponent[chb+rb1+chb];
-	int W=0;
-	for(int x=0;x<chb;x++){
-			jcheck[x]=new JCheckBox(schek[x]);
-			jcheck[x].addItemListener(this);
-
-			jinput2[W]=jcheck[x];
-			W++;
-			manual[x]=new JTextField();
-			manual[x].setColumns(10);
-			jinput2[W]=manual[x];
-			W++;
-		}
-	textFieldInput[INP_REND]=manual[0];
-	textFieldInput[INP_CO2]=manual[1];
-	for(int x=0;x<rb1;x++){
-			rdb_ariabr[x]=new JRadioButton(schek[x+chb]);
-			group.add(rdb_ariabr[x]);
-			jinput2[W]=rdb_ariabr[x];
-			W++;
-		}
-	for(int x=0;x<jinput2.length;x++){
-		panelInput2.add(jinput2[x]);
-	}
+  rdb_ariabr[RAD_BTN_AN]=new JRadioButton(strRadioButtons[RAD_BTN_AN]);
+  group.add(rdb_ariabr[RAD_BTN_AN]);
+  panelInput2.add(rdb_ariabr[RAD_BTN_AN]);
+  rdb_ariabr[RAD_BTN_AS]=new JRadioButton(strRadioButtons[RAD_BTN_AS]);
+  group.add(rdb_ariabr[RAD_BTN_AS]);
+  panelInput2.add(rdb_ariabr[RAD_BTN_AS]);
 
 
 	}
@@ -382,41 +387,49 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 
 
 		}
-		/****************
+		/****************************************************************
 		*	Validate Input
-		***************/
+		************************************************************/
 	boolean validateInput(Dati dati){
-		boolean test=true;
 
-		txtOutput[IND_P_MASS].setText("Portata massica");
-		txtOutput[IND_R].setText("Coefficiente elasticita");
+String[] strErrori=new String[textFieldInput.length];
+    boolean test=false;
 
-		int selectdComb=combList.getSelectedIndex();
-		log("converto INP POTENZA");
 
-		String strP     =  textFieldInput[INP_POT].getText();
-		String strTempF =  textFieldInput[INP_TEMPFUM].getText();
-		String strRend  =  textFieldInput[INP_REND].getText();
-		String strCO2   =  textFieldInput[INP_CO2].getText();
-		log("Potenza : "+strP);
-		log("Temperatura fumi :"+strTempF);
-		log("Rendimento :"+strRend);
-		log("Co2 percento :"+strCO2);
 
-		Double P=convertField(textFieldInput[INP_POT]);
-			test=P==null?false:test;
-		Double T=convertField(textFieldInput[INP_TEMPFUM]);
-			test=T==null?false:test;
-
-		Double R=convertField(textFieldInput[INP_REND]);
-		Double C=convertField(textFieldInput[INP_CO2]);
-
-		if(jcheck[CHB_REND].isSelected()){
-			test=R==null?false:test;
+for(int x=0;x<textFieldInput.length;x++){
+log(String.format("x=%d",x));
+  // Verifcio quelli condizionati da check box
+  if(x==INP_P_MASS){
+    if(jcheck[CHB_P_MASS].isSelected()){
+			 Double _TEST=convertField(textFieldInput[x]);
+      test=_TEST==null?false:test;
 			}
-		if(jcheck[CHB_CO].isSelected()){
-			test=C==null?false:test;
+
+  }else if(x==INP_REND){
+    if(jcheck[CHB_REND].isSelected()){
+      Double _TEST=convertField(textFieldInput[x]);
+     test=_TEST==null?false:test;
+
 			}
+
+  }
+  else if(x==INP_CO2){
+    if(jcheck[CHB_CO].isSelected()){
+      Double _TEST=convertField(textFieldInput[x]);
+     test=_TEST==null?false:test;
+
+			}
+
+  }else {
+    Double _TEST=convertField(textFieldInput[x]);
+   test=_TEST==null?false:test;
+   log(String.format("x=%d",x));
+  }
+
+
+}
+
 		return test;
 	}
 	/*************
@@ -444,10 +457,10 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 	private Double convertToDouble(String string){
 			try{
 				Double val=Double.parseDouble(string);
-				log("val non nullo");
+				log(String.format("Conversione OK val(%s) = %f",string,val));
 				return val;
 			}catch(Exception e){
-				log("errore val=nullo...");
+				log(String.format("errore val(%s) = nullo...",string));
 				return null;
 			}
 
