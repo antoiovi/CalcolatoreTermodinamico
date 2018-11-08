@@ -4,19 +4,19 @@
       <artifactId>calctermodin</artifactId>
       <version>2</version>
    <dependencies>
-   
+
    <dependency>
    <groupId>com.antoiovi</groupId>
       <artifactId>uniciglib</artifactId>
-      <version>2</version>
+      <version>2.1</version>
 	</dependency>
-  
+
   <dependency>
    <groupId>com.antoiovi</groupId>
       <artifactId>utilities</artifactId>
       <version>1</version>
 	</dependency>
- 
+
   <dependency>
     <groupId>com.antoiovi</groupId>
     <artifactId>calctermodin</artifactId>
@@ -24,8 +24,8 @@
     <scope>system</scope>
     <systemPath>${pom.basedir}/lib/forms-1.3.0.jar</systemPath>
   </dependency>
- 
-  
+
+
  <dependency>
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
@@ -34,7 +34,7 @@
 	</dependency>
 
    </dependencies>
-  
+
    <build>
    <resources>
       <resource>
@@ -45,17 +45,17 @@
 		   </resource>
 	   </resources>
    <plugins>
-   
+
 	   <plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-compiler-plugin</artifactId>
 			<configuration>
-			
+
 			</configuration>
 		</plugin>
-   
-   
-   
+
+
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -70,11 +70,11 @@
             </manifest>
 			</archive>
 			</configuration>
-		 </plugin> 
-		 
-		 <plugin> 
-    <artifactId>maven-dependency-plugin</artifactId> 
-    <executions> 
+		 </plugin>
+
+		 <plugin>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <executions>
       <execution>
             <id>copy-dependencies</id>
             <phase>prepare-package</phase>
@@ -86,12 +86,12 @@
                 <overWriteReleases>false</overWriteReleases>
                 <overWriteSnapshots>false</overWriteSnapshots>
                 <overWriteIfNewer>true</overWriteIfNewer>
-				
+
             </configuration>
         </execution>
-      </executions> 
-    </plugin> 
-		 
+      </executions>
+    </plugin>
+
    </plugins>
    </build>
     </project>
