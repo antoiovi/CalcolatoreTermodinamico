@@ -1,5 +1,8 @@
 package demo;
 import com.antoiovi.unicig.fluidi.comb.Combustibile;
+import com.antoiovi.unicig.fluidi.comb.Comb_1;
+import com.antoiovi.unicig.fluidi.comb.Comb_2;
+import com.antoiovi.unicig.impianti.Gener;
 import java.awt.Toolkit;
 
 
@@ -22,6 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
+import  javax.swing.JScrollPane;
+
 
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
@@ -39,7 +44,7 @@ public class APCombCaldaia extends JPanel  implements ItemListener
 {
     String[] sinput={"Combustibile","Potenza","Temperatura fumi [°C]"};
 
-
+Dati daticalcolo=new Dati();
 
 	//INDICI OUTPUT
 	final int OUT_P_MASS=0;
@@ -251,6 +256,7 @@ final int RAD_BTN_AN=1;
 
 		lblOutput[x]=new JLabel(soutput[x]);
 		panel.add(lblOutput[x], c);
+    log(String.format("Label %20s  Y=%d",soutput[x],Y));
 		X++;
 		c.gridx = X;
 		c.weightx=0.4;
@@ -270,35 +276,49 @@ final int RAD_BTN_AN=1;
 
 	}
 
-	//---------------------DESCIZIONE (Ultima Linea)-----
+log(String.format("Y=%d",Y));
+/********
+* Output logArea
+************/
 	outArea=new JTextArea(10,10);
-	JLabel descr=new JLabel(sDescrizione);
-
-
 	Y++;
-	c.gridx = 0;
-	c.gridy = Y;
-	c.gridwidth = 6;
-	c.weightx=1.0;
-	c.weighty=1.0;
-	c. gridheight=2;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.anchor=GridBagConstraints.LAST_LINE_START;
-
-	panel.add(descr,c);
-
-
-	Y++;
+  c.gridx = 0;
 	c.gridy=Y;
-	c.gridheight=3;
+  c.gridwidth = 6;
+	c.gridheight=2;
 	c.weighty=1.0;
-	panel.add(outArea,c);
+  c.weightx=1.0;
+    c.anchor=GridBagConstraints.FIRST_LINE_START;
+  c.fill = GridBagConstraints.BOTH;
+log(String.format("out Area     Y=%d",Y));
+  JScrollPane spane=new JScrollPane(outArea);
+  	panel.add(spane,c);
+    c.fill = GridBagConstraints.NONE;
+    c.anchor=GridBagConstraints.NONE;
+//---------------------DESCIZIONE (Ultima Linea)-----
+    	JLabel descr=new JLabel(sDescrizione);
+    	Y++;
+    	c.gridx = 0;
+    	c.gridy = Y+1;
+    	c.gridwidth = 6;
+    	c.weightx=1.0;
+    	c.weighty=1.0;
+    	c.gridheight=1;
+    	c.fill = GridBagConstraints.HORIZONTAL;
+    	c.anchor=GridBagConstraints.LAST_LINE_START;
 
-			jcheck[CHB_CO].setSelected(true);
-			jcheck[CHB_REND].setSelected(true);
-      jcheck[CHB_P_MASS].setSelected(true);
+    	panel.add(descr,c);
 
+/****
+* Inizzializzo checkBox e radio box
+****/
+boolean is_def=false;
+      jcheck[CHB_CO].setSelected(is_def);
+			jcheck[CHB_REND].setSelected(is_def);
+      jcheck[CHB_P_MASS].setSelected(is_def);
 
+    rdb_ariabr[RAD_BTN_AN].setSelected(true);
+    rdb_ariabr[RAD_BTN_AS].setSelected(false);
 
     }
 		/**
@@ -377,9 +397,24 @@ final int RAD_BTN_AN=1;
 	private void Calcola(){
 		Dati dati=new Dati();
 
-		logArea("");
+	//	logArea("");
 		if(validateInput(dati)){
 			logArea("INPUT OK");
+        try{
+          daticalcolo.calcola();
+
+            logArea(daticalcolo.gen_stringHeader);
+            logArea(daticalcolo.gen_stringValue);
+            logArea(daticalcolo.gen_comb_stringHeader);
+            logArea(daticalcolo.gen_comb_stringValue);
+            setTextValue(daticalcolo.gen_cap_term,txtOutput[OUT_CAP_T]);
+            setTextValue(daticalcolo.gen_temp_rug,txtOutput[OUT_TEMP_RUG]);
+            setTextValue(daticalcolo.gen_tenore_h20,txtOutput[OUT_TEN_VAP_H2O]);
+            
+
+        }catch(Exception e){
+          logArea("ERRORE DURANTE I CALCOLI");
+      }
 
 		}else{
 			logArea("ERRORE INPUT");
@@ -392,43 +427,56 @@ final int RAD_BTN_AN=1;
 		************************************************************/
 	boolean validateInput(Dati dati){
 
-String[] strErrori=new String[textFieldInput.length];
-    boolean test=false;
+    boolean test=true;
 
-
+    String[] strErrori=new String[textFieldInput.length];
+    daticalcolo.is_bruc_aria_nat=rdb_ariabr[RAD_BTN_AN].isSelected();
+    daticalcolo.is_bruc_aria_soff=rdb_ariabr[RAD_BTN_AS].isSelected();
+    daticalcolo.gen_COMBUSTIBILE=jcombListCombust.getSelectedIndex();
 
 for(int x=0;x<textFieldInput.length;x++){
-log(String.format("x=%d",x));
+  //log(String.format("x=%d",x));
   // Verifcio quelli condizionati da check box
   if(x==INP_P_MASS){
     if(jcheck[CHB_P_MASS].isSelected()){
-			 Double _TEST=convertField(textFieldInput[x]);
-      test=_TEST==null?false:test;
-			}
+			 Double _VAL=convertField(textFieldInput[x]);
+      test=_VAL==null?false:test;
+        daticalcolo.gen_pmass=_VAL;
+        daticalcolo.is_pmass_noto=true;
+      }else{  daticalcolo.is_pmass_noto=false;}
 
   }else if(x==INP_REND){
     if(jcheck[CHB_REND].isSelected()){
-      Double _TEST=convertField(textFieldInput[x]);
-     test=_TEST==null?false:test;
-
-			}
+      Double _VAL=convertField(textFieldInput[x]);
+     test=_VAL==null?false:test;
+     daticalcolo.gen_rend=_VAL;
+      daticalcolo.is_rend_noto=true;
+   }else{  daticalcolo.is_rend_noto=false;}
 
   }
   else if(x==INP_CO2){
     if(jcheck[CHB_CO].isSelected()){
-      Double _TEST=convertField(textFieldInput[x]);
-     test=_TEST==null?false:test;
-
-			}
+      Double _VAL=convertField(textFieldInput[x]);
+     test=_VAL==null?false:test;
+     daticalcolo.gen_co2=_VAL;
+      daticalcolo.is_co2_noto=true;
+   }else{  daticalcolo.is_co2_noto=false;}
 
   }else {
-    Double _TEST=convertField(textFieldInput[x]);
-   test=_TEST==null?false:test;
-   log(String.format("x=%d",x));
-  }
+
+      Double _VAL=convertField(textFieldInput[x]);
+      test=_VAL==null?false:test;
+      switch(x){
+          case INP_POT:
+              daticalcolo.gen_potenza=_VAL;
+          case INP_TEMPFUM:
+              daticalcolo.gen_temp_fumi=_VAL;
+            }
+        //log(String.format("x=%d",x));
+      }
+ }// ciclo for
 
 
-}
 
 		return test;
 	}
@@ -466,26 +514,97 @@ log(String.format("x=%d",x));
 
     		}
 
+        private void  setTextValue(double _value,JTextField _jtextfield){
+      			try{
+              String string=String.format("%f",_value);
+      				_jtextfield.setText(string);
+
+      			}catch(Exception e){
+      				_jtextfield.setText("#errore");
+      			}
+      		}
+
+
 	private void log(String s){
 		System.out.println(s);
 		}
 
 	private void logArea(String s){
-		outArea.setText(s);
+		outArea.append(s);
+    outArea.append("\n");
 		}
+    private void logAreaClean(){
+      outArea.setText("");
+      }
 
 
 
 	private class Dati {
-			int COMBUSTIBILE;
-			double potenza;
-			double temp_fumi;
-			boolean inp_rend_mano;
+			int gen_COMBUSTIBILE;
+			double gen_potenza;
+			double gen_temp_fumi;
+
+      boolean is_pmass_noto;
+      double gen_pmass;
+      boolean is_rend_noto;
+      double gen_rend;
+      boolean is_co2_noto;
+      double gen_co2;
+      boolean is_bruc_aria_soff;
+      boolean is_bruc_aria_nat;
+
+
+
+      boolean inp_rend_mano;
 			double rend_a_mano;
 			boolean inp_co2_mano;
 			double co2_mano;
 			boolean bruc_aria_soff;
 			boolean bruc_aria_nat;
+
+      String gen_stringHeader;
+      String gen_stringValue;
+
+      String gen_comb_stringHeader;
+      String gen_comb_stringValue;
+
+      double gen_cost_el;
+      double gen_cost_el_cond;
+      double gen_temp_rug;
+     double gen_cap_term;
+     double gen_tenore_h20;
+
+
+
+public void calcola(){
+
+  Gener gener=new Gener(gen_potenza,gen_COMBUSTIBILE,gen_temp_fumi,is_bruc_aria_nat);
+
+if(is_co2_noto)
+  gener.setCo2(gen_co2);
+if(is_rend_noto)
+  gener.setRend(gen_rend);
+if(is_pmass_noto)
+   gener.setPortatamassicaFumi(gen_pmass);
+
+gen_stringHeader=gener.getStringHeader();
+gen_stringValue=gener.getStringValue();
+  gener.print();
+
+
+
+  Comb_2 combx=new Comb_2(gen_COMBUSTIBILE,gener.getCo2(),gener.getTm());
+    combx.print();
+gen_comb_stringHeader=combx.getStringHeader();
+gen_comb_stringValue=combx.getStringValue();
+gen_cost_el=combx.CostElasticita_1();
+gen_cost_el_cond=combx.CostElasticita_Cond();
+gen_cap_term=combx.CapTermica();
+gen_tenore_h20=combx.TenoreH2O();
+//PparzialeH2o(),
+//tempPuntoRugiada(),deltaTsp(),lambdaA(),viscDin()
+
+}
 
 
 			}

@@ -11,11 +11,11 @@ import javax.swing.JTabbedPane;
 
 import javax.swing.UIManager;
 
- 
- 
+
+
 import java.awt.Component;
- 
- 
+
+
 public class Demo extends JFrame   {
 
 private JPanel contentPane;
@@ -44,9 +44,9 @@ private JPanel contentPane;
 	 */
 	public Demo() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 860, 584);
-		
-		 
+		setBounds(100, 100, 1000, 800);
+
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -70,11 +70,11 @@ private JPanel contentPane;
 		JScrollPane spane=new JScrollPane(apcomb);
 		panel_1.add(spane,BorderLayout.CENTER);
 		tabbedPane.addTab("AP comb caldaia", null, panel_1 , null);
-		
-		 
-		
+
+
+
 	}
 
-	 
+
 
 }
