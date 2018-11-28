@@ -6,10 +6,15 @@ import com.antoiovi.unicig.impianti.Gener;
 import java.awt.Toolkit;
 
 
+import java.util.List;
+import java.util.ArrayList;
+
+
 import java.awt.Color;
  import java.awt.Font;
 
 import javax.swing.JPanel;
+import javax.swing.text.DefaultCaret;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -49,14 +54,21 @@ Dati daticalcolo=new Dati();
 	//INDICI OUTPUT
 	final int OUT_P_MASS=0;
 	final int OUT_R=1;
-	final int OUT_CAP_T=2;
-	final int OUT_H2O_P=3;
 
-	final int OUT_PRESS_PARZ_H2O=4;
+	final int OUT_CAP_T=2;
+	final int OUT_TEN_H2O=3;
+
+	final int OUT_PRESS_PARZ_VAP_H2O=4;
 	final int OUT_TEMP_RUG=5;
-	final int OUT_COND_TERM=6;
-	final int OUT_VISC_DIN=7;
-	final int OUT_TEN_VAP_H2O=8;
+
+  final int OUT_AUM_TEMP_RUG=6;
+	final int OUT_COND_TERM=7;
+
+	final int OUT_VISC_DIN=8;
+	final int OUT_R_CONDENS=9;
+
+  final int OUT_TIR_MIN=10;
+  final int OUT_PRESS_PARZ_VAP_H20_A_T_RUG=11;
 
 	// Indici InputTextField
 	final int INP_POT=0;
@@ -75,14 +87,16 @@ String[] strRadioButtons={"Bruciatore aria soffiata","Bruciatore aria naturale"}
 final int RAD_BTN_AS=0;
 final int RAD_BTN_AN=1;
 
+private List<String> listaErroriInput=new ArrayList<String>();
 
 
-	String[] soutput={"Portata massica fumi [g/s]"     		  ,"CostElasticita",
-					"CapTermica"							  ,"TenoreH2O [%]"			  ,
+	String[] soutput={
+          "Portata massica fumi [g/s]"	             ,"CostElasticita",
+					"CapTermica"							                ,"TenoreH2O [%]"			  ,
 					"Pressione parziale del vapore acqueo[Pa]","temperatura punto di rugiada[°C]",
-					"Aumento del punto di rugiada in Kelvin"  ,"coefficiente di conducibilità termica in W/(m x K)",
+					"Aumento del punto di rugiada [K]"        ,"coefficiente di conducibilità termica in W/(m x K)",
 					"viscosità dinamica dei prodotti [N s/m2]"," R in J/(kgxK)",
-					"Tenore vapore H2O  in %"				  ,"pressione parziale del vapore acqueo in Pa"};
+					"Tiraggio minimo [Pa] "                   ,"P parz vapore acqueo a temp rugiada [Pa]"};
 	String sDescrizione= "<html><b>Calcolo parametri combustione</b><br>"+
 					"<p>Il programma calcola i parametri dei prodotti "+
 				"della combustione dati i dati del generatore utilizando il metodo della norma UNI EN 13384-1</p><br>"+
@@ -264,6 +278,8 @@ final int RAD_BTN_AN=1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		txtOutput[x].setColumns(10);
 		txtOutput[x].setBackground(Color.BLUE);
+    txtOutput[x].setText(String.valueOf(x));
+
 
 		panel.add(txtOutput[x],c);
 		X++;
@@ -281,6 +297,10 @@ log(String.format("Y=%d",Y));
 * Output logArea
 ************/
 	outArea=new JTextArea(10,10);
+// Queste due righe sono state messe per permettere l'autoscrll
+// dell'area nello jscrollpane
+  DefaultCaret caret = (DefaultCaret)outArea.getCaret();
+  caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	Y++;
   c.gridx = 0;
 	c.gridy=Y;
@@ -391,6 +411,10 @@ boolean is_def=false;
 
 	}
 
+
+
+
+
 	/*****************
 	*	CALCOLA
 	*****************/
@@ -407,17 +431,42 @@ boolean is_def=false;
             logArea(daticalcolo.gen_stringValue);
             logArea(daticalcolo.gen_comb_stringHeader);
             logArea(daticalcolo.gen_comb_stringValue);
+
+
+
+
+            setTextValue(daticalcolo.gen_pmass,txtOutput[OUT_P_MASS]);
+            setTextValue(daticalcolo.gen_cost_el,txtOutput[OUT_R]);
+
             setTextValue(daticalcolo.gen_cap_term,txtOutput[OUT_CAP_T]);
+            setTextValue(daticalcolo.gen_tenore_h20,txtOutput[OUT_TEN_H2O]);
+
+            setTextValue(daticalcolo.gen_press_parz_vap_h20,txtOutput[OUT_PRESS_PARZ_VAP_H2O]);
             setTextValue(daticalcolo.gen_temp_rug,txtOutput[OUT_TEMP_RUG]);
-            setTextValue(daticalcolo.gen_tenore_h20,txtOutput[OUT_TEN_VAP_H2O]);
-            
+
+            setTextValue(daticalcolo.gen_aum_temp_rug,txtOutput[OUT_AUM_TEMP_RUG]);
+            setTextValue(daticalcolo.gen_cond_term,txtOutput[OUT_COND_TERM]);
+
+            setTextValue(daticalcolo.gen_visc_din,txtOutput[OUT_VISC_DIN]);
+            setTextValue(daticalcolo.gen_cost_el_cond,txtOutput[OUT_R_CONDENS]);
+
+            setTextValue(daticalcolo.gen_tiragg_min,txtOutput[OUT_TIR_MIN]);
+            setTextValue(daticalcolo.gen_press_parz_h20_a_Trug,txtOutput[OUT_PRESS_PARZ_VAP_H20_A_T_RUG]);
+
+
+
+
 
         }catch(Exception e){
+          log(e.toString());
           logArea("ERRORE DURANTE I CALCOLI");
       }
 
 		}else{
 			logArea("ERRORE INPUT");
+      for(String _str_:listaErroriInput){
+        logArea(_str_);
+      }
 		}
 
 
@@ -427,9 +476,19 @@ boolean is_def=false;
 		************************************************************/
 	boolean validateInput(Dati dati){
 
+    listaErroriInput.clear();
     boolean test=true;
 
     String[] strErrori=new String[textFieldInput.length];
+
+strErrori[INP_POT]="Valore potenza non valido...";
+strErrori[INP_TEMPFUM]="Valore temperatura fumi non valido";
+strErrori[INP_P_MASS]="Valore portata massica non valido ";
+strErrori[INP_REND]="Valore rendimento non valido ";
+strErrori[INP_CO2]="Valore CO2 non valido ";
+
+
+
     daticalcolo.is_bruc_aria_nat=rdb_ariabr[RAD_BTN_AN].isSelected();
     daticalcolo.is_bruc_aria_soff=rdb_ariabr[RAD_BTN_AS].isSelected();
     daticalcolo.gen_COMBUSTIBILE=jcombListCombust.getSelectedIndex();
@@ -441,37 +500,63 @@ for(int x=0;x<textFieldInput.length;x++){
     if(jcheck[CHB_P_MASS].isSelected()){
 			 Double _VAL=convertField(textFieldInput[x]);
       test=_VAL==null?false:test;
-        daticalcolo.gen_pmass=_VAL;
-        daticalcolo.is_pmass_noto=true;
+        if(_VAL!=null){
+          daticalcolo.gen_pmass=_VAL;
+          daticalcolo.is_pmass_noto=true;
+        }else{
+          listaErroriInput.add(strErrori[INP_P_MASS]);
+        }
+
       }else{  daticalcolo.is_pmass_noto=false;}
 
   }else if(x==INP_REND){
     if(jcheck[CHB_REND].isSelected()){
       Double _VAL=convertField(textFieldInput[x]);
      test=_VAL==null?false:test;
-     daticalcolo.gen_rend=_VAL;
-      daticalcolo.is_rend_noto=true;
+      if(_VAL!=null){
+        daticalcolo.gen_rend=_VAL;
+         daticalcolo.is_rend_noto=true;
+      }else{
+        listaErroriInput.add(strErrori[INP_REND]);
+      }
+
    }else{  daticalcolo.is_rend_noto=false;}
 
   }
   else if(x==INP_CO2){
     if(jcheck[CHB_CO].isSelected()){
       Double _VAL=convertField(textFieldInput[x]);
+
      test=_VAL==null?false:test;
-     daticalcolo.gen_co2=_VAL;
+     if(_VAL!=null){
+       daticalcolo.gen_co2=_VAL;
       daticalcolo.is_co2_noto=true;
+     }else{
+       listaErroriInput.add(strErrori[INP_CO2]);
+     }
+
    }else{  daticalcolo.is_co2_noto=false;}
 
   }else {
-
-      Double _VAL=convertField(textFieldInput[x]);
-      test=_VAL==null?false:test;
+Double _VAL=null;
       switch(x){
           case INP_POT:
-              daticalcolo.gen_potenza=_VAL;
-          case INP_TEMPFUM:
-              daticalcolo.gen_temp_fumi=_VAL;
+           _VAL=convertField(textFieldInput[x]);
+           test=_VAL==null?false:test;
+           if(_VAL!=null){
+             daticalcolo.gen_potenza=_VAL;
+            }else{
+              listaErroriInput.add(strErrori[INP_POT]);
             }
+          case INP_TEMPFUM:
+           _VAL=convertField(textFieldInput[x]);
+           test=_VAL==null?false:test;
+              if(_VAL!=null){
+              daticalcolo.gen_temp_fumi=_VAL;
+              }else{
+                listaErroriInput.add(strErrori[INP_TEMPFUM]);
+              }
+            }//switch
         //log(String.format("x=%d",x));
       }
  }// ciclo for
@@ -569,10 +654,21 @@ for(int x=0;x<textFieldInput.length;x++){
       String gen_comb_stringValue;
 
       double gen_cost_el;
-      double gen_cost_el_cond;
+      double gen_cap_term;
+      double gen_tenore_h20;
+      double gen_press_parz_h20;
+      double gen_press_parz_h20_a_Trug;
       double gen_temp_rug;
-     double gen_cap_term;
-     double gen_tenore_h20;
+      double gen_aum_temp_rug;
+      double gen_cond_term;
+      double gen_visc_din;
+      double gen_cost_el_cond;
+      double gen_press_parz_vap_h20;
+
+      double gen_tiragg_min;
+
+
+
 
 
 
@@ -594,16 +690,38 @@ gen_stringValue=gener.getStringValue();
 
 
   Comb_2 combx=new Comb_2(gen_COMBUSTIBILE,gener.getCo2(),gener.getTm());
+  combx.setPressione(101000.0);
     combx.print();
+
+
+
 gen_comb_stringHeader=combx.getStringHeader();
 gen_comb_stringValue=combx.getStringValue();
-gen_cost_el=combx.CostElasticita_1();
-gen_cost_el_cond=combx.CostElasticita_Cond();
-gen_cap_term=combx.CapTermica();
-gen_tenore_h20=combx.TenoreH2O();
-//PparzialeH2o(),
-//tempPuntoRugiada(),deltaTsp(),lambdaA(),viscDin()
 
+gen_pmass=gener.portataMassicaFumi();
+gen_cost_el=combx.CostElasticita_1();
+
+gen_cap_term=combx.CapTermica();
+gen_tenore_h20=combx.TenoreH2O();// tenore vapore acqueo
+
+System.out.println(String.format("Tenore h20= %f  Parziale=%f ",gen_tenore_h20,Comb_1.PparzialeH2o(gen_tenore_h20,101000.0)));
+System.out.println(String.format("PARZIALE VAPORE= %f   ",combx.PparzialeH2o()));
+
+
+gen_press_parz_vap_h20=combx.PparzialeH2o();
+gen_temp_rug=combx.tempPuntoRugiada();
+
+
+gen_aum_temp_rug=combx.deltaTsp();
+gen_cond_term=combx.lambdaA();
+
+gen_visc_din=combx.viscDin();
+gen_cost_el_cond=combx.CostElasticita_Cond();
+
+
+gen_press_parz_h20_a_Trug=combx. PparzialeH2O_Tr();
+
+gen_tiragg_min=gener.getPW_tiraggiominimo();
 }
 
 
