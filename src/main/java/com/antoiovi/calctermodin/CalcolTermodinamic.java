@@ -82,10 +82,10 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 	public CalcolTermodinamic() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 860, 584);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		mntmInfo = new JMenuItem("Info");
 		mntmInfo.addActionListener(this);
 		menuBar.add(mntmInfo);
@@ -106,9 +106,16 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 
 		APanelMoodyDiagram panel_moody= new APanelMoodyDiagram();
 		tabbedPane.addTab("Diagramma di Moody", null, panel_moody, null);
-		
-		 
-		
+
+		APCombCaldaia apcomb=new APCombCaldaia();
+		JPanel panel_apcomb=new JPanel(new BorderLayout());
+		JScrollPane jspane_apcomb=new JScrollPane(apcomb);
+		panel_apcomb.add(jspane_apcomb,BorderLayout.CENTER);
+		tabbedPane.addTab("Combustibile/Fumi UNI 13384-1", null, panel_apcomb , null);
+
+
+
+
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -121,7 +128,7 @@ public class CalcolTermodinamic extends JFrame implements ActionListener {
 		if(COMMAND.equals("Info")){
 			JOptionPane.showMessageDialog(this,"Autore : Antonello Iovino");
 		}
-	
+
 	}
 
 }
