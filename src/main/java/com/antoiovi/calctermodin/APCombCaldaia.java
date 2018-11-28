@@ -278,7 +278,6 @@ private List<String> listaErroriInput=new ArrayList<String>();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		txtOutput[x].setColumns(10);
 		txtOutput[x].setBackground(Color.BLUE);
-    txtOutput[x].setText(String.valueOf(x));
 
 
 		panel.add(txtOutput[x],c);
