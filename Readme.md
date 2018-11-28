@@ -8,16 +8,24 @@ windows
  execdemo.bat
 
 
-## Execute
+##Execute
 
 Java version 1.8 (tested)
 
 mvn package
 
+###Execute from target dir
 linux
   ./execute.sh
 windows
  exectarget.bat
+
+###Exceute wherewere
+Copy calctermodin-2-jar-with-dependencies.jar (can be renamed) and execute as jar
+  java -jar calctermodin-2-jar-with-dependencies.jar
+OR
+copy calctermodin-2.jar in a directory with lib/dependecixx.jar and execute
+  java -jar calctermodin-2.jar
 
 ##Pannello Diagramma di Moody
 

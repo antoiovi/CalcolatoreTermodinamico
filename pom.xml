@@ -63,8 +63,8 @@
           <archive>
 			<manifest>
 			<addClasspath>true</addClasspath>
-                <classpathPrefix>lib/</classpathPrefix> 
-                <mainClass>
+      <classpathPrefix>./lib/</classpathPrefix>
+                      <mainClass>
                     com.antoiovi.calctermodin.CalcolTermodinamic
                 </mainClass>
             </manifest>
@@ -72,7 +72,34 @@
 			</configuration>
 		 </plugin>
 
-		 <plugin>
+     <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+
+            <configuration>
+                      <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <archive>
+    			<manifest>
+                          <mainClass>
+                        com.antoiovi.calctermodin.CalcolTermodinamic
+                    </mainClass>
+                </manifest>
+    			</archive>
+
+           </configuration>
+
+      </plugin>
+
+     <plugin>
     <artifactId>maven-dependency-plugin</artifactId>
     <executions>
       <execution>
@@ -90,7 +117,7 @@
         </execution>
       </executions>
     </plugin>
-
+ 
    </plugins>
    </build>
     </project>
