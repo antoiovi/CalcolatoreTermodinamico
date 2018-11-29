@@ -20,7 +20,7 @@ linux
 windows
  exectarget.bat
 
-###Exceute wherewere
+###Exceute everywhere
 Copy calctermodin-2-jar-with-dependencies.jar (can be renamed) and execute as jar
   java -jar calctermodin-2-jar-with-dependencies.jar
 OR
@@ -36,4 +36,4 @@ insert directly friction factor and tha Moodu Dyagram is calculated and plotted
 
 
 ##Pannello Combustibile
-Calcluate chemical properties of gas as EN 13384-1
+Calcluate chemical properties product of combustion as specified by UNI EN 13384-1
