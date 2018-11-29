@@ -17,14 +17,6 @@
       <version>1</version>
 	</dependency>
 
-  <dependency>
-    <groupId>com.antoiovi</groupId>
-    <artifactId>calctermodin</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${pom.basedir}/lib/forms-1.3.0.jar</systemPath>
-  </dependency>
-
 
  <dependency>
 		<groupId>junit</groupId>
@@ -54,26 +46,29 @@
 			</configuration>
 		</plugin>
 
-
-
-      <plugin>
+    <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
-			<manifest>
-			<addClasspath>true</addClasspath>
-      <classpathPrefix>./lib/</classpathPrefix>
-                      <mainClass>
-                    com.antoiovi.calctermodin.CalcolTermodinamic
-                </mainClass>
-            </manifest>
-			</archive>
-			</configuration>
+			         <manifest>
+			              <addClasspath>true</addClasspath>
+                    <classpathPrefix>./lib/</classpathPrefix>
+                    <mainClass> com.antoiovi.calctermodin.CalcolTermodinamic </mainClass>
+             </manifest>
+			     </archive>
+         		<excludes>
+             			<exclude>**/demo/*.*</exclude>
+             			<exclude>**/demo</exclude>
+             		</excludes>
+			  </configuration>
 		 </plugin>
-
-     <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
+<!-- maven-assembly-plugin : utilizzando il jar-with-dependecies viene creato un
+    file jar chiamato nomeprogetto-versione-jar-with-dependencies, il quale puo
+    essere eseguito con comando java -jar
+-->
+       <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
             <executions>
               <execution>
                 <phase>package</phase>
@@ -82,42 +77,62 @@
                 </goals>
               </execution>
             </executions>
-
             <configuration>
-                      <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
+              <descriptorRefs>
+                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>
               <archive>
-    			<manifest>
-                          <mainClass>
-                        com.antoiovi.calctermodin.CalcolTermodinamic
-                    </mainClass>
-                </manifest>
+    			    <manifest>
+                <mainClass>com.antoiovi.calctermodin.CalcolTermodinamic</mainClass>
+              </manifest>
     			</archive>
-
-           </configuration>
-
+        </configuration>
       </plugin>
+<!--  maven-dependency-plugin : Da utilizzare se si vuole che le dependencies
+      siano scaricate nella locale cartella ${project.build.directory}/classes/lib
+      in maniera di eseguire il programma , in quanto le depndencies non sono
+      disponibili dal file jar (in quanto no si puo chiamare un jar da dentro
+      un jar); per creare un completo eseguibile vedere sopra il maven assembly
+      plugin ;
+
+    -->
 
      <plugin>
-    <artifactId>maven-dependency-plugin</artifactId>
-    <executions>
-      <execution>
-            <id>copy-dependencies</id>
-            <phase>prepare-package</phase>
-            <goals>
-                <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
+       <artifactId>maven-dependency-plugin</artifactId>
+       <executions>
+
+        <execution>
+          <id>copy</id>
+           <phase>package</phase>
+           <!-- Usando la fase prepare-package le dependencies verrano anche inserite nel
+           jar finale come  file jar-->
+          <!-- <phase>prepare-package</phase> -->
+          <goals>
+            <goal>copy</goal>
+          </goals>
+        </execution>
+      </executions>
+        <configuration>
+          <artifactItems>
+              <artifactItem>
+                <groupId>com.antoiovi</groupId>
+                   <artifactId>utilities</artifactId>
+                   <version>1</version>
+              </artifactItem>
+              <artifactItem>
+              <groupId>com.antoiovi</groupId>
+                 <artifactId>uniciglib</artifactId>
+                 <version>2.1</version>
+              </artifactItem>
+        </artifactItems>
               <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
                 <overWriteReleases>false</overWriteReleases>
                 <overWriteSnapshots>false</overWriteSnapshots>
                 <overWriteIfNewer>true</overWriteIfNewer>
             </configuration>
-        </execution>
-      </executions>
+
     </plugin>
- 
+
    </plugins>
    </build>
     </project>
