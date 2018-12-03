@@ -1,5 +1,15 @@
 #Calcolatore termodinamico
 
+##Mandatories dependencies
+
+https://github.com/antoiovi/uniciglib (2.1)
+
+https://github.com/antoiovi/utilities
+
+Both must be downloaded and excete :
+  mvn install
+to have in local maven repository the dependency.
+
 ## Execute demo
 mvn compile
 linux
