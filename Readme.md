@@ -1,14 +1,14 @@
-#Calcolatore termodinamico
+# Calcolatore termodinamico
 
-##Mandatories dependencies
+### Mandatories dependencies
 
 https://github.com/antoiovi/uniciglib (2.1)
 
 https://github.com/antoiovi/utilities
 
-Both must be downloaded and excete :
+Both must be downloaded and mast be executed the following cmd :
   mvn install
-to have in local maven repository the dependency.
+to have into the local maven repository the right dependency.
 
 ## Execute demo
 mvn compile
@@ -17,27 +17,26 @@ linux
 windows
  execdemo.bat
 
-
-##Execute
+## Execute
 
 Java version 1.8 (tested)
 
 mvn package
 
-###Execute from target dir
+### Execute from target dir
 linux
   ./execute.sh
 windows
  exectarget.bat
 
-###Exceute everywhere
+### Exceute everywhere
 Copy calctermodin-2-jar-with-dependencies.jar (can be renamed) and execute as jar
   java -jar calctermodin-2-jar-with-dependencies.jar
 OR
 copy calctermodin-2.jar in a directory with lib/dependecixx.jar and execute
   java -jar calctermodin-2.jar
 
-##Pannello Diagramma di Moody
+## Pannello Diagramma di Moody
 
 Plots the Diagram of Moody .
 Insert diameter and relative pipe roughness
@@ -45,5 +44,5 @@ OR
 insert directly friction factor and tha Moodu Dyagram is calculated and plotted
 
 
-##Pannello Combustibile
+## Pannello Combustibile
 Calcluate chemical properties product of combustion as specified by UNI EN 13384-1
