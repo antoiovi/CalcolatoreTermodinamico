@@ -1,138 +1,50 @@
+<?xml version="1.0"?>
 <project>
-      <modelVersion>4.0.0</modelVersion>
-      <groupId>com.antoiovi</groupId>
-      <artifactId>calctermodin</artifactId>
-      <version>2</version>
-   <dependencies>
-
-   <dependency>
-   <groupId>com.antoiovi</groupId>
-      <artifactId>uniciglib</artifactId>
-      <version>2.1</version>
-	</dependency>
-
-  <dependency>
-   <groupId>com.antoiovi</groupId>
-      <artifactId>utilities</artifactId>
-      <version>1</version>
-	</dependency>
-
-
- <dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.12</version>
-		<scope>test</scope>
-	</dependency>
-
-   </dependencies>
-
-   <build>
-   <resources>
-      <resource>
-			   <directory>src/main/java</directory>
-			   <excludes>
-					<exclude>**/*.java</exclude>
-			</excludes>
-		   </resource>
-	   </resources>
-   <plugins>
-
-	   <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-
-			</configuration>
-		</plugin>
-
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-			         <manifest>
-			              <addClasspath>true</addClasspath>
-                    <classpathPrefix>./lib/</classpathPrefix>
-                    <mainClass> com.antoiovi.calctermodin.CalcolTermodinamic </mainClass>
-             </manifest>
-			     </archive>
-         		<excludes>
-             			<exclude>**/demo/*.*</exclude>
-             			<exclude>**/demo</exclude>
-             		</excludes>
-			  </configuration>
-		 </plugin>
-<!-- maven-assembly-plugin : utilizzando il jar-with-dependecies viene creato un
-    file jar chiamato nomeprogetto-versione-jar-with-dependencies, il quale puo
-    essere eseguito con comando java -jar
--->
-       <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <descriptorRefs>
-                 <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-              <archive>
-    			    <manifest>
-                <mainClass>com.antoiovi.calctermodin.CalcolTermodinamic</mainClass>
-              </manifest>
-    			</archive>
-        </configuration>
-      </plugin>
-<!--  maven-dependency-plugin : Da utilizzare se si vuole che le dependencies
-      siano scaricate nella locale cartella ${project.build.directory}/classes/lib
-      in maniera di eseguire il programma , in quanto le depndencies non sono
-      disponibili dal file jar (in quanto no si puo chiamare un jar da dentro
-      un jar); per creare un completo eseguibile vedere sopra il maven assembly
-      plugin ;
-
-    -->
-
-     <plugin>
-       <artifactId>maven-dependency-plugin</artifactId>
-       <executions>
-
-        <execution>
-          <id>copy</id>
-           <phase>package</phase>
-           <!-- Usando la fase prepare-package le dependencies verrano anche inserite nel
-           jar finale come  file jar-->
-          <!-- <phase>prepare-package</phase> -->
-          <goals>
-            <goal>copy</goal>
-          </goals>
-        </execution>
-      </executions>
-        <configuration>
-          <artifactItems>
-              <artifactItem>
-                <groupId>com.antoiovi</groupId>
-                   <artifactId>utilities</artifactId>
-                   <version>1</version>
-              </artifactItem>
-              <artifactItem>
-              <groupId>com.antoiovi</groupId>
-                 <artifactId>uniciglib</artifactId>
-                 <version>2.1</version>
-              </artifactItem>
-        </artifactItems>
-              <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
-                <overWriteReleases>false</overWriteReleases>
-                <overWriteSnapshots>false</overWriteSnapshots>
-                <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-
-    </plugin>
-
-   </plugins>
-   </build>
-    </project>
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.antoiovi</groupId>
+<artifactId>calctermodin</artifactId>
+<version>2</version>
+<dependencies>
+<dependency>
+<groupId>junit</groupId>
+<artifactId>junit</artifactId>
+<version>4.12</version>
+<scope>test</scope>
+</dependency>
+</dependencies>
+<build>
+<resources>
+<resource>
+  <directory>src/main/java</directory>
+  <excludes>
+    <exclude>**/*.java</exclude>
+  </excludes>
+</resource>
+</resources>
+<plugins>
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <configuration>
+  </configuration>
+</plugin>
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-jar-plugin</artifactId>
+  <configuration>
+    <archive>
+      <manifest>
+	<addClasspath>true</addClasspath>
+	<classpathPrefix>./lib/</classpathPrefix>
+	<mainClass> com.antoiovi.calctermodin.CalcolTermodinamic </mainClass>
+      </manifest>
+    </archive>
+    <excludes>
+      <exclude>**/demo/*.*</exclude>
+      <exclude>**/demo</exclude>
+    </excludes>
+  </configuration>
+</plugin>
+</plugins>
+</build>
+</project>
