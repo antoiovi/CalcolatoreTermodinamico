@@ -43,10 +43,6 @@
 	<mainClass> com.antoiovi.calctermodin.CalcolTermodinamic </mainClass>
       </manifest>
     </archive>
-    <excludes>
-      <exclude>**/demo/*.*</exclude>
-      <exclude>**/demo</exclude>
-    </excludes>
   </configuration>
 </plugin>
 </plugins>
