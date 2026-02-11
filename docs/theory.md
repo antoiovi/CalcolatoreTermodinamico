@@ -80,44 +80,60 @@ f_\text{trans} = f_\text{laminar} + \frac{\text{Re} - 2300}{3400 - 2300} \left(f
 
 ---
 
-## 5. Moody Diagram (Visual ASCII)
+## 5. Moody Diagram 
 
-Below is a **simplified diagram** to understand zones and relative roughness:
+The **Moody Diagram** is a fundamental tool in fluid mechanics, used to determine the **Darcy-Weisbach friction factor (f)** for flow in a circular pipe based on:
 
-f
-| Turbulent Flow (f ≈ 0.02–0.08)
-| **** ***** ***** *****
-| * * * * *
-|* * * * *
-| * *
-|----------------------------> Re
-| Laminar Transizione Turbulento
-| (Re<2300) (2300–3400) (Re>3400)
+- **Reynolds number (Re)** – dimensionless number representing flow regime
+- **Relative roughness (ε/D)** – ratio of pipe roughness to diameter
 
+The diagram covers **three main flow regimes**:
 
-**Legend:**
-
-- Laminar: straight line (f = 64/Re)  
-- Transition: shaded/interpolated region  
-- Turbulent: multiple curves for different ε/D  
-
-Another view with **roughness effect**:
-
-f
-| 0.08 +-------------------+ Rough pipe (ε/D = 0.01)
-| | ***** |
-| 0.04 +------------------+ Medium roughness (ε/D = 0.005)
-| | * |
-| 0.02 +------------------+ Smooth pipe (ε/D ≈ 0)
-|-----------------------------> Re
-1e3 1e4 1e5
-
-
-- X-axis: Reynolds number (log scale)  
-- Y-axis: Friction factor f (log scale)  
-- Each curve: a different relative roughness  
+| Flow regime       | Reynolds number range |
+|------------------|--------------------|
+| Laminar           | Re < 2300          |
+| Transitional      | 2300 ≤ Re < 3400  |
+| Turbulent         | Re ≥ 3400          |
 
 ---
+
+## How to Read the Diagram
+
+1. Locate the **Reynolds number** along the horizontal axis (logarithmic scale).
+2. Identify the **relative roughness** curve corresponding to your pipe.
+3. Move vertically to intersect the chosen curve.
+4. Read the **friction factor f** on the vertical axis (also logarithmic).
+
+---
+
+## Flow Regimes Visualization
+
+Below is a **schematic representation of flow regimes**:
+
+| Reynolds number → | 0–2300       | 2300–3400       | >3400       |
+|------------------|-------------|----------------|------------|
+| Friction factor f | Laminar     | Transitional   | Turbulent  |
+
+> In laminar flow, \( f = 64 / Re \).  
+> In transitional flow, \( f \) is interpolated between laminar and turbulent.  
+> In turbulent flow, \( f \) is calculated via the Colebrook equation or read from the Moody Diagram.
+
+---
+
+## Example Moody Diagram
+
+![Moody Diagram](screenshots/moody-diagram.png)
+
+
+> The figure above shows curves of friction factor \( f \) versus Reynolds number for various relative roughness values.  
+
+---
+
+## References
+
+- F.M. White, *Fluid Mechanics*, 8th Edition, McGraw-Hill, 2016  
+- Moody, L.F., "Friction Factors for Pipe Flow," *Transactions of the ASME*, 1944
+
 
 ## 6. Software Implementation Notes
 

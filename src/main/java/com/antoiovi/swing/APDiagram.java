@@ -5,7 +5,7 @@ import com.antoiovi.swing.APanelDiagram.Punto;
 public interface APDiagram {
 	/**
 	 * Imposta i valori dell'asse x; intanto inizzializza il vettore per creare
-	 * le stringhe che è separato per permettere operazioni sui dati senza
+	 * le stringhe che e separato per permettere operazioni sui dati senza
 	 * modificarli
 	 *  20/12/2014: aggiunto setFormatNumberAxisX(..
  *          aggiunto setFormatNumberAxisY(..
@@ -18,7 +18,7 @@ public interface APDiagram {
 
 	/**
 	 * * Imposta i valori dell'asse Y; intanto inizzializza il vettore per
-	 * creare le stringhe che è separato per permettere operazioni(per la
+	 * creare le stringhe che ï¿½ separato per permettere operazioni(per la
 	 * visualizzazione) sui dati senza modificarli
 	 * 
 	 * @param y_axis

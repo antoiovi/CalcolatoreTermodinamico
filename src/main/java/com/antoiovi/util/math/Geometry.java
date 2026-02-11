@@ -6,7 +6,7 @@ public class Geometry {
  * i valori sono distanziati di step; 
  * @param init
  * @param end
- * @param step passo di distanza dei punti. S è un INT allora viene chiaata l'altra funzione che 
+ * @param step passo di distanza dei punti. S ï¿½ un INT allora viene chiaata l'altra funzione che 
  * 		divide la scala in n pezzi uguali
  * @return
  */
@@ -28,7 +28,7 @@ public class Geometry {
 	 * GENERA UNA SCALA di number elementi che inizia da init e finisce con end
 	 * @param init
 	 * @param end
-	 * @param number NUMERO DI ELEMENTI I CUI DIVIDERE LA SCALA. Se è double allora viene chiaat 
+	 * @param number NUMERO DI ELEMENTI I CUI DIVIDERE LA SCALA. Se ï¿½ double allora viene chiaat 
 	 * 				l'altra funzione , in cui rappresenta il passo
 	 * @return
 	 */
@@ -169,7 +169,7 @@ step=step<0?-step:step;
 				}
 				for (int y = 1; y < 9; y++) {
 					// diecine+unita, - decine precedenti, in quanto 
-					//	la fine di una diecina è l'inizio della successiva
+					//	la fine di una diecina ï¿½ l'inizio della successiva
 					k = 10 * x + y - x;
 					double dd = d + y * d;
 					a[k] = Math.log10(dd);

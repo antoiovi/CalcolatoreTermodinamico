@@ -4,7 +4,7 @@
  *
  * Flow regimes:
  *  - Laminar (Re < 2300): analytical solution f = 64 / Re
- *  - Transitional (2300 ≤ Re ≤ 3400): linear interpolation
+ *  - Transitional (2300 <=Re <=3400): linear interpolation
  *  - Turbulent (Re > 3400): Colebrook–White equation
  *
  * The method updates both numerical output and Moody diagram visualization.
@@ -81,21 +81,26 @@ public class APanelMoodyDiagram extends JPanel implements ActionListener,ItemLis
 	private JTextField textFieldScabr;
 	private JCheckBox ckboxScabrAMano;
 /**
- * Numero di Reynold
+ * Reynolds number
  */
 double nrey;
+
 /**
- * Diametro idraulico interno del condotto
+ * Internal hydraulic diameter of the pipe
  */
 double diam;
+
 /**
- * Rugositia'
+ * Absolute roughness
  */
 double rug;
+
 /**
- * Scabrezza relativa
+ * Relative roughness
  */
 double scabr;
+
+
 double fattattr;
 private static double asseys[];
 private static double assexs[];
@@ -138,7 +143,9 @@ private JTextArea textArea;
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JLabel lblNewLabel = new JLabel("Numero di Reynolds [adimensionale]");
+		JLabel lblNewLabel = new JLabel("Reynolds number [dimensionless]");
+		
+		
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_panel.gridy = Y;
@@ -151,7 +158,7 @@ private JTextArea textArea;
 		panel.add(textFieldNrey, gbc_panel);
 		Y++;
 
-		JLabel lblRug =new JLabel("Rugosita'(click mouse dx per help)");
+		JLabel lblRug = new JLabel("Roughness (right-click for help)");
 		gbc_panel.gridy = Y;
 		panel.add(lblRug, gbc_panel);
 		Y++;
@@ -160,7 +167,7 @@ private JTextArea textArea;
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(textFieldRug, popupMenu);
 		
-		JMenuItem mntmHelpRugosit = new JMenuItem("Help rugosit\u00E0");
+		JMenuItem mntmHelpRugosit = new JMenuItem("Roughness help");
 		mntmHelpRugosit.setActionCommand("HelpRugosita");
 		popupMenu.add(mntmHelpRugosit);
 		mntmHelpRugosit.addActionListener(this);
@@ -170,9 +177,12 @@ private JTextArea textArea;
 		textFieldRug.setColumns(10);
 		Y++;
 		
-		JLabel lblNewLabel_2 = new JLabel("<html>Diametro<br/> ( metri se rugosita in metri <br/> mm se rugosita in mm)</html>", SwingConstants.CENTER);
-		//"Diametro( in metri se");
-		//gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
+
+		JLabel lblNewLabel_2 = new JLabel(
+			"<html>Diameter<br/> (meters if roughness is in meters <br/> mm if roughness is in mm)</html>",
+			SwingConstants.CENTER
+		);
+	
 		gbc_panel.gridy = Y;
 		panel.add(lblNewLabel_2, gbc_panel);
 		Y++;
@@ -183,14 +193,17 @@ private JTextArea textArea;
 		textFieldDiam.setColumns(10);
 		Y++;
 
-		JLabel lblscabrezzaRelativarugositdiamtero = new JLabel("<html>Scabrezza relativa<br>(Rugosit\u00E0/Diamtero)</html>");
+
+		JLabel lblscabrezzaRelativarugositdiamtero = new JLabel(
+			"<html>Relative roughness<br>(Roughness/Diameter)</html>"
+		);
 		lblscabrezzaRelativarugositdiamtero.setHorizontalAlignment(SwingConstants.TRAILING);
 		gbc_panel.gridy = Y;
 		panel.add(lblscabrezzaRelativarugositdiamtero, gbc_panel);
 		Y++;
 
 		
-		ckboxScabrAMano = new JCheckBox(" Inserisci valore a mano");
+		ckboxScabrAMano = new JCheckBox(" Enter relative roughness value manually");
 		ckboxScabrAMano.setSelected(true);
 		ckboxScabrAMano.addItemListener(this);
 		gbc_panel.gridy=Y;
@@ -206,7 +219,7 @@ private JTextArea textArea;
 		Y++;
 		
 		
-		JButton btnCalcola = new JButton("Calcola fattore attrito");
+		JButton btnCalcola = new JButton("Calculate friction factor");
 		btnCalcola.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
@@ -225,7 +238,7 @@ private JTextArea textArea;
 		panel.add(btnCalcola, gbc_panel);
 		Y++;
 		
-		JLabel lblNewLabel_3 = new JLabel("Fattore d'attrito");
+		JLabel lblNewLabel_3 = new JLabel("Friction factor");
 		gbc_panel.gridy = Y;
 		panel.add(lblNewLabel_3, gbc_panel);
 		Y++;
@@ -501,9 +514,10 @@ private boolean Calcfattaattr() {
             fattattr = 64.0 / nrey;
 
             resultString = String.format(
-                    "Moto laminare.\nNumero di Reynolds = %1.1f\n"
-                  + "Scabrezza relativa = %f\n"
-                  + "Fattore di attrito (64/Re) = %f",
+                    "Laminar flow.\nReynolds number = %1.1f\n"
+					+ "Relative roughness = %f\n"
+					+ "Friction factor (64/Re) = %f"
+					,
                     nrey, scabr, fattattr
             );
 
@@ -527,9 +541,9 @@ private boolean Calcfattaattr() {
             fattattr = fLaminare + peso * (fTurbolento - fLaminare);
 
             resultString = String.format(
-                    "Moto in zona di transizione.\nNumero di Reynolds = %1.1f\n"
-                  + "Scabrezza relativa = %f\n"
-                  + "Fattore di attrito (interpolazione) = %f",
+                  "Transitional flow region.\nReynolds number = %1.1f\n"
+					+ "Relative roughness = %f\n"
+					+ "Friction factor (interpolated) = %f",
                     nrey, scabr, fattattr
             );
 
@@ -542,9 +556,9 @@ private boolean Calcfattaattr() {
             fattattr = moody.zbrent();
 
             resultString = String.format(
-                    "Moto turbolento.\nNumero di Reynolds = %1.1f\n"
-                  + "Scabrezza relativa = %f\n"
-                  + "Fattore di attrito (Colebrook) = %f",
+				"Turbulent flow.\nReynolds number = %1.1f\n"
+				+ "Relative roughness = %f\n"
+				+ "Friction factor (Colebrook equation) = %f",
                     nrey, scabr, fattattr
             );
         }
@@ -569,12 +583,12 @@ private boolean Calcfattaattr() {
         double halfX = assexs[assexs.length / 2];
 
         apdiagram.addStringa(
-                String.format("CURVA PER SCABREZZA RELATIVA = %1.6f", scabr),
+			String.format("CURVE FOR RELATIVE ROUGHNESS = %1.6f", scabr),
                 halfX, topY
         );
 
         apdiagram.addStringa(
-                String.format("Fattore d'attrito = %1.6f", fattattr),
+			String.format("Friction factor = %1.6f", fattattr),
                 x, y
         );
 
@@ -582,8 +596,8 @@ private boolean Calcfattaattr() {
 
     } catch (Exception e) {
         // Gestione errori di input o calcolo
-        textFieldFattAtt.setText("#ERRORE");
-        textArea.setText("#ERRORE#");
+        textFieldFattAtt.setText("#ERROR");
+        textArea.setText("#ERRORE");
         return false;
     }
 }

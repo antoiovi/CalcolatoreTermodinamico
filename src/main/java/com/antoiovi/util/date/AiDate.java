@@ -83,7 +83,7 @@ public class AiDate {
 	}
 
 	/**
-	 * Il nome del giorno è dato dalla inizzializzazione con l'array[7]
+	 * Il nome del giorno ï¿½ dato dalla inizzializzazione con l'array[7]
 	 * nomeguiorni
 	 * 
 	 * @return data nel formato : Lunedi 20-10-2013
