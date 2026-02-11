@@ -1,3 +1,19 @@
+/**
+ * Computes the Darcy friction factor for internal pipe flow
+ * using Reynolds number and relative roughness.
+ *
+ * Flow regimes:
+ *  - Laminar (Re < 2300): analytical solution f = 64 / Re
+ *  - Transitional (2300 ≤ Re ≤ 3400): linear interpolation
+ *  - Turbulent (Re > 3400): Colebrook–White equation
+ *
+ * The method updates both numerical output and Moody diagram visualization.
+ *
+ * License: MIT
+ */
+
+
+
 package com.antoiovi.calctermodin;
 
 import javax.swing.JPanel;
@@ -172,23 +188,6 @@ private JTextArea textArea;
 		gbc_panel.gridy = Y;
 		panel.add(lblscabrezzaRelativarugositdiamtero, gbc_panel);
 		Y++;
-
-/***
-		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.anchor = GridBagConstraints.WEST;
-		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_2.fill = GridBagConstraints.VERTICAL;
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 7;
-		panel.add(panel_2, gbc_panel_2);
-		
-		ckboxScabrAMano = new JCheckBox(" Inserisci valore a mano");
-		ckboxScabrAMano.setSelected(true);
-		ckboxScabrAMano.addItemListener(this);
-		panel_2.add(ckboxScabrAMano);
-**/
-
 
 		
 		ckboxScabrAMano = new JCheckBox(" Inserisci valore a mano");
