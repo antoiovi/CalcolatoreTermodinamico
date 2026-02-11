@@ -14,11 +14,15 @@ import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
+import java.awt.RenderingHints;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.antoiovi.swing.APanelDiagram.Punto;
+import com.antoiovi.swing.APanelDiagram.Stringa;
 import com.antoiovi.util.math.Geometry;
 
 import javax.swing.JPopupMenu;
@@ -51,7 +55,7 @@ import java.awt.event.ActionListener;
  * @version 1.0
  * @author Antoiovi date 21/11/2014 8/12/2014 : prima versione funzionante
  *         bbastanza bene: ancora da verificare con valori negativi ed
- *         implementare menù labels UTILIZZO: 
+ *         implementare menï¿½ labels UTILIZZO: 
  *         		double x[]=GenerateScale.Scale(-500, 500,1.0); 
  *       		 panel.setX_axis(x);
  *        	 panel.setY_axis(y);
@@ -155,12 +159,12 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 	private double y_scale = 50;
 	/**
 	 * 2/12/2014 x_scale_adapted: scala calcolata in base alle opzioni impostate
-	 * di adapt_scale; è quella usata nei calcoli, e di default vale x_scale
+	 * di adapt_scale; ï¿½ quella usata nei calcoli, e di default vale x_scale
 	 */
 	private double x_scale_adapted;
 	/**
 	 * Y_scale_adapted: scala calcolata in base alle opzioni impostate di
-	 * adapt_scale; è quella usata nei calcoli per evetuamente adattare allo
+	 * adapt_scale; ï¿½ quella usata nei calcoli per evetuamente adattare allo
 	 * schermo, e di default vale Y_scale
 	 */
 	private double y_scale_adapted;
@@ -224,7 +228,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 	/**
 	 * Colore con cui si disegano le coordinate del punto
 	 */
-	Color color_punto=Color.green;
+	Color color_punto=Color.RED;
 	
 	/**
 	 * Elimina tutti i punti di cui vedere le coordinate
@@ -271,6 +275,35 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 	private  Rectangle rect_view;
 	private  Rectangle rect_panel;
 	private  Container parent;
+
+// ===============================
+// COSTANTI TESTO DIAGRAMMA
+// ===============================
+private static final int FONT_SIZE_AXIS = 12;     // dimensione testo assi
+private static final int FONT_SIZE_LABELS = 13;   // dimensione testo stringhe/punti
+private static final int FONT_STYLE = Font.BOLD;  // PLAIN oppure BOLD
+
+
+// ===============================
+// STILE CURVA
+// ===============================
+private static final float CURVE_STROKE_WIDTH = 3.0f;
+private static final Color CURVE_COLOR = new Color(0, 90, 200); 
+// esempi:
+// Color.RED
+// Color.BLUE
+// new Color(30,144,255)  // blu piÃ¹ moderno
+// new Color(200,0,0)     // rosso intenso
+
+
+	// Zona di transizione (Reynolds)
+private static final double RE_TRANS_MIN = 2300.0;
+private static final double RE_TRANS_MAX = 3400.0;
+
+// Colore banda (rosa trasparente)
+private static final Color TRANSITION_BAND_COLOR =
+        new Color(255, 105, 180, 80); // rosa con alpha
+
 
 	/***
  * 	ELEMENTI DEI MENU DI CONTESTO
@@ -424,7 +457,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 		// Sposta l'origine in basso e rende positivo lasse y i su
 		g2d.translate(0, getHeight());
 		g2d.scale(1.0, -1.0);
-		Font font = new Font(null, Font.PLAIN, 10);
+		Font font = new Font("SansSerif", FONT_STYLE, FONT_SIZE_AXIS);
 		AffineTransform affineTransform = new AffineTransform();
 		// Rendo il testo asse x orientato correttmente creando una
 		// trasformazione che annulla la rototraslazione del piano
@@ -527,7 +560,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 		 */
 		
 		/**
-		 * Creo l'array delle coordinate, VERRà INIZIALIZZATO IN BASE AALLA
+		 * Creo l'array delle coordinate, VERRï¿½ INIZIALIZZATO IN BASE AALLA
 		 * SCAALA
 		 */
 		// test traslo i dtai di margin left
@@ -577,7 +610,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 				(int) x_coordinate[0],
 				(int) y_coordinate[y_coordinate.length - 1]);
 		/**
-		 * Nuova larghezza DISEGNO: Larghezza dell'asse x disegnato: sarà la
+		 * Nuova larghezza DISEGNO: Larghezza dell'asse x disegnato: sarï¿½ la
 		 * nuova larghezza finestra
 		 */
 		double new_width = (int) x_coordinate[x_coordinate.length - 1];
@@ -601,23 +634,56 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 		}
 		this.paintLabelY(g2d);
 
+
+
+		// ===============================
+		// Banda zona di transizione
+		// ===============================
+		paintTransitionBand(g2d);
+
+
+
+
+
 		/**
 		 * DISEGNA LA FUNCTION
 		 */
 
 		if (functions != null) {
+
+			// Salvo stato grafico
+			Stroke oldStroke = g2d.getStroke();
+			Color oldColor = g2d.getColor();
+		
+			// Imposto stile curva
+			g2d.setStroke(new BasicStroke(
+					CURVE_STROKE_WIDTH,
+					BasicStroke.CAP_ROUND,
+					BasicStroke.JOIN_ROUND
+			));
+		
+			g2d.setColor(CURVE_COLOR);
+		
 			GeneralPath pl_f = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 			pl_f.moveTo(x_coordinate[0], y_coordinate[0]);
-			//double max = new_height;
-			int k=(x_coordinate.length<=functions.length)?x_coordinate.length:functions.length;
+		
+			int k = (x_coordinate.length <= functions.length)
+					? x_coordinate.length
+					: functions.length;
+		
 			for (int j = 0; j < k; j++) {
 				double yf = margin_bottom + functions[j] * y_scale_adapted;
-				// new_height=new_height > yf ? new_height: (long)yf;
-				//System.out.println("x=  " + x_coordinate[j] + "  yf=" + yf);
 				pl_f.lineTo(x_coordinate[j], yf);
 			}
+		
 			g2d.draw(pl_f);
+		
+			// Ripristino stato originale
+			g2d.setStroke(oldStroke);
+			g2d.setColor(oldColor);
 		}
+		
+		
 		
 		/**
 		 * Paints le griglie
@@ -647,9 +713,67 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 	 * 		FINE FUNZIONE PAINTCOMPONENT
 	 ***********************************************************************************/
 	
+
+
+/**
+ * Disegna una banda verticale trasparente che evidenzia
+ * la zona di transizione del numero di Reynolds
+ */
+/**
+ * Disegna la banda rosa trasparente della zona di transizione
+ * (Re 2300 - 3400)
+ */
+private void paintTransitionBand(Graphics2D g2d) {
+
+    // Se l'asse non Ã¨ inizializzato esco
+    if (x_axis == null || x_axis.length == 0) return;
+
+    // ===============================
+    // IMPORTANTE:
+    // Il diagramma di Moody usa log10(Re)
+    // ===============================
+    double reMin = Math.log10(2300.0);
+    double reMax = Math.log10(3400.0);
+
+    // Se la banda Ã¨ fuori dal range asse X, non disegno
+    if (reMax < x_axis[0] || reMin > x_axis[x_axis.length - 1])
+        return;
+
+    // Conversione coordinate reali â†’ coordinate schermo
+    double x1 = ConvertXValue(reMin);
+    double x2 = ConvertXValue(reMax);
+
+    double y1 = y_coordinate[0];
+    double y2 = y_coordinate[y_coordinate.length - 1];
+
+    double width = x2 - x1;
+    double height = y2 - y1;
+
+    // Salvo stato grafico
+    Color oldColor = g2d.getColor();
+
+    // Rosa trasparente
+    g2d.setColor(new Color(255, 105, 180, 90));
+
+    g2d.fillRect(
+            (int) x1,
+            (int) y1,
+            (int) width,
+            (int) height
+    );
+
+    g2d.setColor(oldColor);
+
+	// Migliora qualitÃ  testo
+g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+	RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+}
+
+
 	
 	/***************
-	 * Disegno le etichette asse X , conoscendo già i rect delle etichette ;
+	 * Disegno le etichette asse X , conoscendo giï¿½ i rect delle etichette ;
 	 * verifihe se vengono sovrapposte ed in base alle opzioni decido come
 	 * stamparle a video ( per ora scrivo solo le etichette che non si
 	 * sovrappongono).
@@ -766,7 +890,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 		return y1;
 	}
 	/***************
-	 * Disegno le etichette asse Y , conoscendo già i rect delle etichette ;
+	 * Disegno le etichette asse Y , conoscendo giï¿½ i rect delle etichette ;
 	 * verifihe se vengono sovrapposte ed in base alle opzioni decido come
 	 * stamparle a video ( per ora scrivo solo le etichette che non si
 	 * sovrappongono).
@@ -802,7 +926,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 	 * @param component
 	 *            - questo pannello Diagram (vedere costruttore )
 	 * @param popup
-	 *            - il menu, che in base alla posizione verrà visualizzzato
+	 *            - il menu, che in base alla posizione verrï¿½ visualizzzato
 	 */
 	private  void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
@@ -819,7 +943,7 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 			}
 
 			/**
-			 * se il clic èa sinistra dell'asse Y o sotto l'asse X visualizzo il
+			 * se il clic ï¿½a sinistra dell'asse Y o sotto l'asse X visualizzo il
 			 * menu label altrimenti il menu diagram
 			 * 
 			 * @param e
@@ -828,8 +952,8 @@ public class APanelDiagram extends JPanel implements ItemListener, ActionListene
 				if(!menu_abilitated)
 					return;
 				/**
-				 * Per verificare se il clic è fuori dall'area diagram e
-				 * nell'are label utilizzo le coordinate del pannello Poichè le
+				 * Per verificare se il clic ï¿½ fuori dall'area diagram e
+				 * nell'are label utilizzo le coordinate del pannello Poichï¿½ le
 				 * coordinate Y sono trasposte per usare origine in basso a
 				 * destra devo per le coordinate inferiori riporatre la
 				 * coordinata Y del click in basso(...)
@@ -978,7 +1102,7 @@ public void disabilitaMenu(){
 	}
 /**
  * Imposta i valori dell'asse x; intanto inizzializza il vettore per creare le stringhe
- * che è separato per permettere operazioni sui dati senza modificarli
+ * che ï¿½ separato per permettere operazioni sui dati senza modificarli
  * @param x_axis
  */
 	public void setX_axis(double[] x_axis) {
@@ -995,7 +1119,7 @@ public void disabilitaMenu(){
 	}
 /**
  *  * Imposta i valori dell'asse Y; intanto inizzializza il vettore per creare le stringhe
- * che è separato per permettere operazioni(per la visualizzazione) sui dati senza modificarli
+ * che ï¿½ separato per permettere operazioni(per la visualizzazione) sui dati senza modificarli
  * 
  * @param y_axis
  */
@@ -1039,7 +1163,7 @@ public void disabilitaMenu(){
 		public void setFormatNumberAxis(String formatNumberAxis) {
 			String oldf = this.formatNumberAxis;
 			try {
-				String.format(formatNumberAxis, 0.15);// Verifica se nuovo formato è
+				String.format(formatNumberAxis, 0.15);// Verifica se nuovo formato ï¿½
 														// corretto
 				this.formatNumberAxis = formatNumberAxis;
 				this.formatNumberAxisX = formatNumberAxis;
@@ -1053,7 +1177,7 @@ public void disabilitaMenu(){
 	public void setFormatNumberAxisX(String formatNumberAxisX) {
 		String oldf = this.formatNumberAxisX;
 		try {
-			String.format(formatNumberAxisX, 0.15);// Verifica se nuovo formato è
+			String.format(formatNumberAxisX, 0.15);// Verifica se nuovo formato ï¿½
 										// corretto
 			this.formatNumberAxisX = formatNumberAxisX;
 		} catch (Exception e) {
@@ -1065,7 +1189,7 @@ public void disabilitaMenu(){
 	public void setFormatNumberAxiY(String formatNumberAxiY) {
 		String oldf = this.formatNumberAxisY;
 		try {
-			String.format(formatNumberAxiY, 0.15);// Verifica se nuovo formato è
+			String.format(formatNumberAxiY, 0.15);// Verifica se nuovo formato ï¿½
 										// corretto
 			this.formatNumberAxisY = formatNumberAxiY;
 		} catch (Exception e) {
@@ -1132,9 +1256,9 @@ public void disabilitaMenu(){
 		}
 
 		public  Punto(){
-		color=Color.green;
+		color= color_punto;// Color.green;
 		 stroke = new BasicStroke(0.5f);
-		 stroke=new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+		 stroke=new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 		
 		};
 		

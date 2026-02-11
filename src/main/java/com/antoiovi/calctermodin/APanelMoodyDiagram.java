@@ -44,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.JCheckBox;
 
+import com.antoiovi.calctermodin.APanelMoodyDiagram.AVerifier;
 import com.antoiovi.swing.APDiagram;
 import com.antoiovi.swing.APanelDiagram;
 import com.antoiovi.util.math.Geometry;
@@ -452,76 +453,142 @@ private JTextArea textArea;
 		}
 		}// Fine inputVerifier
 
-	private boolean Calcfattaattr() {
-	try {
+	/**
+ * Calcola il fattore di attrito del moto in un condotto in funzione
+ * del numero di Reynolds e della scabrezza relativa.
+ *
+ * Il metodo:
+ * - legge i valori di Reynolds e scabrezza dai campi di input
+ * - calcola la scabrezza relativa automaticamente oppure la usa inserita a mano
+ * - determina il regime di moto (laminare, transizione o turbolento)
+ * - calcola il fattore di attrito:
+ *   - moto laminare: formula 64 / Reynolds
+ *   - zona di transizione: interpolazione tra moto laminare e turbolento
+ *   - moto turbolento: risoluzione dell’equazione di Colebrook tramite diagramma di Moody
+ * - aggiorna i campi di output testuali e grafici
+ *
+ * In caso di errore di input o di calcolo, visualizza un messaggio di errore
+ * e restituisce false.
+ *
+ * @return true se il calcolo va a buon fine, false in caso di errore
+ */
+	/**
+ * Calcola il fattore di attrito in base al numero di Reynolds e alla scabrezza relativa.
+ * Gestisce moto laminare, di transizione e turbolento.
+ */
+private boolean Calcfattaattr() {
+    try {
 
-		nrey=Double.parseDouble(textFieldNrey.getText());
-		scabr=Double.parseDouble(textFieldScabr.getText());
-		if (ckboxScabrAMano.isSelected()) {
-			scabr=Double.parseDouble(textFieldScabr.getText());
-			
-		} else {
-		//	rug=Double.parseDouble(textFieldRug.getText());
-			scabr=rug/diam;
-			textFieldScabr.setText(Double.toString(scabr));
-		}
-		String resultString;
-		if(nrey<2300){
-			/**
-			 * Moto laminare
-			 */
-			fattattr=64/nrey;
-               //FattAttrRuvido=FattAttrLiscio;//verificare per nre<3000
-			resultString=String.format("Moto laminare.Numero di Reynolds = %1.1f "
-					+ " scabrezza relativa = %f  Fattore di attrito(64/Nreynolds)= %f", nrey,scabr,fattattr);
-           }
-		else if(nrey<3400){
-			/**
-			 * Zona di tranzizione
-			 */
-			double f1=64/nrey;
-		    com.antoiovi.unicig.condotti.MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
-            double f2=moodydiagr.zbrent();
-            double Xa=2300;
-            double Xb=3400;
-            double Ya=f1;    
-            double Yb=f2;    
-              //Calculate slope from p1 to p2 
-            double m = (Xb-Xa)/(Yb-Ya); 
-            double a=Ya*(nrey-Xb)/(Xa-Xb);
-            double b=Yb*(nrey-Xa)/(Xa-Xb);
-            fattattr=a-b;
-            resultString=String.format("Moto in zona di tranzizione.\n Numero di Reynolds = %1.1f \n"
-					+ " scabrezza relativa = %f  \n"
-					+ "Fattore di attrito\n"
-					+ "(interpolazione tra zona laminare e zona moto turbolento)=\n %f", nrey,scabr,fattattr);
-        }else{
-        	/**
-        	 * Moto Turbolento
-        	 */
-               com.antoiovi.unicig.condotti.MoodyDiagram moodydiagr=new MoodyDiagram(nrey,scabr);
-                fattattr=moodydiagr.zbrent();
-               resultString=String.format("Moto turbolento. \nNumero di Reynolds = %1.1f \n"
-   					+ " scabrezza relativa = %f \n Fattore di attrito\n(tramite formula di Colebrook)= %f", nrey,scabr,fattattr);
-           }
-		
-		textFieldFattAtt.setText(Double.toString(fattattr));
-		double x=Math.log10(nrey);
-		double y=Math.log10(fattattr);
-		apdiagram.clearPunti();
-		apdiagram.clearStringhe();
-		apdiagram.addPunto(Math.log10(nrey), Math.log10(fattattr));
-		double topy=asseys[asseys.length-1];
-		double halfx=assexs[(int)assexs.length/2];
-		apdiagram.addStringa(String.format("CURVA PER SCABREZZA RELATIVA =%1.6f", scabr), halfx, topy);
-		apdiagram.addStringa(String.format("Fattore d'attrito=%1.6f", fattattr), x, y);
-		textArea.setText(resultString);
-		return true;
-	} catch (Exception e) {
-		textFieldFattAtt.setText("#ERRORE");
-		textArea.setText("#ERRORE#");
-		return false;
-	}}	
+        // ===============================
+        // Lettura input
+        // ===============================
+        nrey = Double.parseDouble(textFieldNrey.getText());
+
+        // Calcolo o inserimento manuale della scabrezza relativa
+        if (ckboxScabrAMano.isSelected()) {
+            scabr = Double.parseDouble(textFieldScabr.getText());
+        } else {
+            scabr = rug / diam;
+            textFieldScabr.setText(Double.toString(scabr));
+        }
+
+        String resultString;
+
+        // ===============================
+        // Moto laminare
+        // ===============================
+        if (nrey < 2300) {
+
+            fattattr = 64.0 / nrey;
+
+            resultString = String.format(
+                    "Moto laminare.\nNumero di Reynolds = %1.1f\n"
+                  + "Scabrezza relativa = %f\n"
+                  + "Fattore di attrito (64/Re) = %f",
+                    nrey, scabr, fattattr
+            );
+
+        // ===============================
+        // Zona di transizione
+        // ===============================
+        } else if (nrey < 3400) {
+
+            // Fattore di attrito in zona laminare
+            double fLaminare = 64.0 / nrey;
+
+            // Fattore di attrito in zona turbolenta (Colebrook)
+            MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+            double fTurbolento = moody.zbrent();
+
+            // Interpolazione lineare tra 2300 e 3400
+            double reMin = 2300.0;
+            double reMax = 3400.0;
+            double peso = (nrey - reMin) / (reMax - reMin);
+
+            fattattr = fLaminare + peso * (fTurbolento - fLaminare);
+
+            resultString = String.format(
+                    "Moto in zona di transizione.\nNumero di Reynolds = %1.1f\n"
+                  + "Scabrezza relativa = %f\n"
+                  + "Fattore di attrito (interpolazione) = %f",
+                    nrey, scabr, fattattr
+            );
+
+        // ===============================
+        // Moto turbolento
+        // ===============================
+        } else {
+
+            MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+            fattattr = moody.zbrent();
+
+            resultString = String.format(
+                    "Moto turbolento.\nNumero di Reynolds = %1.1f\n"
+                  + "Scabrezza relativa = %f\n"
+                  + "Fattore di attrito (Colebrook) = %f",
+                    nrey, scabr, fattattr
+            );
+        }
+
+        // ===============================
+        // Aggiornamento output
+        // ===============================
+        textFieldFattAtt.setText(Double.toString(fattattr));
+        textArea.setText(resultString);
+
+        // ===============================
+        // Aggiornamento diagramma
+        // ===============================
+        double x = Math.log10(nrey);
+        double y = Math.log10(fattattr);
+
+        apdiagram.clearPunti();
+        apdiagram.clearStringhe();
+        apdiagram.addPunto(x, y);
+
+        double topY = asseys[asseys.length - 1];
+        double halfX = assexs[assexs.length / 2];
+
+        apdiagram.addStringa(
+                String.format("CURVA PER SCABREZZA RELATIVA = %1.6f", scabr),
+                halfX, topY
+        );
+
+        apdiagram.addStringa(
+                String.format("Fattore d'attrito = %1.6f", fattattr),
+                x, y
+        );
+
+        return true;
+
+    } catch (Exception e) {
+        // Gestione errori di input o calcolo
+        textFieldFattAtt.setText("#ERRORE");
+        textArea.setText("#ERRORE#");
+        return false;
+    }
+}
+
 
 	
 	public void CreateDiagram()  {
