@@ -1,8 +1,9 @@
 site_name: "Moody Diagram Java Documentation"
 nav:
   - Home: index.md
-  - Theory: theory.md
+  - Theory: theory_moody.md
   - README: README_COPY.md    
+  - Theory_combustion: theory_combustion_module.md
   - Screenshots:
       - Screenshot: screenshots/moody-diagram.png
   - Examples: sample-inputs.txt
