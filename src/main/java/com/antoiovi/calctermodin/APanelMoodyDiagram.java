@@ -106,8 +106,6 @@ import com.antoiovi.calctermodin.APanelMoodyDiagram.AVerifier;
 import com.antoiovi.swing.APDiagram;
 import com.antoiovi.swing.APanelDiagram;
 import com.antoiovi.util.math.Geometry;
-import  com.antoiovi.calctermodin.core.FrictionFactorCalculation;
-import com.antoiovi.calctermodin.core.FrictionFactorCalculation.Result;
 import com.antoiovi.unicig.condotti.MoodyDiagram;
 
 import javax.swing.JScrollPane;
@@ -269,7 +267,7 @@ private JTextArea textArea;
 					// Crepo il diagramma e la curva con la scabrezza
 					
 					// calcolo il fattore d'attrito
-				if(	calculateFrictionFactor()){
+				if(	Calcfattaattr()){
 					CreateDiagram();
 				}
 				}catch(Exception e){
@@ -380,7 +378,7 @@ private JTextArea textArea;
 		rug=0.001;
 		diam=0.75;
 		textFieldDiam.setText(String.valueOf(0.5));
-		this.calculateFrictionFactor();
+		this.Calcfattaattr();
 		this.CreateDiagram();
 
 
@@ -451,7 +449,7 @@ private JTextArea textArea;
 		        boolean inputOK = verify(input);
 		     //   makeItPretty(input);
 		        if (inputOK) {
-		        	calculateFrictionFactor();
+		        	Calcfattaattr();
 		                return true;
 		        } else {
 		            Toolkit.getDefaultToolkit().beep();
