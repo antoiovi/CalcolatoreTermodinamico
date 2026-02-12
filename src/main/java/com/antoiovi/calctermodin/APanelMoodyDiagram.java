@@ -488,121 +488,128 @@ private JTextArea textArea;
  * Calcola il fattore di attrito in base al numero di Reynolds e alla scabrezza relativa.
  * Gestisce moto laminare, di transizione e turbolento.
  */
-private boolean Calcfattaattr() {
-    try {
+	private boolean Calcfattaattr() {
 
-        // ===============================
-        // Lettura input
-        // ===============================
-        nrey = Double.parseDouble(textFieldNrey.getText());
+		try {
+	
+			// ===============================
+			// Lettura input (GUI)
+			// ===============================
+			nrey = Double.parseDouble(textFieldNrey.getText());
+	
+			if (ckboxScabrAMano.isSelected()) {
+				scabr = Double.parseDouble(textFieldScabr.getText());
+			} else {
+				scabr = rug / diam;
+				textFieldScabr.setText(Double.toString(scabr));
+			}
+	
+			// ===============================
+			// Calcolo numerico (separato)
+			// ===============================
+			fattattr = computeFrictionFactor(nrey, scabr);
+	
+			// ===============================
+			// Output testuale (GUI)
+			// ===============================
+			textFieldFattAtt.setText(Double.toString(fattattr));
+			textArea.setText(buildResultString(nrey, scabr, fattattr));
+	
+			// ===============================
+			// Aggiornamento grafico (GUI)
+			// ===============================
+			updateDiagramPoint(nrey, fattattr);
+	
+			return true;
+	
+		} catch (Exception e) {
+	
+			textFieldFattAtt.setText("#ERROR");
+			textArea.setText("#ERRORE");
+			return false;
+		}
+	}
 
-        // Calcolo o inserimento manuale della scabrezza relativa
-        if (ckboxScabrAMano.isSelected()) {
-            scabr = Double.parseDouble(textFieldScabr.getText());
-        } else {
-            scabr = rug / diam;
-            textFieldScabr.setText(Double.toString(scabr));
-        }
+	private double computeFrictionFactor(double nrey, double scabr) {
 
-        String resultString;
+		// Moto laminare
+		if (nrey < 2300) {
+			return 64.0 / nrey;
+		}
+	
+		// Zona di transizione
+		if (nrey < 3400) {
+	
+			double fLaminare = 64.0 / nrey;
+	
+			MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+			double fTurbolento = moody.zbrent();
+	
+			double reMin = 2300.0;
+			double reMax = 3400.0;
+			double peso = (nrey - reMin) / (reMax - reMin);
+	
+			return fLaminare + peso * (fTurbolento - fLaminare);
+		}
+	
+		// Moto turbolento
+		MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+		return moody.zbrent();
+	}
+		
+	private String buildResultString(double nrey, double scabr, double fattattr) {
 
-        // ===============================
-        // Moto laminare
-        // ===============================
-        if (nrey < 2300) {
-
-            fattattr = 64.0 / nrey;
-
-            resultString = String.format(
-                    "Laminar flow.\nReynolds number = %1.1f\n"
-					+ "Relative roughness = %f\n"
-					+ "Friction factor (64/Re) = %f"
-					,
-                    nrey, scabr, fattattr
-            );
-
-        // ===============================
-        // Zona di transizione
-        // ===============================
-        } else if (nrey < 3400) {
-
-            // Fattore di attrito in zona laminare
-            double fLaminare = 64.0 / nrey;
-
-            // Fattore di attrito in zona turbolenta (Colebrook)
-            MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
-            double fTurbolento = moody.zbrent();
-
-            // Interpolazione lineare tra 2300 e 3400
-            double reMin = 2300.0;
-            double reMax = 3400.0;
-            double peso = (nrey - reMin) / (reMax - reMin);
-
-            fattattr = fLaminare + peso * (fTurbolento - fLaminare);
-
-            resultString = String.format(
-                  "Transitional flow region.\nReynolds number = %1.1f\n"
-					+ "Relative roughness = %f\n"
-					+ "Friction factor (interpolated) = %f",
-                    nrey, scabr, fattattr
-            );
-
-        // ===============================
-        // Moto turbolento
-        // ===============================
-        } else {
-
-            MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
-            fattattr = moody.zbrent();
-
-            resultString = String.format(
-				"Turbulent flow.\nReynolds number = %1.1f\n"
+		if (nrey < 2300) {
+	
+			return String.format(
+				"Laminar flow.\nReynolds number = %1.1f\n"
 				+ "Relative roughness = %f\n"
-				+ "Friction factor (Colebrook equation) = %f",
-                    nrey, scabr, fattattr
-            );
-        }
+				+ "Friction factor (64/Re) = %f",
+				nrey, scabr, fattattr
+			);
+		}
+	
+		if (nrey < 3400) {
+	
+			return String.format(
+				"Transitional flow region.\nReynolds number = %1.1f\n"
+				+ "Relative roughness = %f\n"
+				+ "Friction factor (interpolated) = %f",
+				nrey, scabr, fattattr
+			);
+		}
+	
+		return String.format(
+			"Turbulent flow.\nReynolds number = %1.1f\n"
+			+ "Relative roughness = %f\n"
+			+ "Friction factor (Colebrook equation) = %f",
+			nrey, scabr, fattattr
+		);
+	}
+	
+	private void updateDiagramPoint(double nrey, double fattattr) {
 
-        // ===============================
-        // Aggiornamento output
-        // ===============================
-        textFieldFattAtt.setText(Double.toString(fattattr));
-        textArea.setText(resultString);
-
-        // ===============================
-        // Aggiornamento diagramma
-        // ===============================
-        double x = Math.log10(nrey);
-        double y = Math.log10(fattattr);
-
-        apdiagram.clearPunti();
-        apdiagram.clearStringhe();
-        apdiagram.addPunto(x, y);
-
-        double topY = asseys[asseys.length - 1];
-        double halfX = assexs[assexs.length / 2];
-
-        apdiagram.addStringa(
+		double x = Math.log10(nrey);
+		double y = Math.log10(fattattr);
+	
+		apdiagram.clearPunti();
+		apdiagram.clearStringhe();
+		apdiagram.addPunto(x, y);
+	
+		double topY = asseys[asseys.length - 1];
+		double halfX = assexs[assexs.length / 2];
+	
+		apdiagram.addStringa(
 			String.format("CURVE FOR RELATIVE ROUGHNESS = %1.6f", scabr),
-                halfX, topY
-        );
-
-        apdiagram.addStringa(
+			halfX, topY
+		);
+	
+		apdiagram.addStringa(
 			String.format("Friction factor = %1.6f", fattattr),
-                x, y
-        );
-
-        return true;
-
-    } catch (Exception e) {
-        // Gestione errori di input o calcolo
-        textFieldFattAtt.setText("#ERROR");
-        textArea.setText("#ERRORE");
-        return false;
-    }
-}
-
-
+			x, y
+		);
+	}
+	
 	
 	public void CreateDiagram()  {
 double Nrey;
