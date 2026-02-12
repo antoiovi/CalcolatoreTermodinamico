@@ -58,7 +58,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
 public class APCombCaldaia extends JPanel implements ItemListener {
-	String[] sinput = { "Combustibile", "Potenza", "Temperatura fumi [°C]" };
+	String[] sinput = { "Combustibile [click destro per help]", "Potenza", "Temperatura fumi [°C]" };
 
 	Dati daticalcolo = new Dati();
 
