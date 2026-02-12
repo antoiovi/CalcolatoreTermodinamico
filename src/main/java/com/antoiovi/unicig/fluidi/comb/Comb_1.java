@@ -260,7 +260,8 @@ static  final double D_F[ ][]={
 		double exp=(23.6448-(4077.9/(tp-36.48)));
 		return Math.exp(exp);
 	}
-
+	
+	
   public static void print(int COMB){
     String header1= String.format("%10s|%10s|%10s|%10s|%10s|%10s|",
     "Hu","Vatr min","VL min","Vh20","CO2%max","SO2%max");

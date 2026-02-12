@@ -43,15 +43,31 @@ public class CombustibiliFactory  {
  static final int NUM_COMB=14; // numero di combustibili
  
  static final int DEFAULT=GAS_NAT_L;
- 
+
  public static final String combustibileName[]={"Coke"       ,"Carbone minerale(antracite)"             ,"Lignite"              ,"RFO <4% S"     ,     "RFO <2% S",
 						"RFO < 1% S" ,"Combustibile per riscaldamento domestico","Cherosene"            ,"Gas naturale H","Gas naturale L",
 						"Gas liquido","Legno (umidità 23.1 %)"                  ,"Legno (umidità 33,3%)","Pallet di legno"};
  
- 
+
+public static final int COL_HU = 0;          // Hu → Potere Calorifico Inferiore
+public static final int COL_VATR_MIN = 1;    // Vatr min → Volume aria teorica minima
+public static final int COL_VL_MIN = 2;      // VL min → Volume fumi secchi minimo
+public static final int COL_VH2O = 3;        // Vh2O → Volume vapore acqueo nei fumi
+public static final int COL_CO2_MAX = 4;     // CO2%max → Percentuale massima teorica di CO2
+public static final int COL_SO2_MAX = 5;     // SO2%max → Percentuale massima teorica di SO2
+
+public static final String[] COL_NAMES = {
+    "Hu [MJ/kg o MJ/Nm3]",
+    "Vatr min [Nm3/Nm3 o Nm3/kg]",
+    "VL min [Nm3/Nm3 o Nm3/kg]",
+    "Vh2O [Nm3/Nm3 o Nm3/kg]",
+    "CO2 max [%]",
+    "SO2 max [%]"
+};
+
  // TabellaB1[Riga][Colonna]
  // Riga = combustibile ;colonna=proprieta
- double DatiCombustibile[ ][]={
+ public static final double DatiCombustibile[ ][]={
 					{ 8.06, 7.64, 7.66, 0.13,20.60, 0.09},//Riga 0
 					{ 9.24, 8.37, 8.55, 0.44,19.05, 0.10},
 					{ 5.42, 5.09, 5.17, 0.68,19.48, 0.04},
@@ -126,5 +142,15 @@ public Combustibile getNewCombustibile(int COMBUSTIBILE){
 		if(COMBUSTIBILE<0 || COMBUSTIBILE> (NUM_COMB-1))
 				COMBUSTIBILE=DEFAULT;
 			return combustibili[COMBUSTIBILE];			}
+
+
+			public static String[] getCombustibileName() {
+				return combustibileName;
+			}
+			
+			public static double[][] getDatiCombustibile() {
+				return DatiCombustibile;
+			}
+			
 		 
 }

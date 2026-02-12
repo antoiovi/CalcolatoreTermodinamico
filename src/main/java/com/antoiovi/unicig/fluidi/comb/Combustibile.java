@@ -14,14 +14,13 @@ import java.util.Map;
 public class Combustibile  {
 
  // Proprietà combustibili tabella B1
-
- static final int HU       =0; //Tenore di energia del combustibile
- static final int V_ATR_MIN=1; // relazione tra volumegas minimom
- static final int VL_MIN   =2;
- static final int V_H2O    =3;
- static final int CO2_MAX  =4;
- static final int SO2_MAX  =5;
-
+ public static final int COL_HU = 0;          // Hu → Potere Calorifico Inferiore
+ public static final int COL_VATR_MIN = 1;    // Vatr min → Volume aria teorica minima
+ public static final int COL_VL_MIN = 2;      // VL min → Volume fumi secchi minimo
+ public static final int COL_VH2O = 3;        // Vh2O → Volume vapore acqueo nei fumi
+ public static final int COL_CO2_MAX = 4;     // CO2%max → Percentuale massima teorica di CO2
+ public static final int COL_SO2_MAX = 5;     // SO2%max → Percentuale massima teorica di SO2
+ 
 
 // DATI COMBUSTIONE
  static final int FM1      =0;
