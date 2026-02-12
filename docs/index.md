@@ -1,4 +1,6 @@
-# Benvenuti alla Documentazione di Moody Diagram Java
+# Welcome to documentation  Moody Diagram Java
 
-Questa è la documentazione per il progetto Moody Diagram in Java. Naviga attraverso le sezioni per scoprire di più.
-Puoi consultare il [README_COPY](README_COPY.md) per maggiori informazioni.
+- [Combustion module  theory](theory_combustion_module.md)
+- [Moody diagram module theory](theory_moody.md)
+
+
