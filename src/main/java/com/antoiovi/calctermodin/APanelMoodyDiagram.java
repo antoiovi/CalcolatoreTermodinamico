@@ -8,6 +8,48 @@
  *  - Turbulent (Re > 3400): Colebrook–White equation
  *
  * The method updates both numerical output and Moody diagram visualization.
+ * 
+ * 
+ User Input
+    │
+    ▼
+InputVerifier
+    │
+    ▼
+Calcfattaattr()
+    │
+    ├── Read nrey
+    ├── Compute / Read scabr
+    │
+    ▼
+computeFrictionFactor()
+    │
+    ├── Laminar
+    ├── Transitional
+    └── Turbulent (Colebrook)
+    │
+    ▼
+Return fattattr
+    │
+    ▼
+buildResultString()
+    │
+    ▼
+updateDiagramPoint()
+    │
+    ├── log10(Re)
+    ├── log10(f)
+    ├── clear old points
+    ├── add new point
+    └── add labels
+    │
+    ▼
+CreateDiagram()
+    │
+    ├── Loop Reynolds axis
+    ├── Compute curve
+    └── Repaint diagram
+
  *
  * License: MIT
  */
