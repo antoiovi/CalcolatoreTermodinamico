@@ -43,6 +43,7 @@ Combustion is modeled assuming steady-state operation.
 
 For a generic hydrocarbon fuel:
 
+C_xH_y + a(O2 +3.76 N2)--> b CO2 + c H2O + d O2 + e N2
 
 Where:
 
