@@ -26,6 +26,11 @@ The implementation is intended for engineering applications in HVAC, energy syst
 
 # 2. Combustion Model
 
+## 2.0 Example calculation
+
+[Boiler calculation](screenshots/boiler_calculation.png)
+
+
 ## 2.1 Fuel Characterization
 
 Each fuel is characterized by:

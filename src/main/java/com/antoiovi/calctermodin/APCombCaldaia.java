@@ -17,10 +17,8 @@ import com.antoiovi.unicig.fluidi.comb.Comb_2;
 import com.antoiovi.unicig.impianti.Gener;
 import java.awt.Toolkit;
 
-
 import java.util.List;
 import java.util.ArrayList;
-
 
 import java.awt.Color;
 import java.awt.Font;
@@ -53,72 +51,74 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
 public class APCombCaldaia extends JPanel implements ItemListener {
-	String[] sinput = { "Combustibile [click destro per help]", "Potenza", "Temperatura fumi [°C]" };
+
+	// Input strings
+	String[] sinput = { "Fuel [right-click for help]", "Power", "Flue Gas Temperature [°C]" };
 
 	Dati daticalcolo = new Dati();
 
-	// INDICI OUTPUT
+	// OUTPUT INDICES
 	final int OUT_P_MASS = 0;
 	final int OUT_R = 1;
-
 	final int OUT_CAP_T = 2;
 	final int OUT_TEN_H2O = 3;
-
 	final int OUT_PRESS_PARZ_VAP_H2O = 4;
 	final int OUT_TEMP_RUG = 5;
-
 	final int OUT_AUM_TEMP_RUG = 6;
 	final int OUT_COND_TERM = 7;
-
 	final int OUT_VISC_DIN = 8;
 	final int OUT_R_CONDENS = 9;
-
 	final int OUT_TIR_MIN = 10;
 	final int OUT_PRESS_PARZ_VAP_H20_A_T_RUG = 11;
 
-	// Indici InputTextField
+	// Input text field indices
 	final int INP_POT = 0;
 	final int INP_TEMPFUM = 1;
 	final int INP_P_MASS = 2;
 	final int INP_REND = 3;
 	final int INP_CO2 = 4;
 
-	String[] strCheckBoxes = { "Portata fumi nota [g/s]", "Rendiemento noto", "CO2% noto" };
+	// Checkbox labels and indices
+	String[] strCheckBoxes = { "Known flue gas flow [g/s]", "Known efficiency", "Known CO2%" };
 	final int CHB_P_MASS = 0;
 	final int CHB_REND = 1;
 	final int CHB_CO = 2;
 
-	String[] strRadioButtons = { "Bruciatore aria soffiata", "Bruciatore aria naturale" };
+	// Radio button labels and indices
+	String[] strRadioButtons = { "Forced-air burner", "Natural-air burner" };
 	final int RAD_BTN_AS = 0;
 	final int RAD_BTN_AN = 1;
 
 	private List<String> listaErroriInput = new ArrayList<String>();
 
+	// Output strings
 	String[] soutput = {
-			"Portata massica fumi [g/s]", "CostElasticita",
-			"CapTermica", "TenoreH2O [%]",
-			"Pressione parziale del vapore acqueo[Pa]", "temperatura punto di rugiada[°C]",
-			"Aumento del punto di rugiada [K]", "coefficiente di conducibilità termica in W/(m x K)",
-			"viscosità dinamica dei prodotti [N s/m2]", " R in J/(kgxK)",
-			"Tiraggio minimo [Pa] ", "P parz vapore acqueo a temp rugiada [Pa]" };
-	String sDescrizione = "<html><b>Calcolo parametri combustione</b><br>" +
-			"<p>Il programma calcola i parametri dei prodotti " +
-			"della combustione dati i dati del generatore utilizando il metodo della norma UNI EN 13384-1</p><br>" +
-			"" +
+			"Flue gas mass flow [g/s]", "Elasticity constant",
+			"Heat capacity", "H2O content [%]",
+			"Partial pressure of water vapor [Pa]", "Dew point temperature [°C]",
+			"Increase in dew point [K]", "Thermal conductivity coefficient [W/(m·K)]",
+			"Dynamic viscosity of products [N·s/m²]", "R [J/(kg·K)]",
+			"Minimum draft [Pa]", "Partial pressure of water vapor at dew point [Pa]" };
+
+	String sDescrizione = "<html><b>Combustion Parameter Calculation</b><br>" +
+			"<p>This program calculates the parameters of combustion products " +
+			"given the boiler data using the UNI EN 13384-1 standard method.</p><br>" +
 			"</html>";
+
+	// Input labels and text fields
 	JLabel[] lblInput;
 	JTextField[] txtInput;
 
-	// Panel input 2
+	// Panels for input
 	JPanel panelInput1;
 	JPanel panelInput2;
 	JTextField textFieldInput[];
 
+	// Manual inputs and checkboxes
 	JTextField[] manual;
 	JCheckBox[] jcheck;
 
@@ -126,18 +126,14 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 	static final int BR_NAT = 1;
 
 	JRadioButton[] rdb_ariabr;
-	// Group the radio buttons.
 	ButtonGroup group;
 
 	JComponent[] jinput2;
-
-
-	// Dati output
-	JLabel[] lblOutput;
-	JTextField[] txtOutput;
-
 	JComponent[] jinput;
 
+	// Output labels and text fields
+	JLabel[] lblOutput;
+	JTextField[] txtOutput;
 
 	JButton bCalcola;
 
@@ -147,9 +143,10 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 	JTextArea outArea;
 
 	public APCombCaldaia() {
-		panel = this;// new JPanel();
+		panel = this; // Use this JPanel
 		panel.setLayout(new GridBagLayout());
-		// JComboBox con lista combustibili
+
+		// JComboBox with fuel list
 		combustibili = Combustibile.combustibile;
 		jcombListCombust = new JComboBox(combustibili);
 		jcombListCombust.setSelectedIndex(4);
@@ -164,18 +161,12 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 			}
 		});
 
-		// sinput stringhe input : combiustiblie, potenza; temperatura
-		// jiunput : componenti che possono essere JTextField o JComboBox
+		// Initialize input components
 		jinput = new JComponent[sinput.length];
-		// etichette inpute : come campi input
 		lblInput = new JLabel[sinput.length];
-		// textfield solo due (uno è jcombobox )
 		txtInput = new JTextField[sinput.length - 1 + strCheckBoxes.length];
 
-		lblOutput = new JLabel[soutput.length];
-		txtOutput = new JTextField[soutput.length];
-
-		// Numero 5 textfield Input : Potenza, Temperatura Pmassica Rendimento CO2
+		// Five main input fields: Power, Flue Temp, Mass Flow, Efficiency, CO2
 		textFieldInput = new JTextField[5];
 		textFieldInput[INP_POT] = new JTextField(10);
 		textFieldInput[INP_TEMPFUM] = new JTextField(10);
@@ -191,104 +182,90 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 			}
 		}
 
+		// Layout constraints
 		int X = 0;
 		int Y = 0;
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(0, 0, 5, 5);
-		// Titolo input
-		X = 0;
-		c.gridy = Y;
-		// c.weighty = 1.0; //request any extra vertical space
-		c.ipady = 40; // make this component tall
-		c.gridwidth = 2;
 
-		JLabel titlinput = new JLabel("Dati caldaia :");
+		// Input title
+		c.gridy = Y;
+		c.ipady = 40;
+		c.gridwidth = 2;
+		JLabel titlinput = new JLabel("Boiler Data:");
 		titlinput.setFont(new Font("Courier New", Font.BOLD, 24));
 		titlinput.setForeground(Color.GRAY);
 		panel.add(titlinput, c);
 
-		c.weighty = 0; // reset
-		c.ipady = 0; // reset
+		c.weighty = 0;
+		c.ipady = 0;
 		Y += 2;
-
 		X = 0;
 
-		/**
-		 * INPUT PANEL 1
-		 **/
+		// INPUT PANEL 1
 		this.initPanelInput1();
-		// Input
 		c.gridx = X;
 		c.gridy = Y;
-
 		c.gridwidth = 5;
-
 		c.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(panelInput1, c);
-		/**
-		 * INPUT PANEL 2
-		 **/
-		this.initPanelInput2();
 
+		// INPUT PANEL 2
+		this.initPanelInput2();
 		Y += 2;
 		c.gridx = 0;
 		c.gridy = Y;
-
 		c.gridwidth = 5;
-
 		c.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(panelInput2, c);
 		c.fill = GridBagConstraints.NONE;
 
-		// -------- Button OK
+		// Calculate button
 		Y += 2;
 		X = 0;
-		bCalcola = new JButton("Calcola");
+		bCalcola = new JButton("Calculate");
 		bCalcola.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Calcola();
+				calculate();
 			}
 		});
-
-		// c.weighty = 1.0; //request any extra vertical space
 		c.gridx = 0;
 		c.gridy = Y;
 		c.gridwidth = 2;
 		panel.add(bCalcola, c);
-		// -------- RISULTATI DEL CALCOLO -------
+
+		// OUTPUT title
 		X = 0;
 		Y += 2;
 		c.gridx = X;
 		c.gridy = Y;
 		c.gridwidth = 2;
-		// c.weighty = 1.0; //request any extra vertical space
-		c.ipady = 30; // make this component tall
-
-		JLabel titleout = new JLabel("Risultati del calcolo :");
+		c.ipady = 30;
+		JLabel titleout = new JLabel("Calculation Results:");
 		titleout.setFont(new Font("Courier New", Font.BOLD, 24));
 		titleout.setForeground(Color.GRAY);
 		panel.add(titleout, c);
 		c.gridwidth = 1;
 
-		// ------------- Output
+		// Output fields
 		Y += 2;
 		c.gridy = Y;
-		c.ipady = 0; // reset to default
-		c.weighty = 0; // reset to default
+		c.ipady = 0;
+		c.weighty = 0;
 		c.gridwidth = 1;
 		X = 0;
 		int col = 0;
-		int row = Y;
+		lblOutput = new JLabel[soutput.length];
+		txtOutput = new JTextField[soutput.length];
 
 		for (int x = 0; x < soutput.length; x++) {
 			c.gridx = X;
 			c.gridy = Y;
 			c.weightx = 0.1;
-
 			lblOutput[x] = new JLabel(soutput[x]);
 			panel.add(lblOutput[x], c);
-			log(String.format("Label %20s  Y=%d", soutput[x], Y));
+
 			X++;
 			c.gridx = X;
 			c.weightx = 0.4;
@@ -296,8 +273,8 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			txtOutput[x].setColumns(10);
 			txtOutput[x].setBackground(Color.BLUE);
-
 			panel.add(txtOutput[x], c);
+
 			X++;
 			col++;
 			if (col > 1) {
@@ -305,18 +282,13 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 				X = 0;
 				Y += 2;
 			}
-
 		}
 
-		log(String.format("Y=%d", Y));
-		/********
-		 * Output logArea
-		 ************/
+		// Log/output area
 		outArea = new JTextArea(10, 10);
-		// Queste due righe sono state messe per permettere l'autoscrll
-		// dell'area nello jscrollpane
 		DefaultCaret caret = (DefaultCaret) outArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
 		Y++;
 		c.gridx = 0;
 		c.gridy = Y;
@@ -326,12 +298,12 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.BOTH;
-		log(String.format("out Area     Y=%d", Y));
 		JScrollPane spane = new JScrollPane(outArea);
 		panel.add(spane, c);
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.NONE;
-		// ---------------------DESCIZIONE (Ultima Linea)-----
+
+		// Description at bottom
 		JLabel descr = new JLabel(sDescrizione);
 		Y++;
 		c.gridx = 0;
@@ -342,12 +314,9 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LAST_LINE_START;
-
 		panel.add(descr, c);
 
-		/****
-		 * Inizzializzo checkBox e radio box
-		 ****/
+		// Initialize checkboxes and radio buttons
 		boolean is_def = false;
 		jcheck[CHB_CO].setSelected(is_def);
 		jcheck[CHB_REND].setSelected(is_def);
@@ -355,7 +324,6 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 
 		rdb_ariabr[RAD_BTN_AN].setSelected(true);
 		rdb_ariabr[RAD_BTN_AS].setSelected(false);
-
 	}
 
 	/**
@@ -371,8 +339,7 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 		} else if (itemEvent.getSource().equals(jcheck[CHB_P_MASS])) {
 			textFieldInput[INP_P_MASS].setEnabled(jcheck[CHB_P_MASS].isSelected());
 		}
-
-	};
+	}
 
 	/*********************
 	 * panel input 1
@@ -392,15 +359,18 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 	}
 
 	/*********************
-	 * panel input 2
+	 * Panel Input 2
 	 *********************/
 	void initPanelInput2() {
-		int chb = 3; // Check Box : portatamassica,Rendimento, CO2
-		int rb1 = 2;
+		int chb = 3; // Checkboxes: Mass flow, Efficiency, CO2
+		int rb1 = 2; // Number of radio buttons
 
 		panelInput2 = new JPanel(new FlowLayout());
 		group = new ButtonGroup();
+
+		// Initialize checkboxes
 		jcheck = new JCheckBox[chb];
+
 		jcheck[CHB_P_MASS] = new JCheckBox(strCheckBoxes[CHB_P_MASS]);
 		jcheck[CHB_P_MASS].addItemListener(this);
 		panelInput2.add(jcheck[CHB_P_MASS]);
@@ -416,20 +386,22 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 		panelInput2.add(jcheck[CHB_CO]);
 		panelInput2.add(textFieldInput[INP_CO2]);
 
+		// Initialize radio buttons
 		rdb_ariabr = new JRadioButton[rb1];
+
 		rdb_ariabr[RAD_BTN_AN] = new JRadioButton(strRadioButtons[RAD_BTN_AN]);
 		group.add(rdb_ariabr[RAD_BTN_AN]);
 		panelInput2.add(rdb_ariabr[RAD_BTN_AN]);
+
 		rdb_ariabr[RAD_BTN_AS] = new JRadioButton(strRadioButtons[RAD_BTN_AS]);
 		group.add(rdb_ariabr[RAD_BTN_AS]);
 		panelInput2.add(rdb_ariabr[RAD_BTN_AS]);
-
 	}
 
 	/*****************
-	 * CALCOLA
+	 * CALCULATE
 	 *****************/
-	private void Calcola() {
+	private void calculate() {
 		Dati dati = new Dati();
 
 		// logArea("");
@@ -438,11 +410,13 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 			try {
 				daticalcolo.calcola();
 
+				// Log headers and values
 				logArea(daticalcolo.gen_stringHeader);
 				logArea(daticalcolo.gen_stringValue);
 				logArea(daticalcolo.gen_comb_stringHeader);
 				logArea(daticalcolo.gen_comb_stringValue);
 
+				// Set output values in text fields
 				setTextValue(daticalcolo.gen_pmass, txtOutput[OUT_P_MASS]);
 				setTextValue(daticalcolo.gen_cost_el, txtOutput[OUT_R]);
 
@@ -463,116 +437,114 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 
 			} catch (Exception e) {
 				log(e.toString());
-				logArea("ERRORE DURANTE I CALCOLI");
+				logArea("ERROR DURING CALCULATIONS");
 			}
 
 		} else {
-			logArea("ERRORE INPUT");
-			for (String _str_ : listaErroriInput) {
-				logArea(_str_);
+			logArea("INPUT ERROR");
+			for (String errorMsg : listaErroriInput) {
+				logArea(errorMsg);
 			}
 		}
-
 	}
 
 	/****************************************************************
 	 * Validate Input
 	 ************************************************************/
+
 	boolean validateInput(Dati dati) {
 
-		listaErroriInput.clear();
+		listaErroriInput.clear(); // Clear the list of input errors
 		boolean test = true;
 
-		String[] strErrori = new String[textFieldInput.length];
+		String[] errorMessages = new String[textFieldInput.length];
 
-		strErrori[INP_POT] = "Valore potenza non valido...";
-		strErrori[INP_TEMPFUM] = "Valore temperatura fumi non valido";
-		strErrori[INP_P_MASS] = "Valore portata massica non valido ";
-		strErrori[INP_REND] = "Valore rendimento non valido ";
-		strErrori[INP_CO2] = "Valore CO2 non valido ";
+		errorMessages[INP_POT] = "Invalid power value...";
+		errorMessages[INP_TEMPFUM] = "Invalid flue gas temperature value";
+		errorMessages[INP_P_MASS] = "Invalid mass flow value";
+		errorMessages[INP_REND] = "Invalid efficiency value";
+		errorMessages[INP_CO2] = "Invalid CO2 value";
 
+		// Set burner type and selected fuel
 		daticalcolo.is_bruc_aria_nat = rdb_ariabr[RAD_BTN_AN].isSelected();
 		daticalcolo.is_bruc_aria_soff = rdb_ariabr[RAD_BTN_AS].isSelected();
 		daticalcolo.gen_COMBUSTIBILE = jcombListCombust.getSelectedIndex();
 
 		for (int x = 0; x < textFieldInput.length; x++) {
-			// log(String.format("x=%d",x));
-			// Verifcio quelli condizionati da check box
+
+			// Check fields controlled by checkboxes
 			if (x == INP_P_MASS) {
 				if (jcheck[CHB_P_MASS].isSelected()) {
-					Double _VAL = convertField(textFieldInput[x]);
-					test = _VAL == null ? false : test;
-					if (_VAL != null) {
-						daticalcolo.gen_pmass = _VAL;
+					Double val = convertField(textFieldInput[x]);
+					test = (val == null) ? false : test;
+					if (val != null) {
+						daticalcolo.gen_pmass = val;
 						daticalcolo.is_pmass_noto = true;
 					} else {
-						listaErroriInput.add(strErrori[INP_P_MASS]);
+						listaErroriInput.add(errorMessages[INP_P_MASS]);
 					}
-
 				} else {
 					daticalcolo.is_pmass_noto = false;
 				}
 
 			} else if (x == INP_REND) {
 				if (jcheck[CHB_REND].isSelected()) {
-					Double _VAL = convertField(textFieldInput[x]);
-					test = _VAL == null ? false : test;
-					if (_VAL != null) {
-						daticalcolo.gen_rend = _VAL;
+					Double val = convertField(textFieldInput[x]);
+					test = (val == null) ? false : test;
+					if (val != null) {
+						daticalcolo.gen_rend = val;
 						daticalcolo.is_rend_noto = true;
 					} else {
-						listaErroriInput.add(strErrori[INP_REND]);
+						listaErroriInput.add(errorMessages[INP_REND]);
 					}
-
 				} else {
 					daticalcolo.is_rend_noto = false;
 				}
 
 			} else if (x == INP_CO2) {
 				if (jcheck[CHB_CO].isSelected()) {
-					Double _VAL = convertField(textFieldInput[x]);
-
-					test = _VAL == null ? false : test;
-					if (_VAL != null) {
-						daticalcolo.gen_co2 = _VAL;
+					Double val = convertField(textFieldInput[x]);
+					test = (val == null) ? false : test;
+					if (val != null) {
+						daticalcolo.gen_co2 = val;
 						daticalcolo.is_co2_noto = true;
 					} else {
-						listaErroriInput.add(strErrori[INP_CO2]);
+						listaErroriInput.add(errorMessages[INP_CO2]);
 					}
-
 				} else {
 					daticalcolo.is_co2_noto = false;
 				}
 
 			} else {
-				Double _VAL = null;
+				Double val = null;
 				switch (x) {
 					case INP_POT:
-						_VAL = convertField(textFieldInput[x]);
-						test = _VAL == null ? false : test;
-						if (_VAL != null) {
-							daticalcolo.gen_potenza = _VAL;
+						val = convertField(textFieldInput[x]);
+						test = (val == null) ? false : test;
+						if (val != null) {
+							daticalcolo.gen_potenza = val;
 						} else {
-							listaErroriInput.add(strErrori[INP_POT]);
+							listaErroriInput.add(errorMessages[INP_POT]);
 						}
+						break;
 					case INP_TEMPFUM:
-						_VAL = convertField(textFieldInput[x]);
-						test = _VAL == null ? false : test;
-						if (_VAL != null) {
-							daticalcolo.gen_temp_fumi = _VAL;
+						val = convertField(textFieldInput[x]);
+						test = (val == null) ? false : test;
+						if (val != null) {
+							daticalcolo.gen_temp_fumi = val;
 						} else {
-							listaErroriInput.add(strErrori[INP_TEMPFUM]);
+							listaErroriInput.add(errorMessages[INP_TEMPFUM]);
 						}
-				}// switch
-					// log(String.format("x=%d",x));
+						break;
+				} // switch
 			}
-		} // ciclo for
+		} // for loop
 
 		return test;
 	}
 
 	/*************
-	 * CONVERT FIELD
+	 * Convert field text to Double
 	 **************/
 	private Double convertField(JTextField field) {
 		String strVal = field.getText();
@@ -586,44 +558,53 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 			field.setBackground(Color.WHITE);
 			field.setForeground(Color.BLACK);
 			return val;
-
 		}
 	}
 
 	/************************
-	 * ConvertToDouble
+	 * Convert String to Double
 	 ***************/
 	private Double convertToDouble(String string) {
 		try {
 			Double val = Double.parseDouble(string);
-			log(String.format("Conversione OK val(%s) = %f", string, val));
+			log(String.format("Conversion OK val(%s) = %f", string, val));
 			return val;
 		} catch (Exception e) {
-			log(String.format("errore val(%s) = nullo...", string));
+			log(String.format("Error converting val(%s) = null...", string));
 			return null;
 		}
-
 	}
 
-	private void setTextValue(double _value, JTextField _jtextfield) {
+	/***************
+	 * Set value into JTextField
+	 ***************/
+	private void setTextValue(double value, JTextField field) {
 		try {
-			String string = String.format("%f", _value);
-			_jtextfield.setText(string);
-
+			String str = String.format("%f", value);
+			field.setText(str);
 		} catch (Exception e) {
-			_jtextfield.setText("#errore");
+			field.setText("#error");
 		}
 	}
 
+	/***************
+	 * Log message to console
+	 ***************/
 	private void log(String s) {
 		System.out.println(s);
 	}
 
+	/***************
+	 * Log message to text area
+	 ***************/
 	private void logArea(String s) {
 		outArea.append(s);
 		outArea.append("\n");
 	}
 
+	/***************
+	 * Clear text area
+	 ***************/
 	private void logAreaClean() {
 		outArea.setText("");
 	}
@@ -631,93 +612,83 @@ public class APCombCaldaia extends JPanel implements ItemListener {
 	/**
 	 * Opens a dialog showing help information for all fuels.
 	 * One row per fuel with its parameters.
+	 * Data are loaded directly from CombustibiliFactory.
 	 */
-	/**
-	 * Opens a dialog showing all fuels and their properties.
-	 * Data are loaded directly from CombustibiliFactory.*/
+	private void showFuelHelpDialog() {
 
-private void showFuelHelpDialog() {
+		JDialog dialog = new JDialog();
+		dialog.setTitle("Fuel Technical Data");
+		dialog.setModal(true);
+		dialog.setSize(800, 450);
+		dialog.setLocationRelativeTo(this);
 
-    JDialog dialog = new JDialog();
-    dialog.setTitle("Fuel Technical Data");
-    dialog.setModal(true);
-    dialog.setSize(800, 450);
-    dialog.setLocationRelativeTo(this);
+		// === Load data from factory ===
+		String[] fuelNames = CombustibiliFactory.getCombustibileName();
+		double[][] fuelData = CombustibiliFactory.getDatiCombustibile();
 
-    // === Load data from factory ===
-    String[] fuelNames = CombustibiliFactory.getCombustibileName();
-    double[][] fuelData = CombustibiliFactory.getDatiCombustibile();
+		// === Create column headers ===
+		int propertyCount = fuelData[0].length;
+		String[] columns = new String[propertyCount + 1];
+		columns[0] = "Fuel";
+		for (int i = 0; i < propertyCount; i++) {
+			columns[i + 1] = CombustibiliFactory.COL_NAMES[i];
+		}
 
-    // === Create column headers ===
-    int propertyCount = fuelData[0].length;
-    String[] columns = new String[propertyCount + 1];
-    columns[0] = "Combustibile";
-    for (int i = 0; i < propertyCount; i++) {
-        columns[i + 1] = CombustibiliFactory.COL_NAMES[i];
-    }
+		// === Table model (read-only) ===
+		DefaultTableModel model = new DefaultTableModel(columns, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // All cells are non-editable
+			}
+		};
 
-    // === Table model (read-only) ===
-    DefaultTableModel model = new DefaultTableModel(columns, 0) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
+		// === Populate table ===
+		for (int i = 0; i < fuelNames.length; i++) {
+			Object[] row = new Object[propertyCount + 1];
+			row[0] = fuelNames[i];
+			for (int j = 0; j < propertyCount; j++) {
+				row[j + 1] = fuelData[i][j];
+			}
+			model.addRow(row);
+		}
 
-    // === Populate table ===
-    for (int i = 0; i < fuelNames.length; i++) {
-        Object[] row = new Object[propertyCount + 1];
-        row[0] = fuelNames[i];
-        for (int j = 0; j < propertyCount; j++) {
-            row[j + 1] = fuelData[i][j];
-        }
-        model.addRow(row);
-    }
+		// === JTable ===
+		JTable table = new JTable(model);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		JScrollPane scrollPane = new JScrollPane(table);
 
-    // === JTable ===
-    JTable table = new JTable(model);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-    JScrollPane scrollPane = new JScrollPane(table);
+		// === Panel for property descriptions ===
+		JPanel descriptionPanel = new JPanel();
+		descriptionPanel.setLayout(new GridLayout(CombustibiliFactory.COL_NAMES.length, 1, 5, 5));
 
-    // === Pannello descrizione proprietà ===
-    JPanel descriptionPanel = new JPanel();
-    descriptionPanel.setLayout(new GridLayout(CombustibiliFactory.COL_NAMES.length, 1, 5, 5));
+		String[] descriptions = {
+				"Lower heating value of fuel [MJ/kg]", // HU
+				"Minimum VATR value [m3/kg]", // Vatr min
+				"Minimum VL value [m3/kg]", // VL min
+				"Maximum water content [%]", // VH2O
+				"Maximum CO2 [%]", // CO2%max
+				"Maximum SO2 [%]" // SO2%max
+		};
 
-    String[] descrizioni = {
-        "Potere calorifico inferiore del combustibile [MJ/kg]",        // HU
-        "Valore minimo di VATR [m3/kg]",                               // Vatr min
-        "Valore minimo di VL [m3/kg]",                                 // VL min
-        "Contenuto massimo di acqua [%]",                              // VH2O
-        "CO2 massimo [%]",                                             // CO2%max
-        "SO2 massimo [%]"                                              // SO2%max
-    };
+		for (int i = 0; i < CombustibiliFactory.COL_NAMES.length; i++) {
+			JLabel lbl = new JLabel(CombustibiliFactory.COL_NAMES[i] + " : " + descriptions[i]);
+			lbl.setFont(new Font("Courier New", Font.PLAIN, 14));
+			descriptionPanel.add(lbl);
+		}
 
-    for (int i = 0; i < CombustibiliFactory.COL_NAMES.length; i++) {
-        JLabel lbl = new JLabel(CombustibiliFactory.COL_NAMES[i] + " : " + descrizioni[i]);
-        lbl.setFont(new Font("Courier New", Font.PLAIN, 14));
-        descriptionPanel.add(lbl);
-    }
+		// === Main content panel ===
+		JPanel contentPanel = new JPanel();
+		contentPanel.setLayout(new BorderLayout(5, 5));
+		contentPanel.add(scrollPane, BorderLayout.CENTER);
+		contentPanel.add(descriptionPanel, BorderLayout.SOUTH);
 
-    // === Pannello principale ===
-    JPanel contentPanel = new JPanel();
-    contentPanel.setLayout(new BorderLayout(5, 5));
-    contentPanel.add(scrollPane, BorderLayout.CENTER);
-    contentPanel.add(descriptionPanel, BorderLayout.SOUTH);
+		dialog.add(contentPanel);
+		dialog.pack(); // Resize according to content
+		dialog.setLocationRelativeTo(this); // Center the dialog
+		dialog.setVisible(true);
+	}
 
-    dialog.add(contentPanel);
-    dialog.pack(); // ridimensiona in base ai contenuti
-    dialog.setLocationRelativeTo(this); // centra
-    dialog.setVisible(true);
-}
-
-
-
-
-
-
-
-
-
+	// ====================== Dati Class ======================
 
 	private class Dati {
 		int gen_COMBUSTIBILE;
@@ -762,6 +733,8 @@ private void showFuelHelpDialog() {
 
 		public void calcola() {
 
+			// Create a generator instance with power, fuel, flue gas temp, and natural air
+			// burner
 			Gener gener = new Gener(gen_potenza, gen_COMBUSTIBILE, gen_temp_fumi, is_bruc_aria_nat);
 
 			if (is_co2_noto)
@@ -771,10 +744,12 @@ private void showFuelHelpDialog() {
 			if (is_pmass_noto)
 				gener.setPortatamassicaFumi(gen_pmass);
 
+			// Save header and values for logging
 			gen_stringHeader = gener.getStringHeader();
 			gen_stringValue = gener.getStringValue();
 			gener.print();
 
+			// Combustion calculation
 			Comb_2 combx = new Comb_2(gen_COMBUSTIBILE, gener.getCo2(), gener.getTm());
 			combx.setPressione(101000.0);
 			combx.print();
@@ -786,11 +761,11 @@ private void showFuelHelpDialog() {
 			gen_cost_el = combx.CostElasticita_1();
 
 			gen_cap_term = combx.CapTermica();
-			gen_tenore_h20 = combx.TenoreH2O();// tenore vapore acqueo
+			gen_tenore_h20 = combx.TenoreH2O(); // Water vapor content
 
-			System.out.println(String.format("Tenore h20= %f  Parziale=%f ", gen_tenore_h20,
+			System.out.println(String.format("Water content h2O= %f  Partial=%f ", gen_tenore_h20,
 					Comb_1.PparzialeH2o(gen_tenore_h20, 101000.0)));
-			System.out.println(String.format("PARZIALE VAPORE= %f   ", combx.PparzialeH2o()));
+			System.out.println(String.format("Partial vapor pressure= %f   ", combx.PparzialeH2o()));
 
 			gen_press_parz_vap_h20 = combx.PparzialeH2o();
 			gen_temp_rug = combx.tempPuntoRugiada();
@@ -805,8 +780,7 @@ private void showFuelHelpDialog() {
 
 			gen_tiragg_min = gener.getPW_tiraggiominimo();
 		}
-
-	}// PRIVATE CLASS Date
+	} // end of Dati class
 
 	/****************** */
 
