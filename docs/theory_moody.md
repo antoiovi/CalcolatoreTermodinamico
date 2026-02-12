@@ -128,6 +128,29 @@ Below is a **schematic representation of flow regimes**:
 > The figure above shows curves of friction factor \( f \) versus Reynolds number for various relative roughness values.  
 
 ---
+## Flowchart ( APanelMoodyDiagram.java )
+
+flowchart TD
+
+A[User clicks Calculate] --> B[Read Reynolds number]
+B --> C[Compute or read relative roughness]
+
+C --> D{Re < 2300?}
+
+D -- Yes --> E[Laminar flow\nf = 64/Re]
+D -- No --> F{Re < 3400?}
+
+F -- Yes --> G[Transitional flow\nLinear interpolation]
+F -- No --> H[Turbulent flow\nColebrook-White]
+
+E --> I[Update friction factor]
+G --> I
+H --> I
+
+I --> J[Update text output]
+J --> K[Update Moody diagram point]
+K --> L[Repaint diagram]
+
 
 ## References
 

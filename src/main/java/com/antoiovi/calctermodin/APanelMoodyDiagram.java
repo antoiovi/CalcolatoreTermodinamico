@@ -8,6 +8,48 @@
  *  - Turbulent (Re > 3400): Colebrook–White equation
  *
  * The method updates both numerical output and Moody diagram visualization.
+ * 
+ * 
+ User Input
+    │
+    ▼
+InputVerifier
+    │
+    ▼
+Calcfattaattr()
+    │
+    ├── Read nrey
+    ├── Compute / Read scabr
+    │
+    ▼
+computeFrictionFactor()
+    │
+    ├── Laminar
+    ├── Transitional
+    └── Turbulent (Colebrook)
+    │
+    ▼
+Return fattattr
+    │
+    ▼
+buildResultString()
+    │
+    ▼
+updateDiagramPoint()
+    │
+    ├── log10(Re)
+    ├── log10(f)
+    ├── clear old points
+    ├── add new point
+    └── add labels
+    │
+    ▼
+CreateDiagram()
+    │
+    ├── Loop Reynolds axis
+    ├── Compute curve
+    └── Repaint diagram
+
  *
  * License: MIT
  */
@@ -515,45 +557,128 @@ private void updateDiagram(
  * Calcola il fattore di attrito in base al numero di Reynolds e alla scabrezza relativa.
  * Gestisce moto laminare, di transizione e turbolento.
  */
-private boolean calculateFrictionFactor() {
+	private boolean Calcfattaattr() {
 
-    try {
+		try {
+	
+			// ===============================
+			// Lettura input (GUI)
+			// ===============================
+			nrey = Double.parseDouble(textFieldNrey.getText());
+	
+			if (ckboxScabrAMano.isSelected()) {
+				scabr = Double.parseDouble(textFieldScabr.getText());
+			} else {
+				scabr = rug / diam;
+				textFieldScabr.setText(Double.toString(scabr));
+			}
+	
+			// ===============================
+			// Calcolo numerico (separato)
+			// ===============================
+			fattattr = computeFrictionFactor(nrey, scabr);
+	
+			// ===============================
+			// Output testuale (GUI)
+			// ===============================
+			textFieldFattAtt.setText(Double.toString(fattattr));
+			textArea.setText(buildResultString(nrey, scabr, fattattr));
+	
+			// ===============================
+			// Aggiornamento grafico (GUI)
+			// ===============================
+			updateDiagramPoint(nrey, fattattr);
+	
+			return true;
+	
+		} catch (Exception e) {
+	
+			textFieldFattAtt.setText("#ERROR");
+			textArea.setText("#ERRORE");
+			return false;
+		}
+	}
 
-        double re = Double.parseDouble(textFieldNrey.getText());
+	private double computeFrictionFactor(double nrey, double scabr) {
 
-        double rr;
-        if (ckboxScabrAMano.isSelected()) {
-            rr = Double.parseDouble(textFieldScabr.getText());
-        } else {
-            rr = rug / diam;
-            textFieldScabr.setText(String.valueOf(rr));
-        }
+		// Moto laminare
+		if (nrey < 2300) {
+			return 64.0 / nrey;
+		}
+	
+		// Zona di transizione
+		if (nrey < 3400) {
+	
+			double fLaminare = 64.0 / nrey;
+	
+			MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+			double fTurbolento = moody.zbrent();
+	
+			double reMin = 2300.0;
+			double reMax = 3400.0;
+			double peso = (nrey - reMin) / (reMax - reMin);
+	
+			return fLaminare + peso * (fTurbolento - fLaminare);
+		}
+	
+		// Moto turbolento
+		MoodyDiagram moody = new MoodyDiagram(nrey, scabr);
+		return moody.zbrent();
+	}
+		
+	private String buildResultString(double nrey, double scabr, double fattattr) {
 
-        Result result = 
-            com.antoiovi.calctermodin.core.FrictionFactorCalculation
-            .calculate(re, rr);
+		if (nrey < 2300) {
+	
+			return String.format(
+				"Laminar flow.\nReynolds number = %1.1f\n"
+				+ "Relative roughness = %f\n"
+				+ "Friction factor (64/Re) = %f",
+				nrey, scabr, fattattr
+			);
+		}
+	
+		if (nrey < 3400) {
+	
+			return String.format(
+				"Transitional flow region.\nReynolds number = %1.1f\n"
+				+ "Relative roughness = %f\n"
+				+ "Friction factor (interpolated) = %f",
+				nrey, scabr, fattattr
+			);
+		}
+	
+		return String.format(
+			"Turbulent flow.\nReynolds number = %1.1f\n"
+			+ "Relative roughness = %f\n"
+			+ "Friction factor (Colebrook equation) = %f",
+			nrey, scabr, fattattr
+		);
+	}
+	
+	private void updateDiagramPoint(double nrey, double fattattr) {
 
-        textFieldFattAtt.setText(
-            String.format("%.6f", result.frictionFactor)
-        );
-
-        textArea.setText(
-            buildResultString(result)
-        );
-
-        updateDiagram(result);
-
-        return true;
-
-    } catch (Exception e) {
-
-        textFieldFattAtt.setText("#ERROR");
-        textArea.setText("Invalid input.");
-        return false;
-    }
-}
-
-
+		double x = Math.log10(nrey);
+		double y = Math.log10(fattattr);
+	
+		apdiagram.clearPunti();
+		apdiagram.clearStringhe();
+		apdiagram.addPunto(x, y);
+	
+		double topY = asseys[asseys.length - 1];
+		double halfX = assexs[assexs.length / 2];
+	
+		apdiagram.addStringa(
+			String.format("CURVE FOR RELATIVE ROUGHNESS = %1.6f", scabr),
+			halfX, topY
+		);
+	
+		apdiagram.addStringa(
+			String.format("Friction factor = %1.6f", fattattr),
+			x, y
+		);
+	}
+	
 	
 	public void CreateDiagram()  {
 double Nrey;
