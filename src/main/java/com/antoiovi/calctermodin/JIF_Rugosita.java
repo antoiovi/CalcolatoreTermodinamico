@@ -1,219 +1,261 @@
 package com.antoiovi.calctermodin;
 
-import java.awt.EventQueue;
-
-import javax.swing.JInternalFrame;
-
 import java.awt.GridBagLayout;
-
 import javax.swing.JLabel;
-
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-
-import javax.swing.SwingConstants;
 import javax.swing.JPanel;
-
 import java.awt.FlowLayout;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
-import java.awt.Dimension;
-
-import javax.swing.JSlider;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * Roughness Selection Dialog
+ *
+ * This dialog allows the user to select typical internal wall roughness values
+ * for different construction materials.
+ *
+ * The values are based on UNI 9615 standard.
+ *
+ * The selected roughness value (in meters) can be:
+ *  - Chosen from predefined minimum/maximum values
+ *  - Entered manually by the user
+ *
+ * The dialog returns:
+ *  - "ok"  → if a valid value is confirmed
+ *  - "esc" → if cancelled or invalid
+ *
+ * Used by the Moody Diagram module.
+ *
+ * License: MIT
+ */
 public class JIF_Rugosita extends JDialog implements ActionListener {
-	SpinnerNumberModel model;
-	JSpinner.NumberEditor editor;
-	JSpinner s;
-	private JTextField textFieldValue;
-	private String value = "esc";
-	private double doblevalue;
-	
-	// Creata per inizzializzare i valori 
-	private String stringButton;
 
-	
-	String labels[]={"Tubi in plastica liscio(scarico caldaie condesazione)","Tubi in plastica corrigato(scarico caldaie condesazione)","Tubo in acciaio moderatamente arruginito",
-					"Condotto in lamiera","Condotto in conglomerato cementizio",
-					"Refrattario","Condotto in muratura"};
-	double minimo[]={0.008e-3,2.85e-3,0.0005,0.0015,0.001,0.001,0.003};
-	double massimo[]={0.008e-3,6.78e-3,0.001, 0.002,0.003,0.002,0.005};
-	
-	JLabel jlabales[]=new JLabel[7];
-	JButton jbuttonsMin[]=new JButton[7];
-	JButton jbuttonsMax[]=new JButton[7];
-	
-	
-	/**
-	 * Launch the application.
-	 */
-	
+    private JTextField textFieldValue;
 
-	/**
-	 * Create the frame.
-	 */
-	public JIF_Rugosita(JFrame parent, boolean modal) {
-	    super(parent,  true);
-	    setTitle("Rugosit\u00E0 media perete interna");
-	    setResizable(false);
-		setBounds(100, 100, 600, 500);
-		init();
-		
-	}
-	public JIF_Rugosita() {
-	    super();
-	    this.setModal(true);
-	    setTitle("Rugosit\u00E0 media perete interna");
-	    setResizable(false);
-		setBounds(100, 100, 600, 500);
-	init();
-		
-	}
+    /** Dialog return state ("ok" or "esc") */
+    private String value = "esc";
 
-	private void init(){
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		
-		gridBagLayout.columnWidths = new int[] { 273, 52, 53, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
-		getContentPane().setLayout(gridBagLayout);
+    /** Selected roughness numeric value */
+    private double doblevalue;
 
-		
-		GridBagConstraints gbl = new GridBagConstraints();
-		gbl.insets = new Insets(0, 0, 5, 5);
-		
-		JLabel lblNewLabel = new JLabel("Modalit\u00E0 costruttive");
-				
-		gbl.gridx = 0;
-		gbl.gridy = 0;
-		getContentPane().add(lblNewLabel, gbl);
+    /**
+     * Construction type labels
+     */
+    String labels[] = {
+        "Smooth plastic pipe (condensing boiler exhaust)",
+        "Corrugated plastic pipe (condensing boiler exhaust)",
+        "Moderately rusted steel pipe",
+        "Sheet metal duct",
+        "Concrete duct",
+        "Refractory duct",
+        "Masonry chimney"
+    };
 
-		JLabel lblNewLabel_1 = new JLabel("Rugosit\u00E0 [m]");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbl.gridwidth = 2;
-		gbl.gridx = 1;
-		gbl.gridy = 0;
-		getContentPane().add(lblNewLabel_1, gbl);
+    /**
+     * Minimum roughness values [m]
+     */
+    double minimo[] = {
+        0.008e-3,
+        2.85e-3,
+        0.0005,
+        0.0015,
+        0.001,
+        0.001,
+        0.003
+    };
 
-		JLabel lblNewLabel_8 = new JLabel("da");
-		gbl.gridwidth = 1;
-		gbl.gridx = 1;
-		gbl.gridy = 1;
-		getContentPane().add(lblNewLabel_8, gbl);
+    /**
+     * Maximum roughness values [m]
+     */
+    double massimo[] = {
+        0.008e-3,
+        6.78e-3,
+        0.001,
+        0.002,
+        0.003,
+        0.002,
+        0.005
+    };
 
-		JLabel lblA = new JLabel("a");
-		gbl.gridx = 2;
-		gbl.gridy = 1;
-		getContentPane().add(lblA, gbl);
+    JLabel jlabales[] = new JLabel[7];
+    JButton jbuttonsMin[] = new JButton[7];
+    JButton jbuttonsMax[] = new JButton[7];
 
-		int gridY=1;
-		gbl.fill = GridBagConstraints.HORIZONTAL;
-		gbl.anchor = GridBagConstraints.SOUTH;
-		for(int x=0;x<labels.length;x++){
-			gridY++;
-			jlabales[x]=new JLabel(labels[x]);
-			gbl.gridx = 0;
-			gbl.gridy = gridY;
-			getContentPane().add(jlabales[x],gbl);
-			stringButton=Double.toString(minimo[x]);
-			jbuttonsMin[x] = new JButton(stringButton );
-			jbuttonsMin[x].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-				JButton btn=(JButton)arg0.getSource();
-				textFieldValue.setText( btn.getText() );
-					}
-				});
-			gbl.gridx = 1;
-			getContentPane().add(jbuttonsMin[x],gbl);
-			stringButton=Double.toString(massimo[x]);
-			jbuttonsMax[x] = new JButton( stringButton);
-			jbuttonsMax[x].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					JButton btn=(JButton)arg0.getSource();
-				textFieldValue.setText( btn.getText() );
-					}
-				});
-			gbl.gridx = 2;
-			getContentPane().add(jbuttonsMax[x],gbl);
-		}
-		gridY++;
-			JLabel lblNewLabel_7 = new JLabel("<html>Valori forniti dalla norma UNI 9615.<br>Questi valori possono diventare pi\u00F9 grandi nel caso di esecuzione non corretta <br/>del canale da fumo e del camino.</html>");
-			
-			
-		gbl.fill = GridBagConstraints.HORIZONTAL;
-		gbl.gridwidth = 3;
-		gbl.gridx = 0;
-		gbl.gridy = gridY;
-		getContentPane().add(lblNewLabel_7, gbl);
-		gridY++;		
-		JPanel panel = new JPanel();
-		gbl.fill = GridBagConstraints.BOTH;
-		gbl.gridy = gridY;
-		getContentPane().add(panel, gbl);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		JLabel lblInserireValore = new JLabel("Inserire valore");
-		panel.add(lblInserireValore);
-		textFieldValue = new JTextField();
-		panel.add(textFieldValue);
-		textFieldValue.setColumns(10);
-		gridY++;
-		JPanel panel_1 = new JPanel();
-		gbl.gridy = gridY;
-		getContentPane().add(panel_1, gbl);
-		JButton okButton = new JButton("Ok");
-		okButton.setActionCommand("ok");
-		okButton.addActionListener(this);
-		panel_1.add(okButton);
+    /**
+     * Constructor with parent frame
+     */
+    public JIF_Rugosita(JFrame parent, boolean modal) {
+        super(parent, true);
+        setTitle("Average Internal Wall Roughness");
+        setResizable(false);
+        setBounds(100, 100, 600, 500);
+        init();
+    }
 
-		JButton escButton = new JButton("Annulla");
-		escButton.setActionCommand("esc");
-		escButton.addActionListener(this);
-		panel_1.add(escButton);
+    /**
+     * Default constructor
+     */
+    public JIF_Rugosita() {
+        super();
+        this.setModal(true);
+        setTitle("Average Internal Wall Roughness");
+        setResizable(false);
+        setBounds(100, 100, 600, 700);
+        init();
+    }
 
-	}
-	public double getDoblevalue() {
-		return doblevalue;
-	}
+    /**
+     * Initializes GUI components and layout
+     */
+    private void init() {
 
-	public void setDoblevalue(double doblevalue) {
-		this.doblevalue = doblevalue;
-	}
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 273, 52, 53, 0 };
+        gridBagLayout.rowHeights = new int[] { 0,0,0,0,0,0,0,0,0,0,0 };
+        getContentPane().setLayout(gridBagLayout);
 
-	public String getValue() {
-		return value;
-	}
+        GridBagConstraints gbl = new GridBagConstraints();
+        gbl.insets = new Insets(0, 0, 5, 5);
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("ok")) {
-			try {
-				String s = textFieldValue.getText();
-				doblevalue = Double.valueOf(s).doubleValue();
-				value = "ok";
-			} catch (Exception ex) {
-				value = "esc";
-			}
-			this.setVisible(false);
-		} else if (e.getActionCommand().equals("esc")) {
-			value = "esc";
-			this.setVisible(false);
-		}
-	}
+        // Header labels
+        JLabel lblConstruction = new JLabel("Construction type");
+        gbl.gridx = 0;
+        gbl.gridy = 0;
+        getContentPane().add(lblConstruction, gbl);
 
+        JLabel lblRoughness = new JLabel("Roughness [m]");
+        gbl.gridwidth = 2;
+        gbl.gridx = 1;
+        gbl.gridy = 0;
+        getContentPane().add(lblRoughness, gbl);
+
+        JLabel lblFrom = new JLabel("from");
+        gbl.gridwidth = 1;
+        gbl.gridx = 1;
+        gbl.gridy = 1;
+        getContentPane().add(lblFrom, gbl);
+
+        JLabel lblTo = new JLabel("to");
+        gbl.gridx = 2;
+        gbl.gridy = 1;
+        getContentPane().add(lblTo, gbl);
+
+        int gridY = 1;
+
+        // Create rows dynamically
+        for (int x = 0; x < labels.length; x++) {
+
+            gridY++;
+
+            // Material label
+            jlabales[x] = new JLabel(labels[x]);
+            gbl.gridx = 0;
+            gbl.gridy = gridY;
+            getContentPane().add(jlabales[x], gbl);
+
+            // Minimum roughness button
+            jbuttonsMin[x] = new JButton(Double.toString(minimo[x]));
+            jbuttonsMin[x].addActionListener(e ->
+                textFieldValue.setText(((JButton)e.getSource()).getText())
+            );
+            gbl.gridx = 1;
+            getContentPane().add(jbuttonsMin[x], gbl);
+
+            // Maximum roughness button
+            jbuttonsMax[x] = new JButton(Double.toString(massimo[x]));
+            jbuttonsMax[x].addActionListener(e ->
+                textFieldValue.setText(((JButton)e.getSource()).getText())
+            );
+            gbl.gridx = 2;
+            getContentPane().add(jbuttonsMax[x], gbl);
+        }
+
+        gridY++;
+
+        JLabel lblNote = new JLabel(
+            "<html>Values provided by UNI 9615 standard.<br>" +
+            "These values may increase in case of improper installation<br/>" +
+            "of flue ducts and chimneys.</html>"
+        );
+
+        gbl.gridwidth = 3;
+        gbl.gridx = 0;
+        gbl.gridy = gridY;
+        getContentPane().add(lblNote, gbl);
+
+        gridY++;
+
+        // Manual input panel
+        JPanel panel = new JPanel(new FlowLayout());
+        gbl.gridy = gridY;
+        getContentPane().add(panel, gbl);
+
+        JLabel lblInsert = new JLabel("Insert value:");
+        panel.add(lblInsert);
+
+        textFieldValue = new JTextField();
+        textFieldValue.setColumns(10);
+        panel.add(textFieldValue);
+
+        gridY++;
+
+        // Buttons panel
+        JPanel panelButtons = new JPanel();
+        gbl.gridy = gridY;
+        getContentPane().add(panelButtons, gbl);
+
+        JButton okButton = new JButton("Ok");
+        okButton.setActionCommand("ok");
+        okButton.addActionListener(this);
+        panelButtons.add(okButton);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setActionCommand("esc");
+        cancelButton.addActionListener(this);
+        panelButtons.add(cancelButton);
+    }
+
+    /**
+     * Returns selected numeric value
+     */
+    public double getDoblevalue() {
+        return doblevalue;
+    }
+
+    /**
+     * Returns dialog result ("ok" or "esc")
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Handles OK / Cancel actions
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getActionCommand().equals("ok")) {
+
+            try {
+                String s = textFieldValue.getText();
+                doblevalue = Double.valueOf(s);
+                value = "ok";
+            } catch (Exception ex) {
+                value = "esc";
+            }
+
+            this.setVisible(false);
+
+        } else if (e.getActionCommand().equals("esc")) {
+
+            value = "esc";
+            this.setVisible(false);
+        }
+    }
 }
