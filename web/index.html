@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+  
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Moody Diagram Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="app.js"></script>
+
+        
+    <style>
+        body {
+            font-family: system-ui;
+            background: #f4f6f8;
+            margin: 40px;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .panel {
+            width: 320px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Moody Diagram – Friction Factor Calculator</h2>
+    
+<div class="container">
+
+    <div class="panel">
+        <label>Reynolds Number</label>
+        <input id="re" value="100000">
+
+        <label>Relative Roughness</label>
+        <input id="rr" value="0.005">
+
+        <button id="calc">Calculate</button>
+
+        <h3 id="result"></h3>
+    </div>
+
+    <canvas id="chart" width="700" height="500"></canvas>
+
+</div>
+
+</body>
+</html>
