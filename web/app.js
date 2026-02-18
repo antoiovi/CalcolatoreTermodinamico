@@ -42,6 +42,28 @@ const projectionLinesPlugin = {
 };
 
 
+const transitionBandPlugin = {
+    id: 'transitionBand',
+    beforeDatasetsDraw(chart) {
+
+        const { ctx, chartArea, scales } = chart;
+
+        const xStart = scales.x.getPixelForValue(2300);
+        const xEnd   = scales.x.getPixelForValue(3400);
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 165, 0, 0.15)'; // arancione trasparente
+        ctx.fillRect(
+            xStart,
+            chartArea.top,
+            xEnd - xStart,
+            chartArea.bottom - chartArea.top
+        );
+        ctx.restore();
+    }
+};
+
+
 let chart = new Chart(ctx, {
     type: 'scatter',
     data: {
@@ -73,23 +95,16 @@ let chart = new Chart(ctx, {
             }
         }
     },
-    plugins: [projectionLinesPlugin]   // 👈 aggiungi questo
+    plugins: [transitionBandPlugin,projectionLinesPlugin]   // 👈 aggiungi questo
 });
 document.getElementById('calc').addEventListener('click', () => {
 
-    alert("Chiamata funzione ")
 
     const Re = parseFloat(document.getElementById('re').value);
     const rr = parseFloat(document.getElementById('rr').value);
 
     const f = computeFrictionFactor(Re, rr);
 
-    alert(
-        "DEBUG INFO\n\n" +
-        "Reynolds = " + Re + "\n" +
-        "Relative roughness = " + rr + "\n" +
-        "Friction factor = " + f
-    );
 
     document.getElementById('result').innerText =
         `f = ${f.toFixed(6)}`;

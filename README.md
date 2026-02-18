@@ -10,27 +10,55 @@
 
 - [GuiGuideda](docs/index.md)
 
-## 🌍 Overview
+# 🌍 Overview
 
-**OpenThermoFluids** is an open-source engineering software toolkit written in Java, designed for:
+**OpenThermoFluids** is an open-source engineering software toolkit designed for:
 
-- Fluid mechanics calculations
-- Moody diagram friction factor evaluation
-- Combustion analysis
-- Chimney draft calculation
-- Thermophysical properties of flue gases
+- Fluid mechanics calculations  
+- Moody diagram friction factor evaluation  
+- Combustion and flue gas analysis  
+- Chimney draft calculation (UNI EN 13384-1)  
 
-The project aims to provide **transparent, reproducible, and professional-grade engineering tools** under the MIT License.
+The project aims to build a **transparent, reproducible, professional-grade engineering platform** under the MIT License.
 
-This software is intended for:
+Target users:
 
-- Mechanical engineers
-- HVAC designers
-- Energy engineers
-- Students and researchers
-- Industrial professionals
+- Mechanical engineers  
+- HVAC designers  
+- Energy engineers  
+- Researchers  
+- Engineering students  
 
 ---
+
+# 🏗 Architecture
+
+## 🔹 Java Core (`/java`)
+
+- Java 8+
+- Swing GUI
+- Numerical solvers (Brent method)
+- Colebrook-White equation implementation
+- UNI EN 13384-1 combustion model
+- Modular and extendable structure
+
+## 🔹 Web Interface (`/web`)
+
+- JavaScript (ES Modules)
+- Chart.js log-log Moody diagram
+- Interactive friction factor calculator
+- Transition band visualization (Re 2300–3400)
+- Projection lines to axes
+- Engineering-oriented graphical rendering
+
+Future direction:
+
+- Full separation of calculation core
+- REST API layer
+- CLI version
+- Full web computation engine
+- Cloud-ready deployment
+
 
 # 📘 Modules
 
@@ -38,39 +66,77 @@ This software is intended for:
 
 # 1️⃣ Moody Diagram – Friction Factor Calculator
 
+Available in:
+
+- Java Desktop version  
+- Web version (interactive log-log diagram)
+
 ### 🔬 Purpose
 
-This module calculates the **Darcy-Weisbach friction factor** using:
+Calculates the **Darcy-Weisbach friction factor** using:
 
 - Laminar flow equation (f = 64/Re)
 - Transitional interpolation
-- Turbulent regime via **Colebrook-White equation**
-- Numerical solution using Brent method
+- Turbulent regime via Colebrook-White equation
+- Brent numerical solver (Java core)
 
 ### 📐 Features
 
-- Reynolds number based regime detection
-- Relative roughness handling
-- Colebrook equation solver
-- Log-log diagram plotting
-- Customizable line thickness and colors
-- Engineering-grade numerical stability
+- Automatic regime detection
+- Relative roughness support
+- Logarithmic axes
+- Transition band highlighting (Re 2300–3400)
+- Interactive point projection to axes
+- Engineering-stable numerical implementation
 
 ### 🧮 Flow Regimes
 
 | Reynolds Number | Regime |
-|---------------|--------|
-| Re < 2300 | Laminar |
-| 2300 – 3400 | Transitional |
-| Re > 3400 | Turbulent |
+|----------------|--------|
+| Re < 2300      | Laminar |
+| 2300 – 3400    | Transitional |
+| Re > 3400      | Turbulent |
 
-### 📊 Engineering Applications
+### 📊 Applications
 
 - Pipe flow design
 - Pressure drop calculations
-- Hydraulic systems
-- Oil & gas transport lines
-- Water distribution networks
+- Hydraulic networks
+- Oil & gas pipelines
+- Water distribution systems
+
+---
+
+# 2️⃣ Boiler Combustion & Chimney Module  
+### UNI EN 13384-1 Implementation (Java)
+
+### 🔥 Purpose
+
+Performs thermophysical and combustion calculations for flue gases according to:
+
+**UNI EN 13384-1 – Chimneys – Thermal and fluid dynamic calculation methods**
+
+### 📥 Inputs
+
+- Fuel type  
+- Boiler thermal power  
+- Flue gas temperature  
+- Efficiency  
+- CO₂ percentage  
+- Burner type (natural / forced air)
+
+### 📤 Outputs
+
+- Flue gas mass flow  
+- Specific heat capacity  
+- Water vapor content  
+- Dew point temperature  
+- Partial pressures  
+- Thermal conductivity  
+- Dynamic viscosity  
+- Minimum chimney draft  
+
+---
 
 ### 🖥 Screenshot
 
@@ -162,37 +228,142 @@ Combustion Calculation Software, Chimney Draft Calculator, UNI EN 13384, Flue Ga
 
 ---
 
-# 🏗 Architecture
+# 📂 Project Structure
+```bash
 
-- Java Swing GUI
-- Modular structure
-- Separate calculation core
-- Numerical methods implementation
-- Expandable engineering framework
+OpenThermoFluids/
+│
+├── java/        → Core calculation engine + Swing GUI
+├── web/         → Web-based interface (Moody Diagram)
+├── docs/        → Documentation & screenshots
+└── README.md
+```
+# 🏗Architecture
+🔹 Java Core (/java)
 
-Future goal:
+Java 8+
 
-Core calculation engine fully separated from GUI  
-CLI version  
-Web-based version  
-REST API integration  
+Swing GUI
+
+Numerical solvers (Brent method)
+
+Colebrook-White equation
+
+UNI EN 13384-1 combustion implementation
+
+Modular and extendable design
+
+🔹 Web Interface (/web)
+
+JavaScript (ES Modules)
+
+Chart.js-based log-log Moody diagram
+
+Interactive friction factor calculator
+
+Transition band visualization (Re 2300–3400)
+
+Projection lines to axes
+
+Engineering-oriented graphical rendering
+
+Future direction:
+
+Full separation of calculation core
+
+REST API layer
+
+CLI version
+
+Full web computation engine
+
+Cloud-ready deployment
 
 ---
 
 # 📦 Installation
 
-Clone the repository:
+## Java Version
+
+Requirements:
+
+- Java 8+
+
+Clone repository:
+
+```bash
+git clone https://github.com/your-username/OpenThermoFluids.git
+```
+## 💻 Java Version
+
+You can run the Java version using an IDE or via Maven.
+
+### ▶ Option 1 — Using an IDE
+
+Open the `/java` folder in your preferred IDE:
+
+- IntelliJ IDEA  
+- Eclipse  
+- NetBeans  
+
+Make sure you are using **Java 8 or higher**.
+
+---
+
+### ▶ Option 2 — Using Maven (CLI)
+
+Navigate to the `/java` directory:
+
+```bash
+cd java
+```
+
+Compile the project:
+```bash
+mvn clean compile
+```
+Run the application:
+```bash
+mvn exec:java
+```
+If an exec plugin is configured in pom.xml, this will start the main application.
+📦 Build JAR
+
+To generate a packaged JAR:
+```bash
+mvn clean package
+```
+The compiled artifact will be available inside:
+
+/java/target/
+
+You can then run it with:
+```bash
+java -jar target/your-artifact-name.jar
+```
+
+---
 
 
-Open in your preferred IDE:
+## 🌐 Web Version
 
-- IntelliJ IDEA
-- Eclipse
-- NetBeans
+Navigate to the `/web` directory:
 
-Requires:
+```bash
+cd web
+```
 
-- Java 8 or higher
+Run a local server (example using Python):
+
+```bash
+python -m http.server 8000
+```
+
+Then open your browser at:
+
+http://localhost:8000
+
+Alternatively, you can use VS Code Live Server.
 
 ---
 
